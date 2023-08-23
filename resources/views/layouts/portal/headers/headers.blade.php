@@ -109,7 +109,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a target="_BLANK" class="dropdown-item" href="https://s.id/survey-simegal-23">
+                                                    <a target="_BLANK" class="dropdown-item" href="{!! $setup->link_survey !!}">
                                                         Survey Kepuasan
                                                     </a>
                                                 </li>

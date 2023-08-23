@@ -22,7 +22,6 @@ return new class extends Migration
             $table->text('url')->nullable();
             $table->string('tipe', 100)->nullable();
             $table->integer('size')->default("0");
-            $table->integer('likes')->default("0");
             $table->integer('views')->default("0");
             $table->integer('downloads')->default("0");
             $table->string('status');

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->longText('post')->nullable();
             $table->text('thumbnails')->nullable();
-            $table->integer('likes')->default("0");
             $table->integer('views')->default("0");
             $table->string('status');
             $table->string('uuid_created', 100)->nullable();

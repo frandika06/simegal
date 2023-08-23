@@ -49,8 +49,6 @@ Route::group(['middleware' => ['WebFECounter']], function () {
         Route::get('/post/{tags}/{slug}', [PostController::class, 'readPost'])->name('prt.post.read');
         // static-page
         Route::get('/page/{slug}', [PostController::class, 'staticPage'])->name('prt.page.index');
-        // search
-        Route::get('/search', [PostController::class, 'searchPost'])->name('prt.q.index');
         // media-unduhan
         Route::group(['prefix' => 'unduhan'], function () {
             Route::get('/{tags?}', [MediaController::class, 'tagsUnduhan'])->name('prt.media.unduh.tags');
@@ -66,11 +64,10 @@ Route::group(['middleware' => ['WebFECounter']], function () {
             Route::get('/', [MediaController::class, 'indexVideo'])->name('prt.media.video.index');
             Route::get('/read/{slug}', [MediaController::class, 'readVideo'])->name('prt.media.video.read');
         });
-
-        // Route::get('/media/{tags}', [MediaController::class, 'index'])->name('prt.media.index');
-        // Route::get('/media/{tags}/{slug}', [MediaController::class, 'readMedia'])->name('prt.media.read');
         // kirim-pesan
         Route::post('/kirim-pesan', [PostController::class, 'kirimPesan'])->name('prt.kirim.pesan');
+        // search
+        Route::get('/search', [PostController::class, 'searchPost'])->name('prt.q.index');
     });
 
     // GUEST ONLY

@@ -632,7 +632,7 @@ class CID
                 "alamat" => "Bidang Metrologi Legal, Balaraja, Kec. Balaraja, Kabupaten Tangerang, Banten 15610.",
                 "no_telp" => "(021) 123-4567",
                 "email" => "info@simegal.tangerangkab.go.id",
-                "link_survey" => "https: //s.id/survey-simegal-23",
+                "link_survey" => "https://s.id/survey-simegal-23",
             ];
             PortalSetup::create($value_1);
         }

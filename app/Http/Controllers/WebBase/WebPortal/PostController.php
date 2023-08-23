@@ -5,10 +5,12 @@ namespace App\Http\Controllers\WebBase\WebPortal;
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\PortalFAQ;
+use App\Models\PortalGaleri;
 use App\Models\PortalPage;
 use App\Models\PortalPesan;
 use App\Models\PortalPost;
 use App\Models\PortalUnduhan;
+use App\Models\PortalVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use \stdClass;
@@ -74,7 +76,6 @@ class PostController extends Controller
             $data->update(["views" => $views]);
             $page = "pages.portal.post.page";
         }
-
         return view($page, compact(
             'slug',
             'UcSlug',
@@ -132,6 +133,36 @@ class PostController extends Controller
                 $hasil->judul = $item->judul;
                 $hasil->url = route('prt.media.unduh.read', [$item->slug]);
                 $hasil->tanggal = CID::hariTgl($item->tanggal);
+                $data[] = $hasil;
+            }
+        }
+
+        // cek galeri
+        $PortalGaleri = PortalGaleri::whereStatus("Published")
+            ->whereRaw("judul LIKE '%$q%'")
+            ->orderBy("created_at", "DESC")
+            ->get();
+        if (!empty($PortalGaleri)) {
+            foreach ($PortalGaleri as $item) {
+                $hasil = new StdClass();
+                $hasil->judul = $item->judul;
+                $hasil->url = route('prt.media.gallery.read', [$item->slug]);
+                $hasil->tanggal = CID::hariTgl($item->created_at);
+                $data[] = $hasil;
+            }
+        }
+
+        // cek video
+        $PortalVideo = PortalVideo::whereStatus("Published")
+            ->whereRaw("judul LIKE '%$q%'")
+            ->orderBy("created_at", "DESC")
+            ->get();
+        if (!empty($PortalVideo)) {
+            foreach ($PortalVideo as $item) {
+                $hasil = new StdClass();
+                $hasil->judul = $item->judul;
+                $hasil->url = route('prt.media.video.read', [$item->slug]);
+                $hasil->tanggal = CID::hariTgl($item->created_at);
                 $data[] = $hasil;
             }
         }

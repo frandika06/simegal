@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\PortalVideo;
+use App\Models\PortalPage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class PortalVideoSeeder extends Seeder
+class PortalPageSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,37 +19,48 @@ class PortalVideoSeeder extends Seeder
         $user = User::where("sub_role", "Admin Portal")->first();
 
         // cek postingan
-        $cekUnduhan = PortalVideo::first();
-        if ($cekUnduhan === null) {
+        $cekPost = PortalPage::first();
+        if ($cekPost === null) {
             // GET POST
-            $response = Http::get('https://api.slingacademy.com/v1/sample-data/blog-posts?limit=50');
+            $no = 1;
+            $response = Http::get('https://api.slingacademy.com/v1/sample-data/blog-posts?limit=2');
             $posts = $response->object();
             foreach ($posts->blogs as $item) {
                 // rand
                 $rand = rand(0, 2);
                 if ($rand == "0") {
-                    $status = "Draft";
-                    $url = "aKtb7Y3qOck";
+                    $status = "Published";
                 } elseif ($rand == "1") {
                     $status = "Published";
-                    $url = "yygJTN-HcL0";
                 } elseif ($rand == "2") {
-                    $status = "Unpublish";
-                    $url = "4JILPREpglY";
+                    $status = "Published";
                 }
+                if ($no == "1") {
+                    $judul = "Layanan Tera / Tera Ulang";
+                    $slug = Str::slug($judul);
+                } elseif ($no == "2") {
+                    $judul = "Tentang Kami";
+                    $slug = Str::slug($judul);
+                } else {
+                    $judul = $item->title;
+                    $slug = Str::slug($item->title);
+                }
+
                 // create
                 $value = [
                     "uuid" => Str::uuid(),
-                    "judul" => $item->title,
-                    "slug" => Str::slug($item->title),
+                    "judul" => $judul,
+                    "slug" => $slug,
                     "deskripsi" => $item->description,
-                    "url" => $url,
+                    "post" => $item->content_html,
+                    "thumbnails" => $item->photo_url,
                     "views" => rand(0, 10000),
                     "status" => $status,
                     "uuid_created" => $user->uuid_profile,
                 ];
                 // save
-                PortalVideo::create($value);
+                PortalPage::create($value);
+                $no++;
             }
         }
     }

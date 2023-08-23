@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text('judul')->nullable();
             $table->text('slug')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->integer('likes')->default("0");
             $table->integer('views')->default("0");
             $table->string('status');
             $table->string('uuid_created', 100)->nullable();

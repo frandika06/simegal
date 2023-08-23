@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('kategori', 100)->nullable();
             $table->text('thumbnails')->nullable();
             $table->dateTime('tanggal')->nullable();
-            $table->integer('likes')->default("0");
             $table->integer('views')->default("0");
             $table->string('status');
             $table->string('uuid_created', 100)->nullable();

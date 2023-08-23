@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PortalGeneralSeeder::class);
         // generate post by API
         $this->call(PortalPostinganSeeder::class);
+        // generate page by API
+        $this->call(PortalPageSeeder::class);
         // generate banner by API
         $this->call(PortalBannerSeeder::class);
         // generate galeri dan datanya by API
