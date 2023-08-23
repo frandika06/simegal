@@ -9,7 +9,7 @@ return [
     | The theme to use for SweetAlert2 popups.
     | Available themes: dark, minimal, borderless, bootstrap-4, material-ui, wordpress-admin, bulma.
     |
-    */
+     */
 
     'theme' => env('SWEET_ALERT_THEME', 'default'),
 
@@ -21,7 +21,7 @@ return [
     | file.
     | However, you can use its cdn if you want.
     |
-    */
+     */
 
     'cdn' => env('SWEET_ALERT_CDN'),
 
@@ -34,7 +34,7 @@ return [
     | show notifications or you might want to use the native js) then this
     | might be handy.
     |
-    */
+     */
 
     'alwaysLoadJS' => env('SWEET_ALERT_ALWAYS_LOAD_JS', false),
 
@@ -52,7 +52,7 @@ return [
     | alwaysLoadJs = true  & neverLoadJs = false => js will be loaded
     | alwaysLoadJs = false & neverLoadJs = false => js will be loaded when
     | you set alert/toast by using the facade/helper functions.
-    */
+     */
 
     'neverLoadJS' => env('SWEET_ALERT_NEVER_LOAD_JS', false),
 
@@ -64,7 +64,7 @@ return [
     | This is for the all Modal windows.
     | For specific modal just use the autoClose() helper method.
     |
-    */
+     */
 
     'timer' => env('SWEET_ALERT_TIMER', 5000),
 
@@ -78,7 +78,7 @@ return [
     | The default width is 32rem.
     | This is for the all Modal windows.
     | for particular modal just use the width() helper method.
-    */
+     */
 
     'width' => env('SWEET_ALERT_WIDTH', '32rem'),
 
@@ -90,7 +90,7 @@ return [
     | If this behavior isn't compatible with your project's layout,
     | set heightAuto to false.
     |
-    */
+     */
 
     'height_auto' => env('SWEET_ALERT_HEIGHT_AUTO', true),
 
@@ -104,7 +104,7 @@ return [
     | The default padding is 1.25rem.
     | This is for the all Modal windows.
     | for particular modal just use the padding() helper method.
-    */
+     */
 
     'padding' => env('SWEET_ALERT_PADDING', '1.25rem'),
 
@@ -116,7 +116,7 @@ return [
     |  Modal window background
     |   (CSS background property).
     |  The default background is '#fff'.
-    */
+     */
 
     'background' => env('SWEET_ALERT_BACKGROUND', '#fff'),
 
@@ -128,7 +128,7 @@ return [
     | If set to false, modal CSS animation will be use default ones.
     | For specific modal just use the animation() helper method.
     |
-    */
+     */
 
     'animation' => [
         'enable' => env('SWEET_ALERT_ANIMATION_ENABLE', false),
@@ -145,7 +145,7 @@ return [
     | This is for the all Modal windows.
     | For specific modal just use the showConfirmButton() helper method.
     |
-    */
+     */
 
     'show_confirm_button' => env('SWEET_ALERT_CONFIRM_BUTTON', true),
 
@@ -158,7 +158,7 @@ return [
     | This is for the all Modal windows.
     | For specific modal just use the showCloseButton() helper method.
     |
-    */
+     */
 
     'show_close_button' => env('SWEET_ALERT_CLOSE_BUTTON', false),
 
@@ -171,7 +171,7 @@ return [
     | 'center-end', 'bottom', 'bottom-start', or 'bottom-end'.
     | For specific modal just use the position() helper method.
     |
-    */
+     */
 
     'toast_position' => env('SWEET_ALERT_TOAST_POSITION', 'top-end'),
 
@@ -182,7 +182,7 @@ return [
     | If set to true, a progress bar at the bottom of a popup will be shown.
     | It can be useful with toasts.
     |
-    */
+     */
 
     'timer_progress_bar' => env('SWEET_ALERT_TIMER_PROGRESS_BAR', false),
 
@@ -192,7 +192,7 @@ return [
     |--------------------------------------------------------------------------
     | Modal window or toast, config for the Middleware
     |
-    */
+     */
 
     'middleware' => [
 
@@ -213,7 +213,7 @@ return [
     |--------------------------------------------------------------------------
     | A custom CSS class for the modal:
     |
-    */
+     */
 
     'customClass' => [
 
@@ -238,7 +238,7 @@ return [
     |--------------------------------------------------------------------------
     | customize the configuration options of the confirmation popup.
     |
-    */
+     */
 
     'confirm_delete_confirm_button_text' => env('SWEET_ALERT_CONFIRM_DELETE_CONFIRM_BUTTON_TEXT', 'Yes, delete it!'),
     'confirm_delete_confirm_button_color' => env('SWEET_ALERT_CONFIRM_DELETE_CONFIRM_BUTTON_COLOR'),
@@ -248,6 +248,5 @@ return [
     'confirm_delete_show_close_button' => env('SWEET_ALERT_CONFIRM_DELETE_SHOW_CLOSE_BUTTON', false),
     'confirm_delete_icon' => env('SWEET_ALERT_CONFIRM_DELETE_ICON', 'warning'),
     'confirm_delete_show_loader_on_confirm' => env('SWEET_ALERT_CONFIRM_DELETE_SHOW_LOADER_ON_CONFIRM', true),
-
 
 ];

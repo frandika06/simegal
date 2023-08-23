@@ -17,7 +17,7 @@ class Authenticate extends Middleware
             return $request->expectsJson() ? null : route('api.lgn.index');
         } else {
             // pengguna mengakses route web
-            return $request->expectsJson() ? null : route('api.lgn.index');
+            return $request->expectsJson() ? null : route('prt.lgn.index');
         }
     }
 }

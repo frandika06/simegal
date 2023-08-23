@@ -22,23 +22,22 @@ class LoginController extends Controller
     {
         // validate
         $request->validate([
-            "email" => "required|email|max:100",
+            "username" => "required|string|max:100",
             "password" => "required|string|max:100",
         ]);
 
         //Submit Login
-        $email = $request->input('email');
+        $username = $request->input('username');
         $remember_me = $request->has('remember_me') ? true : false;
-        if (auth()->attempt(['email' => $email, 'password' => $request->input('password')], $remember_me)) {
+        if (auth()->attempt(['username' => $username, 'password' => $request->input('password')], $remember_me)) {
             $user = auth()->user();
-            $status_instansi = $user->RelAdministrator->RelInstansi->status;
-            if ($user->status == "1" && $status_instansi == "1") {
+            if ($user->status == "1") {
                 if ($user->trashed()) {
                     //User Telah Dihapus
                     //Failed Login
                     $FailedLogin = [
                         'uuid' => Str::uuid(),
-                        'email' => $email,
+                        'username' => $username,
                         'ip' => $request->ip(),
                         "agent" => $request->header('user-agent'),
                         "status" => "Gagal Login, Akun User Sudah Dihapus!",
@@ -53,7 +52,6 @@ class LoginController extends Controller
                     $SuccessLogin = [
                         'uuid' => Str::uuid(),
                         'uuid_profile' => $user->uuid_profile,
-                        'email' => $email,
                         'ip' => $request->ip(),
                         "agent" => $request->header('user-agent'),
                         "status" => "Login at " . date('Y-m-d H:i:s'),
@@ -68,7 +66,7 @@ class LoginController extends Controller
                 //Failed Login
                 $FailedLogin = [
                     'uuid' => Str::uuid(),
-                    'email' => $email,
+                    'username' => $username,
                     'ip' => $request->ip(),
                     "agent" => $request->header('user-agent'),
                     "status" => "Gagal Login, Akun User Sudah Di Non-Aktifkan!",
@@ -83,7 +81,7 @@ class LoginController extends Controller
             //Failed Login
             $FailedLogin = [
                 'uuid' => Str::uuid(),
-                'email' => $email,
+                'username' => $username,
                 'ip' => $request->ip(),
                 "agent" => $request->header('user-agent'),
                 "status" => "Gagal Login, Email/Password Salah!",
@@ -103,7 +101,6 @@ class LoginController extends Controller
         $SuccessLogout = [
             'uuid' => Str::uuid(),
             'uuid_profile' => $user->uuid_profile,
-            'email' => $user->email,
             'ip' => $request->ip(),
             "agent" => $request->header('user-agent'),
             "status" => "Logout at " . date('Y-m-d H:i:s'),

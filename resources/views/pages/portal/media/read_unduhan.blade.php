@@ -35,7 +35,7 @@
                     <p class="appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="1000">{{ $data->description }}</p>
                     <div class="row">
                         <div class="col mb-5">
-                            <iframe src="https://www.africau.edu/images/default/sample.pdf#toolbar=0" frameborder="0" width="100%" height="560px"></iframe>
+                            <iframe src="{{ asset('storage/sistem/sample-unduhan.pdf') }}#toolbar=0" frameborder="0" width="100%" height="560px"></iframe>
                         </div>
                     </div>
                 </div>

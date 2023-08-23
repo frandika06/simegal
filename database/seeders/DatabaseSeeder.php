@@ -12,11 +12,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Admin Simegal Untuk Portal Website
+        $this->call(AdminSimegalSeeder::class);
+        /*
+        | PORTAL APPS
+         */
+        // general generate
+        $this->call(PortalGeneralSeeder::class);
+        // generate post by API
+        $this->call(PortalPostinganSeeder::class);
+        // generate banner by API
+        $this->call(PortalBannerSeeder::class);
+        // generate galeri dan datanya by API
+        $this->call(PortalGaleriSeeder::class);
+        // generate video by API
+        $this->call(PortalVideoSeeder::class);
+        // generate unduhan by API
+        $this->call(PortalUnduhanSeeder::class);
+        // generate pesan by API
+        $this->call(PortalPesanSeeder::class);
+        // generate FAQ by API
+        $this->call(PortalFAQSeeder::class);
     }
 }

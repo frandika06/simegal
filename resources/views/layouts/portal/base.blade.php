@@ -22,7 +22,7 @@
     <title>@stack('title')</title>
     {{-- META --}}
     {{-- FAVICON --}}
-    <meta name="msapplication-TileImage" content="{{ asset('assets-portal/dist/img/favicon/ms-icon-144x144.png') }}" />
+    <meta name="msapplication-TileImage" content="{{ asset('assets-portal/dist/css/img/favicon/ms-icon-144x144.png') }}" />
     <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('assets-portal/dist/img/favicon/apple-icon-57x57.png') }}" />
     <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('assets-portal/dist/img/favicon/apple-icon-60x60.png') }}" />
     <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('assets-portal/dist/img/favicon/apple-icon-72x72.png') }}" />
@@ -32,6 +32,11 @@
     <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('assets-portal/dist/img/favicon/apple-icon-144x144.png') }}" />
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets-portal/dist/img/favicon/apple-icon-152x152.png') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets-portal/dist/img/favicon/apple-icon-180x180.png') }}" />
+    <link rel="icon" type="image/png" sizes="36x36" href="{{ asset('assets-portal/dist/img/favicon/android-icon-36x36.png') }}" />
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('assets-portal/dist/img/favicon/android-icon-48x48.png') }}" />
+    <link rel="icon" type="image/png" sizes="72x72" href="{{ asset('assets-portal/dist/img/favicon/android-icon-72x72.png') }}" />
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('assets-portal/dist/img/favicon/android-icon-96x96.png') }}" />
+    <link rel="icon" type="image/png" sizes="144x144" href="{{ asset('assets-portal/dist/img/favicon/android-icon-144x144.png') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets-portal/dist/img/favicon/android-icon-192x192.png') }}" />
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets-portal/dist/img/favicon/favicon-32x32.png') }}" />
     <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('assets-portal/dist/img/favicon/favicon-96x96.png') }}" />
@@ -56,6 +61,8 @@
     <link rel="stylesheet" href="{{ asset('assets-portal/dist/css/theme-shop.css') }}">
     {{-- Skin CSS --}}
     <link id="skinCSS" rel="stylesheet" href="{{ asset('assets-portal/dist/css/skins/skin-corporate-9.css?v=') . date('ymdHis') }}">
+    {{-- Internal Sweet-Alert css --}}
+    <link href="{{ asset('assets-admin/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
     {{-- Theme Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('assets-portal/dist/css/custom.css') }}">
     {{-- Head Libs --}}
@@ -125,6 +132,9 @@
     {{-- Theme Initialization Files --}}
     <script src="{{ asset('assets-portal/dist/js/theme.init.js') }}"></script>
     {{-- stack scripts --}}
+    {{-- Internal Sweet-Alert js --}}
+    <script src="{{ asset('assets-admin/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets-admin/plugins/sweet-alert/jquery.sweet-alert.js') }}"></script>
     {{-- CUSTOM JS --}}
     <script src="{{ asset('assets-portal/dist/js/cid.js?=') . date('ymdHis') }}"></script>
     @stack('scripts')

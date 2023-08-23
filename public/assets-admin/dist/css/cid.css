@@ -1,0 +1,15 @@
+.min_id {
+    width: 30px;
+    text-align: center;
+}
+.wajib {
+    display: inline-block;
+    color: #ff0000;
+    margin-left: 5px;
+}
+#datatable {
+    width: 100%;
+}
+.dropdown-menu {
+    z-index: 9999;
+}

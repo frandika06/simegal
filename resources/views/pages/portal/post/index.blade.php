@@ -10,7 +10,7 @@
 @endpush
 @section('content')
     <div role="main" class="main">
-        <section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0" style="background-image: url({{ asset('assets-portal/dist/img/bg/bg-03.jpg') }}); background-size: cover; background-position: center; min-height: 645px;">
+        {{-- <section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0" style="background-image: url({{ asset('assets-portal/dist/img/bg/bg-03.jpg') }}); background-size: cover; background-position: center; min-height: 645px;">
             <div class="section-angled-layer-bottom section-angled-layer-increase-angle bg-light" style="padding: 8rem 0;"></div>
             <div class="container pt-lg-5 mt-5">
                 <div class="row pt-3 pb-lg-0 pb-xl-0">
@@ -23,6 +23,21 @@
                         <p class="opacity-7 text-4 negative-ls-05 pb-2 mb-4">Halaman Postingan {{ $UcTags }}</p>
                     </div>
 
+                </div>
+            </div>
+        </section> --}}
+        <section class="page-header page-header-modern bg-color-primary page-header-md">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 order-2 order-md-1 align-self-center p-static">
+                        <h1 class="">{{ $UcTags }}</h1>
+                    </div>
+                    <div class="col-md-4 order-1 order-md-2 align-self-center">
+                        <ul class="breadcrumb d-block text-md-end breadcrumb-light">
+                            <li><a href="{{ route('prt.home.index') }}">Beranda</a></li>
+                            <li class="active">{{ $UcTags }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>

@@ -3,236 +3,79 @@
     SIMEGAL
 @endpush
 @push('title')
-    Home | SIMEGAL
+    Login | SIMEGAL
 @endpush
 @push('description')
-    Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    Login | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @section('content')
     <div role="main" class="main">
-        <div class="owl-carousel owl-carousel-light owl-carousel-light-init-fadeIn owl-theme manual dots-inside dots-horizontal-center show-dots-hover show-dots-xs nav-style-1 nav-inside nav-inside-plus nav-dark nav-lg nav-font-size-lg show-nav-hover mb-0" data-plugin-options="{'autoplayTimeout': 7000}"
-            data-dynamic-height="['700px','700px','700px','550px','500px']" style="height: 700px;">
-            <div class="owl-stage-outer">
-                <div class="owl-stage">
-                    <!-- Carousel Slide 1 -->
-                    <div class="owl-item position-relative" style="background-image: url({{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}); background-size: cover; background-position: center;">
-                        <div class="container position-relative z-index-1 h-100">
-                            <div class="row justify-content-center align-items-center h-100">
-                                <div class="col-lg-7">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <h2 class="text-color-dark font-weight-extra-bold text-10 text-md-12-13 line-height-1 text-center mb-2 appear-animation" data-appear-animation="blurIn" data-appear-animation-delay="500" data-plugin-options="{'minWindowWidth': 0}">SELAMAT DATANG
-                                        </h2>
-                                        <p class="text-4-5 text-color-dark font-weight-light text-center mb-4" data-plugin-animated-letters data-plugin-options="{'startDelay': 1000, 'minWindowWidth': 0, 'animationSpeed': 30}">Di Website Pelayanan Tera / Tera Ulang dan Pengujian BDKT</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Carousel Slide 1 -->
-                    <div class="owl-item position-relative" style="background-image: url({{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}); background-size: cover; background-position: center;">
-                        <div class="container position-relative z-index-1 h-100">
-                            <div class="row justify-content-center align-items-center h-100">
-                                <div class="col-lg-7">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <h2 class="text-color-dark font-weight-extra-bold text-10 text-md-12-13 line-height-1 text-center mb-2 appear-animation" data-appear-animation="blurIn" data-appear-animation-delay="500" data-plugin-options="{'minWindowWidth': 0}">SELAMAT DATANG
-                                        </h2>
-                                        <p class="text-4-5 text-color-dark font-weight-light text-center mb-4" data-plugin-animated-letters data-plugin-options="{'startDelay': 1000, 'minWindowWidth': 0, 'animationSpeed': 30}">Di Website Pelayanan Tera / Tera Ulang dan Pengujian BDKT</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Carousel Slide 1 -->
-                    <div class="owl-item position-relative" style="background-image: url({{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}); background-size: cover; background-position: center;">
-                        <div class="container position-relative z-index-1 h-100">
-                            <div class="row justify-content-center align-items-center h-100">
-                                <div class="col-lg-7">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <h2 class="text-color-dark font-weight-extra-bold text-10 text-md-12-13 line-height-1 text-center mb-2 appear-animation" data-appear-animation="blurIn" data-appear-animation-delay="500" data-plugin-options="{'minWindowWidth': 0}">SELAMAT DATANG
-                                        </h2>
-                                        <p class="text-4-5 text-color-dark font-weight-light text-center mb-4" data-plugin-animated-letters data-plugin-options="{'startDelay': 1000, 'minWindowWidth': 0, 'animationSpeed': 30}">Di Website Pelayanan Tera / Tera Ulang dan Pengujian BDKT</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Carousel Slide 1 -->
-                    <div class="owl-item position-relative" style="background-image: url({{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}); background-size: cover; background-position: center;">
-                        <div class="container position-relative z-index-1 h-100">
-                            <div class="row justify-content-center align-items-center h-100">
-                                <div class="col-lg-7">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <h2 class="text-color-dark font-weight-extra-bold text-10 text-md-12-13 line-height-1 text-center mb-2 appear-animation" data-appear-animation="blurIn" data-appear-animation-delay="500" data-plugin-options="{'minWindowWidth': 0}">SELAMAT DATANG
-                                        </h2>
-                                        <p class="text-4-5 text-color-dark font-weight-light text-center mb-4" data-plugin-animated-letters data-plugin-options="{'startDelay': 1000, 'minWindowWidth': 0, 'animationSpeed': 30}">Di Website Pelayanan Tera / Tera Ulang dan Pengujian BDKT</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="owl-nav">
-                <button type="button" role="presentation" class="owl-prev" aria-label="Previous"></button>
-                <button type="button" role="presentation" class="owl-next" aria-label="Next"></button>
-            </div>
-        </div>
-
-        <div class="container py-4 my-5">
-            <div class="row justify-content-center text-center mb-4 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="400">
-                <div class="col-lg-8">
-                    <h2 class="font-weight-bold mb-3 mt-3">Layanan SIMEGAL</h2>
-                    {{-- <p class="text-6 text-color-dark line-height-7 negative-ls-1 px-5">Sistem Informasi Metrologi Legal</p> --}}
-                </div>
-            </div>
-            <div class="row featured-boxes featured-boxes-style-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="featured-box featured-box-primary featured-box-effect-4 appear-animation" data-appear-animation="fadeInLeftShorter" data-appear-animation-delay="200">
-                        <div class="box-content px-4">
-                            <i class="icon-featured icon-screen-tablet icons text-12"></i>
-                            <h4 class="font-weight-bold text-color-dark pb-1 mb-2">Mobile Apps</h4>
-                            <p class="mb-0">SIMEGAL Sudah Support Android</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="featured-box featured-box-primary featured-box-effect-4 appear-animation" data-appear-animation="fadeIn">
-                        <div class="box-content px-4">
-                            <i class="icon-featured icon-layers icons text-12"></i>
-                            <h4 class="font-weight-bold text-color-dark pb-1 mb-2">Tera</h4>
-                            <p class="mb-0">Pengajuan Permohonan Tera Baru</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="featured-box featured-box-primary featured-box-effect-4 appear-animation" data-appear-animation="fadeIn">
-                        <div class="box-content px-4">
-                            <i class="icon-featured icon-magnifier icons text-12"></i>
-                            <h4 class="font-weight-bold text-color-dark pb-1 mb-2">Tera Ulang</h4>
-                            <p class="mb-0">Pengajuan Permohonan Tera Ulang</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="featured-box featured-box-primary featured-box-effect-4 appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="200">
-                        <div class="box-content px-4">
-                            <i class="icon-featured icon-screen-desktop icons text-12"></i>
-                            <h4 class="font-weight-bold text-color-dark pb-1 mb-2">Pengajuan BPKD</h4>
-                            <p class="mb-0">Pengajuan BPKD</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <section class="parallax section section-height-3 section-parallax m-0" data-plugin-parallax data-plugin-options="{'speed': 1.5}" data-image-src="{{ asset('assets-portal/dist/img/custom/parallax/parallax-05.jpg') }}">
+        <section class="page-header page-header-modern bg-color-primary page-header-md">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-7 mb-5 mb-lg-0 appear-animation" data-appear-animation="fadeInRightShorter">
-                        <p class="text-color-primary text-2 line-height-1 mb-2">Statistik Data</p>
-                        <h4 class="text-color-dark font-weight-normal line-height-3 text-6">Jumlah Perusahaan dan <strong class="font-weight-extra-bold">Permohonan</strong></h4>
-                        <p class="lead pb-2 mb-4">Kami telah melayani permohonan Tera/Tera Ulang dan BDKT dari berbagai Perusahaan.</p>
-                        {{-- <a href="#" class="btn btn-outline btn-primary font-weight-bold text-1 px-4 btn-py-2">GET STARTED NOW</a> --}}
+                <div class="row">
+                    <div class="col-md-8 order-2 order-md-1 align-self-center p-static">
+                        <h1 class="">Login</h1>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-md-4 order-1 order-md-2 align-self-center">
+                        <ul class="breadcrumb d-block text-md-end breadcrumb-light">
+                            <li><a href="{{ route('prt.home.index') }}">Beranda</a></li>
+                            <li class="active">Login</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-6 mb-5 mb-5">
+                    <h2 class="font-weight-bold text-5 mb-0">Login</h2>
+                    <form action="{{ route('prt.lgn.post') }}" method="POST">
+                        @csrf
                         <div class="row">
-                            <div class="col appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="200">
-                                <div class="row counters counters-lg counters-text-dark">
-                                    <div class="col-md-6 mb-5">
-                                        <div class="counter">
-                                            <strong class="font-weight-extra-bold text-12" data-to="200" data-append="+">0</strong>
-                                            <label class="opacity-8 font-weight-normal text-4">Total Perusahaan</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-5">
-                                        <div class="counter">
-                                            <strong class="font-weight-extra-bold text-12" data-to="300" data-append="+">0</strong>
-                                            <label class="opacity-8 font-weight-normal text-4">Tera</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-5 mb-md-0">
-                                        <div class="counter">
-                                            <strong class="font-weight-extra-bold text-12" data-to="20" data-append="+">0</strong>
-                                            <label class="opacity-8 font-weight-normal text-4">Tera Ulang</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="counter">
-                                            <strong class="font-weight-extra-bold text-12" data-to="100" data-append="+">0</strong>
-                                            <label class="opacity-8 font-weight-normal text-4">Pengujian BDKT</label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-group col">
+                                <label class="form-label text-color-dark text-3">Username <span class="text-color-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg text-4 @error('username') is-invalid @enderror" name="username" id="username" value="{{ old('username') }}" placeholder="Masukkan Username." maxlength="100" autocomplete="off" required>
+                                @error('username')
+                                    <div id="usernameFeedback" class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
-                    </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label class="form-label text-color-dark text-3">Password <span class="text-color-danger">*</span></label>
+                                <input type="password" class="form-control form-control-lg text-4 @error('password') is-invalid @enderror" name="password" id="password" placeholder="Masukkan Password." maxlength="100" required>
+                                @error('password')
+                                    <div id="passwordFeedback" class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="form-group col-md-auto">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me">
+                                    <label class="form-label custom-control-label cur-pointer text-2" for="remember_me">Remember Me</label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-auto">
+                                <a class="text-decoration-none text-color-dark text-color-hover-primary font-weight-semibold text-2" href="#">Lupa Password?</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <button type="submit" class="btn btn-primary btn-modern w-100 text-uppercase rounded-0 font-weight-bold text-3 py-3">Login</button>
+                            </div>
+                            <div class="divider">
+                                <span class="bg-light px-4 position-absolute left-50pct top-50pct transform3dxy-n50">atau</span>
+                            </div>
+                            <div class="form-group col">
+                                <a href="#" class="btn btn-success btn-modern w-100 text-uppercase rounded-0 font-weight-bold text-3 py-3">Register</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </section>
-
-        <section class="section section-no-background section-height-4 border-0 pb-5 m-0 appear-animation" data-appear-animation="fadeIn">
-            <div class="container">
-                <div class="row justify-content-center recent-posts appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="200">
-                    <div class="col-sm-8 col-md-4 mb-4 mb-md-0">
-                        <article>
-                            <div class="row">
-                                <div class="col">
-                                    <a href="blog-post.html" class="text-decoration-none">
-                                        <img src="{{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}" class="img-fluid hover-effect-2 mb-3" alt="" />
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="text-color-primary text-2 mb-1">LOREM IPSUM DOLOR SIT</p>
-                                    <h4 class="line-height-5 ls-0"><a href="blog-post.html" class="text-dark text-decoration-none">Lorem ipsum dolor sit amet, consectetur</a></h4>
-                                    <p class="text-color-dark opacity-7 mb-3">Lorem ipsum dolor sit amet, coctetur adipiscing elit.</p>
-                                    <a href="/" class="read-more text-color-primary font-weight-semibold text-2">VIEW MORE <i class="fas fa-chevron-right text-3 ms-2"></i></a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div class="col-sm-8 col-md-4 mb-4 mb-md-0">
-                        <article>
-                            <div class="row">
-                                <div class="col">
-                                    <a href="blog-post.html" class="text-decoration-none">
-                                        <img src="{{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}" class="img-fluid hover-effect-2 mb-3" alt="" />
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="text-color-primary text-2 mb-1">LOREM IPSUM DOLOR SIT</p>
-                                    <h4 class="line-height-5 ls-0"><a href="blog-post.html" class="text-dark text-decoration-none">Lorem ipsum dolor si, consectetur</a></h4>
-                                    <p class="text-color-dark opacity-7 mb-3">Lorem ipsum dolor sit amet, coctetur adipiscing elit.</p>
-                                    <a href="/" class="read-more text-color-primary font-weight-semibold text-2">VIEW MORE <i class="fas fa-chevron-right text-3 ms-2"></i></a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div class="col-sm-8 col-md-4">
-                        <article>
-                            <div class="row">
-                                <div class="col">
-                                    <a href="blog-post.html" class="text-decoration-none">
-                                        <img src="{{ asset('assets-portal/dist/img/custom/parallax/parallax-04.png') }}" class="img-fluid hover-effect-2 mb-3" alt="" />
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="text-color-primary text-2 mb-1">LOREM IPSUM DOLOR SIT</p>
-                                    <h4 class="line-height-5 ls-0"><a href="blog-post.html" class="text-dark text-decoration-none">Lorem ipsum dolor sit amet, consectetur</a></h4>
-                                    <p class="text-color-dark opacity-7 mb-3">Lorem ipsum dolor sit amet, coctetur adipiscing elit.</p>
-                                    <a href="/" class="read-more text-color-primary font-weight-semibold text-2">VIEW MORE <i class="fas fa-chevron-right text-3 ms-2"></i></a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
 
     </div>
 @endsection

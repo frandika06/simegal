@@ -3,14 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+
+    public $incrementing = false;
+    protected $primaryKey = "uuid";
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -18,19 +24,35 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        "uuid",
+        "uuid_profile",
+        "username",
+        "password",
+        "remember_token",
+        "role",
+        "sub_role",
+        "sub_sub_role",
+        "status",
+        "uuid_created",
+        "uuid_updated",
+        "uuid_deleted",
+        "last_seen",
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes excluded from the model's JSON form.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $hidden = [
         'password',
         'remember_token',
+        "uuid_created",
+        "uuid_updated",
+        "uuid_deleted",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -40,6 +62,15 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
+
+    public function RelPegawai()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_profile', 'uuid')->withTrashed();
+    }
+
+    public function RelPerusahaan()
+    {
+        return $this->belongsTo('App\Models\Perusahaan', 'uuid_profile', 'uuid')->withTrashed();
+    }
 }
