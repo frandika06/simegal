@@ -32,21 +32,19 @@
                     <div class="blog-posts single-post">
                         <article class="post post-large blog-single-post border-0 m-0 p-0">
                             <div class="post-image ms-0">
-                                <img src="{{ $dataPosts->photo_url }}" class="img-fluid img-thumbnail img-thumbnail-no-borders rounded-0" alt="{{ $UcSlug }}" />
+                                <img src="{{ \CID::urlImg($data->thumbnails) }}" class="img-fluid img-thumbnail img-thumbnail-no-borders rounded-0" alt="{{ $UcSlug }}" />
                             </div>
                             <div class="post-date ms-0">
-                                <span class="day">{{ date('d', strtotime($dataPosts->created_at)) }}</span>
-                                <span class="month">{{ date('M', strtotime($dataPosts->created_at)) }}</span>
+                                <span class="day">{{ date('d', strtotime($data->created_at)) }}</span>
+                                <span class="month">{{ date('M', strtotime($data->created_at)) }}</span>
                             </div>
                             <div class="post-content ms-0">
                                 <h2 class="font-weight-semi-bold">{{ $UcSlug }}</h2>
                                 <div class="post-meta">
-                                    <span><i class="far fa-user"></i> By John Doe</span>
-                                    <span><i class="far fa-folder"></i> <a href="{{ route('prt.page.index', [$slug]) }}">{{ $UcSlug }}</a></span>
-                                    <span><i class="far fa-comments"></i> 0 Comments</span>
+                                    <span><i class="far fa-user"></i> By {{ $data->publisher->nama_lengkap }}</span>
                                 </div>
                                 {{-- ARTIKEL --}}
-                                {!! $dataPosts->content_html !!}
+                                {!! $data->post !!}
                             </div>
                         </article>
                     </div>

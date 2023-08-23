@@ -46,6 +46,7 @@
                                             <label class="col-sm-3 col-form-label">Thumbnails</label>
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control @error('thumbnails') is-invalid @enderror" name="thumbnails" id="thumbnails" accept=".png,.jpg,.jpeg">
+                                                <p class="text-danger">Ukuran File Maksimal 1MB.</p>
                                                 @error('thumbnails')
                                                     <div id="thumbnailsFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -62,6 +63,7 @@
                                             <label class="col-sm-3 col-form-label">Thumbnails</label>
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control @error('thumbnails') is-invalid @enderror" name="thumbnails" id="thumbnails" accept=".png,.jpg,.jpeg">
+                                                <p class="text-danger">Ukuran File Maksimal 1MB.</p>
                                                 @error('thumbnails')
                                                     <div id="thumbnailsFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror

@@ -6,7 +6,7 @@
                     <div class="header-row">
                         <div class="header-logo">
                             <a href="{{ route('prt.home.index') }}">
-                                <img alt="SIMEGAL" width="200" height="70" data-sticky-width="150" data-sticky-height="50" data-sticky-top="30" src="{{ asset('assets-portal/dist/img/logo-color.png') }}">
+                                <img alt="SIMEGAL" width="200" height="70" data-sticky-width="150" data-sticky-height="55" data-sticky-top="32" src="{{ asset('assets-portal/dist/img/logo-color.png') }}">
                             </a>
                         </div>
                     </div>
@@ -16,14 +16,11 @@
                         <nav class="header-nav-top">
                             <ul class="nav nav-pills">
                                 <li class="nav-item nav-item-anim-icon d-none d-md-block">
-                                    <a class="nav-link" target="_BLANK" href="https://goo.gl/maps/HT6TtdJCVubJqRB69"><i class="fas fa-map-marker"></i> Kantor</a>
+                                    <a class="nav-link" target="_BLANK" href="{!! $setup->google_maps !!}"><i class="fas fa-map-marker"></i> Kantor</a>
                                 </li>
                                 <li class="nav-item nav-item-anim-icon d-none d-md-block">
-                                    <a class="nav-link" href="tel:+6221456789"><i class="fas fa-phone"></i> (021) 456-789</a>
+                                    <a class="nav-link" href="tel:{{ $setup->no_telp }}"><i class="fas fa-phone"></i> {{ $setup->no_telp }}</a>
                                 </li>
-                                {{-- <li class="nav-item nav-item-left-border nav-item-left-border-remove nav-item-left-border-md-show">
-                                    <span class="ws-nowrap"><i class="fas fa-phone"></i> (123) 456-789</span>
-                                </li> --}}
                             </ul>
                         </nav>
                         <div class="header-nav-features">
@@ -32,7 +29,7 @@
                                 <div class="header-nav-features-dropdown header-nav-features-dropdown-mobile-fixed" id="headerTopSearchDropdown">
                                     <form role="search" action="{{ route('prt.q.index') }}" method="get">
                                         <div class="simple-search input-group">
-                                            <input class="form-control text-1" id="headerSearch" name="q" type="search" value="" placeholder="Search...">
+                                            <input class="form-control text-1" id="headerSearch" name="q" type="search" value="" placeholder="Search..." autocomplete="0ff" maxlength="300" required>
                                             <button class="btn" type="submit" aria-label="Search">
                                                 <i class="fas fa-search header-nav-top-icon"></i>
                                             </button>
@@ -63,7 +60,7 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('prt.page.index', ['tera-atau-tera-ulang']) }}">
+                                                    <a class="dropdown-item" href="{{ route('prt.page.index', ['layanan-tera-tera-ulang']) }}">
                                                         Tera / Tera Ulang
                                                     </a>
                                                 </li>
@@ -75,17 +72,17 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('prt.media.index', ['unduhan']) }}">
+                                                    <a class="dropdown-item" href="{{ route('prt.media.unduh.tags') }}">
                                                         Unduhan
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('prt.media.index', ['galeri']) }}">
+                                                    <a class="dropdown-item" href="{{ route('prt.media.gallery.index') }}">
                                                         Galeri
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('prt.media.index', ['video']) }}">
+                                                    <a class="dropdown-item" href="{{ route('prt.media.video.index') }}">
                                                         Video
                                                     </a>
                                                 </li>
@@ -107,7 +104,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('prt.page.index', ['frequently-asked-questions']) }}">
+                                                    <a class="dropdown-item" href="{{ route('prt.page.index', ['faq']) }}">
                                                         Frequently Asked Questions
                                                     </a>
                                                 </li>
@@ -124,6 +121,11 @@
                                                     Akun
                                                 </a>
                                                 <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('auth.home') }}">
+                                                            Dashboard
+                                                        </a>
+                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item" href="{{ route('prt.lgn.logout') }}">
                                                             Logout
@@ -154,10 +156,17 @@
                                 </nav>
                             </div>
                             <ul class="header-social-icons social-icons d-none d-sm-block">
-                                <li class="social-icons-facebook"><a href="http://www.facebook.com/" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                {{-- <li class="social-icons-twitter"><a href="http://www.twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a></li> --}}
-                                <li class="social-icons-instagram"><a href="http://www.instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a></li>
-                                <li class="social-icons-youtube"><a href="http://www.youtube.com/" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a></li>
+                                @foreach ($sosmed as $item)
+                                    @if ($item->sosmed == 'Facebook')
+                                        <li class="social-icons-facebook"><a href="{!! $item->url !!}" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                    @elseif($item->sosmed == 'Twitter')
+                                        <li class="social-icons-twitter"><a href="{!! $item->url !!}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                    @elseif($item->sosmed == 'Instagram')
+                                        <li class="social-icons-instagram"><a href="{!! $item->url !!}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                                    @elseif($item->sosmed == 'YouTube')
+                                        <li class="social-icons-youtube"><a href="{!! $item->url !!}" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a></li>
+                                    @endif
+                                @endforeach
                             </ul>
                             <button class="btn header-btn-collapse-nav" data-bs-toggle="collapse" data-bs-target=".header-nav-main nav">
                                 <i class="fas fa-bars"></i>

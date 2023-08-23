@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-md-12 align-self-center p-static order-2 text-center">
                         <h1 class="text-light text-10"><strong>Pencarian</strong></h1>
-                        <span class="sub-title text-light">Ditemukan 0 hasil: <strong>{{ $UcKeys }}</strong></span>
+                        <span class="sub-title text-light">Ditemukan {{ \count($data) }} hasil: <strong>{{ $UcKeys }}</strong></span>
                     </div>
                     <div class="col-md-12 align-self-center order-1">
                         <ul class="breadcrumb d-block text-center breadcrumb-light">
@@ -28,7 +28,6 @@
         </section>
 
         <div class="container py-5 mt-3">
-
             <div class="row">
                 <div class="col">
                     <h2 class="font-weight-normal text-7 mb-0">Hasil Pencarian: <strong class="font-weight-extra-bold">{{ $UcKeys }}</strong></h2>
@@ -43,64 +42,32 @@
                 <div class="col">
 
                     <ul class="simple-post-list m-0">
-                        <li>
+                        {{-- <li>
                             <div class="post-info">
                                 <a href="blog-post.html">Nullam Vitae Nibh Un Odiosters</a>
                                 <div class="post-meta">
                                     <span class="text-dark text-uppercase font-weight-semibold">Page</span> | Nov 10, 2023
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <div class="post-info">
-                                <a href="blog-post.html">Vitae Nibh Un Odiosters</a>
-                                <div class="post-meta">
-                                    <span class="text-dark text-uppercase font-weight-semibold">Post</span> | Nov 10, 2023
+                        </li> --}}
+                        @foreach ($data as $item)
+                            <li>
+                                <div class="post-info">
+                                    <a href="{{ $item->url }}">{{ $item->judul }}</a>
+                                    <div class="post-meta">
+                                        {{ $item->tanggal }}
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="post-info">
-                                <a href="blog-post.html">Odiosters Nullam Vitae</a>
-                                <div class="post-meta">
-                                    <span class="text-dark text-uppercase font-weight-semibold">Post</span> | Nov 10, 2023
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="post-info">
-                                <a href="blog-post.html">Nullam Vitae Nibh Un Odiosters</a>
-                                <div class="post-meta">
-                                    <span class="text-dark text-uppercase font-weight-semibold">Page</span> | Nov 10, 2023
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="post-info">
-                                <a href="blog-post.html">Vitae Nibh Un Odiosters</a>
-                                <div class="post-meta">
-                                    <span class="text-dark text-uppercase font-weight-semibold">Page</span> | Nov 10, 2023
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="post-info">
-                                <a href="blog-post.html">Odiosters Nullam Vitae</a>
-                                <div class="post-meta">
-                                    <span class="text-dark text-uppercase font-weight-semibold">Page</span> | Nov 10, 2023
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        @endforeach
                     </ul>
-
-                    <ul class="pagination float-end">
+                    {{-- <ul class="pagination float-end">
                         <li class="page-item"><a class="page-link" href="#"><i class="fas fa-angle-left"></i></a></li>
                         <li class="page-item active"><a class="page-link" href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item"><a class="page-link" href="#"><i class="fas fa-angle-right"></i></a></li>
-                    </ul>
-
+                    </ul> --}}
                 </div>
             </div>
         </div>
@@ -111,7 +78,7 @@
                     <div class="col">
                         <form action="{{ route('prt.q.index') }}" method="get">
                             <div class="input-group input-group-lg">
-                                <input class="form-control h-auto" placeholder="Search..." name="q" id="q" type="text">
+                                <input class="form-control h-auto" placeholder="Search..." name="q" id="q" type="text" autocomplete="off" maxlength="300" required>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                             </div>
                         </form>

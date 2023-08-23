@@ -26,34 +26,60 @@
             </div>
         </section>
 
-        <div class="container py-5">
-            <div class="row my-5">
-                @foreach ($data as $item)
-                    <div class="col-lg-6 mb-6 mb-lg-0">
-                        <div class="recent-posts mb-5">
-                            <article class="post">
-                                <div class="row">
-                                    <div class="col-auto pe-0">
-                                        <div class="post-date">
-                                            <span class="day text-color-dark font-weight-extra-bold">{{ date('d', strtotime($item->created_at)) }}</span>
-                                            <span class="month">{{ date('M', strtotime($item->created_at)) }}</span>
+        @if (!empty($data))
+            <div class="container py-5">
+                <div class="row my-5">
+                    @foreach ($data as $item)
+                        <div class="col-lg-6 mb-6 mb-lg-0">
+                            <div class="recent-posts mb-5">
+                                <article class="post">
+                                    <div class="row">
+                                        <div class="col-auto pe-0">
+                                            <div class="post-date">
+                                                <span class="day text-color-dark font-weight-extra-bold">{{ date('d', strtotime($item->tanggal)) }}</span>
+                                                <span class="month">{{ date('M', strtotime($item->tanggal)) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col ps-1">
+                                            <h4 class="line-height-3"><a href="{{ route('prt.media.unduh.read', [$item->slug]) }}" class="text-decoration-none">{{ $item->judul }}</a></h4>
+                                            <div class="post-meta">
+                                                <span><i class="fa-solid fa-eye"></i> {{ \CID::toDot($item->views) }}</span>
+                                                <span><i class="fa-solid fa-cloud-arrow-down"></i> {{ \CID::toDot($item->downloads) }}</span>
+                                            </div>
+                                            <a href="{{ route('prt.media.unduh.read', [$item->slug]) }}" class="btn btn-light text-primary text-1 py-2 px-3 mb-1 mt-2"><strong>Read More</strong><i class="fas fa-chevron-right text-2 ps-2"></i></a>
                                         </div>
                                     </div>
-                                    <div class="col ps-1">
-                                        <h4 class="line-height-3"><a href="{{ route('prt.media.read', [$tags, $item->id]) }}" class="text-decoration-none">{{ $item->description }}</a></h4>
-                                        <div class="post-meta">
-                                            <span><i class="fa-solid fa-eye"></i> {{ \CID::toDot(rand(0, 5000)) }}</span>
-                                            <span><i class="fa-solid fa-cloud-arrow-down"></i> {{ \CID::toDot(rand(0, 5000)) }}</span>
-                                        </div>
-                                        <a href="{{ route('prt.media.read', [$tags, $item->id]) }}" class="btn btn-light text-uppercase text-primary text-1 py-2 px-3 mb-1 mt-2"><strong>VIEW MORE</strong><i class="fas fa-chevron-right text-2 ps-2"></i></a>
-                                    </div>
-                                </div>
-                            </article>
+                                </article>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- pagination --}}
+                <div class="text-center mb-5">
+                    @if ($data->currentPage() > 1)
+                        <a href="{{ $data->previousPageUrl() }}" class="btn btn-outline btn-gradient mb-2">Previous</a>
+                    @endif
+
+                    @if ($data->hasMorePages())
+                        <a href="{{ $data->nextPageUrl() }}" class="btn btn-outline btn-gradient mb-2">Next</a>
+                    @endif
+                </div>
+            </div>
+        @else
+            <div class="container">
+                <section class="http-error">
+                    <div class="row justify-content-center py-3">
+                        <div class="col-md-12 text-center">
+                            <div class="http-error-main">
+                                <h2>404!</h2>
+                                <p>We're sorry, but the page you were looking for doesn't exist.</p>
+                            </div>
                         </div>
                     </div>
-                @endforeach
+                </section>
             </div>
-        </div>
+        @endif
 
     </div>
 @endsection

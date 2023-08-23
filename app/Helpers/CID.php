@@ -2,6 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Models\PortalKategori;
+use App\Models\PortalPage;
+use App\Models\PortalSetup;
+use App\Models\PortalSosmed;
 use App\Models\SysLogAktifitas;
 use Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -168,6 +172,24 @@ class CID
             "message" => $msg,
         ];
         return response()->json($response, $code);
+    }
+    // Konvert Size Disk
+    public static function SizeDisk($bytes)
+    {
+        if ($bytes >= 1073741824) {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        } elseif ($bytes > 1) {
+            $bytes = $bytes . ' bytes';
+        } elseif ($bytes == 1) {
+            $bytes = $bytes . ' byte';
+        } else {
+            $bytes = '0 bytes';
+        }
+        return $bytes;
     }
 
     /*
@@ -596,5 +618,74 @@ class CID
             $tags = "package";
         }
         return $tags;
+    }
+    // Get Data Portal Setup
+    public static function getPortalSetup()
+    {
+        // cek data setup
+        $cekSetup = PortalSetup::first();
+        if ($cekSetup === null) {
+            // create
+            $value_1 = [
+                "uuid" => Str::uuid(),
+                "google_maps" => "https: //goo.gl/maps/HT6TtdJCVubJqRB69",
+                "alamat" => "Bidang Metrologi Legal, Balaraja, Kec. Balaraja, Kabupaten Tangerang, Banten 15610.",
+                "no_telp" => "(021) 123-4567",
+                "email" => "info@simegal.tangerangkab.go.id",
+                "link_survey" => "https: //s.id/survey-simegal-23",
+            ];
+            PortalSetup::create($value_1);
+        }
+        // data
+        $data = PortalSetup::first();
+        return $data;
+    }
+    // Get Data Portal Sosmed
+    public static function getSosmed()
+    {
+        // cek data sosmed
+        $cekSosmed = PortalSosmed::first();
+        if ($cekSosmed === null) {
+            // create
+            $sosmed = [
+                "Facebook",
+                "Twitter",
+                "Instagram",
+                "YouTube",
+            ];
+            $url = [
+                "https://www.facebook.com/",
+                "https://www.twitter.com/",
+                "https://www.instagram.com/",
+                "https://www.youtube.com/",
+            ];
+            $csosmed = count($sosmed);
+            for ($i = 0; $i < $csosmed; $i++) {
+                // value
+                $value_1 = [
+                    "uuid" => Str::uuid(),
+                    "sosmed" => $sosmed[$i],
+                    "url" => $url[$i],
+                ];
+                // save
+                PortalSosmed::create($value_1);
+            }
+        }
+
+        // update
+        $data = PortalSosmed::all();
+        return $data;
+    }
+    // Get Data Kategori
+    public static function getKategori($jenis)
+    {
+        $data = PortalKategori::whereJenis($jenis)->whereStatus("1")->orderBy("nama")->get();
+        return $data;
+    }
+    // Get Data Halaman
+    public static function getHalaman()
+    {
+        $data = PortalPage::whereStatus("1")->orderBy("judul", "ASC")->get();
+        return $data;
     }
 }

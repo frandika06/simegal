@@ -4,147 +4,103 @@ namespace App\Http\Controllers\WebBase\WebPortal;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Models\PortalGaleri;
+use App\Models\PortalUnduhan;
+use App\Models\PortalVideo;
 
 class MediaController extends Controller
 {
-    // index
-    public function index(Request $request, $tags)
-    {
-        $ar_tags = [
-            "unduhan",
-            "galeri",
-            "video",
-        ];
-        if (!in_array($tags, $ar_tags)) {
-            return \abort(404);
-        }
-
-        if ($tags == "unduhan") {
-            return $this->indexUnduhan($request, $tags);
-        } elseif ($tags == "galeri") {
-            return $this->indexGaleri($request, $tags);
-        } elseif ($tags == "video") {
-            return $this->indexVideo($request, $tags);
-        }
-    }
-    private function indexUnduhan($request, $tags)
+    // tagsUnduhan
+    public function tagsUnduhan($tags = null)
     {
         $UcTags = CID::UcSlug($tags);
-        $endpoint = "https://api.slingacademy.com/v1/sample-data/blog-posts?limit=30";
-        $response = Http::get($endpoint);
-        $posts = $response->object();
-        $data = $posts->blogs;
+        if ($tags !== null) {
+            $data = PortalUnduhan::whereStatus("Published")
+                ->whereRaw("kategori LIKE '%$tags%'")
+                ->orderBy("created_at", "DESC")
+                ->simplePaginate(6);
+        } else {
+            $data = PortalUnduhan::whereStatus("Published")
+                ->orderBy("created_at", "DESC")
+                ->simplePaginate(6);
+        }
         return view('pages.portal.media.index_unduhan', compact(
             'tags',
             'UcTags',
             'data'
         ));
     }
-    private function indexGaleri($request, $tags)
+    // tagsUnduhan
+    public function readUnduhan($slug)
     {
-        $UcTags = CID::UcSlug($tags);
-        $endpoint = "https://api.slingacademy.com/v1/sample-data/blog-posts?limit=2";
-        $response = Http::get($endpoint);
-        $posts = $response->object();
-        $data = $posts->blogs;
-        // IMG GALLERI 1
-        $endpoint1 = "https://api.slingacademy.com/v1/sample-data/photos?offset=0&limit=3";
-        $response1 = Http::get($endpoint1);
-        $images1 = $response1->object();
-        $images1 = $images1->photos;
-        // IMG GALLERI 2
-        $endpoint2 = "https://api.slingacademy.com/v1/sample-data/photos?offset=12&limit=3";
-        $response2 = Http::get($endpoint2);
-        $images2 = $response2->object();
-        $images2 = $images2->photos;
-        return view('pages.portal.media.index_galeri', compact(
-            'tags',
-            'UcTags',
+        $UcTags = CID::UcSlug($slug);
+        $data = PortalUnduhan::whereStatus("Published")
+            ->whereSlug($slug)
+            ->firstOrFail();
+
+        // update views
+        $views = $data->views + 1;
+        $data->update(["views" => $views]);
+        return view('pages.portal.media.read_unduhan', compact(
             'data',
-            'images1',
-            'images2',
+            'UcTags'
         ));
+
     }
-    private function indexVideo($request, $tags)
+
+    // indexGaleri
+    public function indexGaleri()
     {
-        $UcTags = CID::UcSlug($tags);
-        $endpoint = "https://api.slingacademy.com/v1/sample-data/blog-posts?limit=4";
-        $response = Http::get($endpoint);
-        $posts = $response->object();
-        $data = $posts->blogs;
-        return view('pages.portal.media.index_video', compact(
-            'tags',
-            'UcTags',
+        $data = PortalGaleri::whereStatus("Published")
+            ->orderBy("created_at", "DESC")
+            ->simplePaginate(3);
+        return view('pages.portal.media.index_galeri', compact(
             'data'
         ));
     }
+    // readGaleri
+    public function readGaleri($slug)
+    {
+        $UcTags = CID::UcSlug($slug);
+        $data = PortalGaleri::whereStatus("Published")
+            ->whereSlug($slug)
+            ->firstOrFail();
 
-    // readMedia
-    public function readMedia(Request $request, $tags, $slug)
-    {
-        $ar_tags = [
-            "unduhan",
-            "galeri",
-            "video",
-        ];
-        if (!in_array($tags, $ar_tags)) {
-            return \abort(404);
-        }
-
-        if ($tags == "unduhan") {
-            return $this->readMediaUnduhan($request, $tags, $slug);
-        } elseif ($tags == "galeri") {
-            return $this->readMediaGaleri($request, $tags, $slug);
-        } elseif ($tags == "video") {
-            return $this->readMediaVideo($request, $tags, $slug);
-        }
-    }
-    private function readMediaUnduhan($request, $tags, $slug)
-    {
-        $UcTags = CID::UcSlug($tags);
-        $endpoint = "https://api.slingacademy.com/v1/sample-data/blog-posts/" . $slug;
-        $response = Http::get($endpoint);
-        $posts = $response->object();
-        $data = $posts->blog;
-        return view('pages.portal.media.read_unduhan', compact(
-            'data',
-            'tags',
-            'UcTags'
-        ));
-    }
-    private function readMediaGaleri($request, $tags, $slug)
-    {
-        $UcTags = CID::UcSlug($tags);
-        $endpoint = "https://api.slingacademy.com/v1/sample-data/blog-posts/" . $slug;
-        $response = Http::get($endpoint);
-        $posts = $response->object();
-        $data = $posts->blog;
-        // IMG GALLERI 1
-        $offset = rand(0, 100);
-        $endpoint1 = "https://api.slingacademy.com/v1/sample-data/photos?offset=$offset&limit=12";
-        $response1 = Http::get($endpoint1);
-        $images1 = $response1->object();
-        $images1 = $images1->photos;
+        // update views
+        $views = $data->views + 1;
+        $data->update(["views" => $views]);
         return view('pages.portal.media.read_galeri', compact(
             'data',
-            'tags',
-            'UcTags',
-            'images1'
-        ));
-    }
-    private function readMediaVideo($request, $tags, $slug)
-    {
-        $UcTags = CID::UcSlug($tags);
-        $endpoint = "https://api.slingacademy.com/v1/sample-data/blog-posts/" . $slug;
-        $response = Http::get($endpoint);
-        $posts = $response->object();
-        $data = $posts->blog;
-        return view('pages.portal.media.read_video', compact(
-            'data',
-            'tags',
             'UcTags'
         ));
+
+    }
+
+    // indexVideo
+    public function indexVideo()
+    {
+        $data = PortalVideo::whereStatus("Published")
+            ->orderBy("created_at", "DESC")
+            ->simplePaginate(6);
+        return view('pages.portal.media.index_video', compact(
+            'data'
+        ));
+    }
+    // readVideo
+    public function readVideo($slug)
+    {
+        $UcTags = CID::UcSlug($slug);
+        $data = PortalVideo::whereStatus("Published")
+            ->whereSlug($slug)
+            ->firstOrFail();
+
+        // update views
+        $views = $data->views + 1;
+        $data->update(["views" => $views]);
+        return view('pages.portal.media.read_video', compact(
+            'data',
+            'UcTags'
+        ));
+
     }
 }

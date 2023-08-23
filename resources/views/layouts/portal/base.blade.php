@@ -1,3 +1,8 @@
+@php
+    $setup = \CID::getPortalSetup();
+    $sosmed = \CID::getSosmed();
+    $pages = \CID::getHalaman();
+@endphp
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-layout="twocolumn" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
 
@@ -91,10 +96,17 @@
                 <div class="row py-5">
                     <div class="col text-center">
                         <ul class="footer-social-icons social-icons social-icons-clean social-icons-big social-icons-opacity-light social-icons-icon-light mt-1">
-                            <li class="social-icons-facebook"><a href="http://www.facebook.com/" target="_blank" title="Facebook"><i class="fab fa-facebook-f text-2"></i></a></li>
-                            <li class="social-icons-twitter"><a href="http://www.twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter text-2"></i></a></li>
-                            <li class="social-icons-instagram"><a href="http://www.instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram text-2"></i></a></li>
-                            <li class="social-icons-youtube"><a href="http://www.youtube.com/" target="_blank" title="YouTube"><i class="fab fa-youtube text-2"></i></a></li>
+                            @foreach ($sosmed as $item)
+                                @if ($item->sosmed == 'Facebook')
+                                    <li class="social-icons-facebook"><a href="{!! $item->url !!}" target="_blank" title="Facebook"><i class="fab fa-facebook-f text-2"></i></a></li>
+                                @elseif($item->sosmed == 'Twitter')
+                                    <li class="social-icons-twitter"><a href="{!! $item->url !!}" target="_blank" title="Twitter"><i class="fab fa-twitter text-2"></i></a></li>
+                                @elseif($item->sosmed == 'Instagram')
+                                    <li class="social-icons-instagram"><a href="{!! $item->url !!}" target="_blank" title="Instagram"><i class="fab fa-instagram text-2"></i></a></li>
+                                @elseif($item->sosmed == 'YouTube')
+                                    <li class="social-icons-youtube"><a href="{!! $item->url !!}" target="_blank" title="YouTube"><i class="fab fa-youtube text-2"></i></a></li>
+                                @endif
+                            @endforeach
                         </ul>
                     </div>
                 </div>
@@ -104,9 +116,9 @@
                     <div class="row py-4">
                         <div class="col-lg-6 text-center text-lg-start mb-2 mb-lg-0">
                             <p>
-                                <span class="pe-0 pe-md-3 d-block d-md-inline-block"><i class="far fa-dot-circle text-color-white top-1 p-relative"></i><span class="text-color-light opacity-7 ps-1">Jl. Lorem Ipsum Dolor</span></span>
-                                <span class="pe-0 pe-md-3 d-block d-md-inline-block"><i class="fab fa-whatsapp text-color-white top-1 p-relative"></i><a href="tel:1234567890" class="text-color-light opacity-7 ps-1">(021) 123-4567</a></span>
-                                <span class="pe-0 pe-md-3 d-block d-md-inline-block"><i class="far fa-envelope text-color-white top-1 p-relative"></i><a href="mailto:mail@example.com" class="text-color-light opacity-7 ps-1">info@simegal.com</a></span>
+                                <span class="pe-0 pe-md-3 d-block d-md-inline-block"><i class="far fa-dot-circle text-color-white top-1 p-relative"></i><span class="text-color-light opacity-7 ps-1">{{ $setup->alamat }}</span></span>
+                                <span class="pe-0 pe-md-3 d-block d-md-inline-block"><i class="fab fa-whatsapp text-color-white top-1 p-relative"></i><a href="tel:{{ $setup->no_telp }}" class="text-color-light opacity-7 ps-1">{{ $setup->no_telp }}</a></span>
+                                <span class="pe-0 pe-md-3 d-block d-md-inline-block"><i class="far fa-envelope text-color-white top-1 p-relative"></i><a href="mailto:{{ $setup->email }}" class="text-color-light opacity-7 ps-1">{{ $setup->email }}</a></span>
                             </p>
                         </div>
                         <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end mb-4 mb-lg-0 pt-4 pt-lg-0">

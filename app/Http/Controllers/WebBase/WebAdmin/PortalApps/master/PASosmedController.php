@@ -91,11 +91,11 @@ class PASosmedController extends Controller
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
+            CID::addToLogAktifitas($request, $log);
         }
 
         // save
         if ($save_1) {
-            CID::addToLogAktifitas($request, $log);
             // alert success
             alert()->success('Success', "Berhasil Mengubah Data!");
             return \redirect()->route('prt.apps.mst.sosmed.index');

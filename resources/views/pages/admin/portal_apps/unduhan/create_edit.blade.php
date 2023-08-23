@@ -89,6 +89,7 @@
                                             <label class="col-sm-3 col-form-label">File</label>
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" id="file" accept=".png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.zip,.rar">
+                                                <p class="text-danger">Ukuran File Maksimal 1MB.</p>
                                                 @error('file')
                                                     <div id="fileFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -113,6 +114,7 @@
                                             <label class="col-sm-3 col-form-label">File <span class="wajib">*</span></label>
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" id="file" required accept=".png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.zip,.rar">
+                                                <p class="text-danger">Ukuran File Maksimal 1MB.</p>
                                                 @error('file')
                                                     <div id="fileFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror

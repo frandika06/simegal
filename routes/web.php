@@ -6,6 +6,7 @@ use App\Http\Controllers\WebBase\WebAdmin\configs\BaseAppsController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\dashboard\PADashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\kontak\PAPesanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\master\PAKategoriController;
+use App\Http\Controllers\WebBase\WebAdmin\PortalApps\master\PASetupController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\master\PASosmedController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PABannerController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAFAQController;
@@ -39,6 +40,7 @@ use Illuminate\Support\Facades\Route;
 | Portal
 |--------------------------------------------------------------------------
  */
+
 Route::group(['middleware' => ['WebFECounter']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('prt.home.index');
     Route::group(['prefix' => 'portal'], function () {
@@ -49,9 +51,26 @@ Route::group(['middleware' => ['WebFECounter']], function () {
         Route::get('/page/{slug}', [PostController::class, 'staticPage'])->name('prt.page.index');
         // search
         Route::get('/search', [PostController::class, 'searchPost'])->name('prt.q.index');
-        // media
-        Route::get('/media/{tags}', [MediaController::class, 'index'])->name('prt.media.index');
-        Route::get('/media/{tags}/{slug}', [MediaController::class, 'readMedia'])->name('prt.media.read');
+        // media-unduhan
+        Route::group(['prefix' => 'unduhan'], function () {
+            Route::get('/{tags?}', [MediaController::class, 'tagsUnduhan'])->name('prt.media.unduh.tags');
+            Route::get('/read/{slug}', [MediaController::class, 'readUnduhan'])->name('prt.media.unduh.read');
+        });
+        // media-galeri
+        Route::group(['prefix' => 'galeri'], function () {
+            Route::get('/', [MediaController::class, 'indexGaleri'])->name('prt.media.gallery.index');
+            Route::get('/read/{slug}', [MediaController::class, 'readGaleri'])->name('prt.media.gallery.read');
+        });
+        // media-video
+        Route::group(['prefix' => 'video'], function () {
+            Route::get('/', [MediaController::class, 'indexVideo'])->name('prt.media.video.index');
+            Route::get('/read/{slug}', [MediaController::class, 'readVideo'])->name('prt.media.video.read');
+        });
+
+        // Route::get('/media/{tags}', [MediaController::class, 'index'])->name('prt.media.index');
+        // Route::get('/media/{tags}/{slug}', [MediaController::class, 'readMedia'])->name('prt.media.read');
+        // kirim-pesan
+        Route::post('/kirim-pesan', [PostController::class, 'kirimPesan'])->name('prt.kirim.pesan');
     });
 
     // GUEST ONLY
@@ -120,6 +139,11 @@ Route::group(['middleware' => ['pbh', 'auth']], function () {
             Route::group(['prefix' => 'sosmed'], function () {
                 Route::get('/', [PASosmedController::class, 'index'])->name('prt.apps.mst.sosmed.index');
                 Route::put('/', [PASosmedController::class, 'update'])->name('prt.apps.mst.sosmed.update');
+            });
+            // portal setup
+            Route::group(['prefix' => 'setup'], function () {
+                Route::get('/', [PASetupController::class, 'index'])->name('prt.apps.mst.setup.index');
+                Route::put('/', [PASetupController::class, 'update'])->name('prt.apps.mst.setup.update');
             });
         });
         // portal postingan

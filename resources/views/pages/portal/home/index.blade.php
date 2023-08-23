@@ -15,7 +15,7 @@
             <div class="owl-stage-outer">
                 <div class="owl-stage">
                     {{-- Carousel Slide 1 --}}
-                    <div class="owl-item position-relative" style="background-image: url({{ asset('assets-portal/dist/img/parallax/parallax-04.png') }}); background-size: cover; background-position: center;">
+                    {{-- <div class="owl-item position-relative" style="background-image: url({{ asset('assets-portal/dist/img/parallax/parallax-04.png') }}); background-size: cover; background-position: center;">
                         <div class="container position-relative z-index-1 h-100">
                             <div class="row justify-content-center align-items-center h-100">
                                 <div class="col-lg-7">
@@ -27,15 +27,24 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @foreach ($images1 as $item)
-                        <div class="owl-item position-relative" style="background-image: url({{ $item->url }}); background-size: cover; background-position: center;">
+                    </div> --}}
+                    @foreach ($PortalBanner as $item)
+                        <div class="owl-item position-relative" style="background-image: url({{ \CID::urlImg($item->thumbnails) }}); background-size: cover; background-position: center;">
                             <div class="container position-relative z-index-1 h-100">
                                 <div class="row justify-content-center align-items-center h-100">
                                     <div class="col-lg-7">
                                         <div class="d-flex flex-column align-items-center">
-                                            <h2 class="text-color-white font-weight-extra-bold text-10 text-md-12-13 line-height-1 text-center mb-2 appear-animation" data-appear-animation="blurIn" data-appear-animation-delay="500" data-plugin-options="{'minWindowWidth': 0}">{{ $item->title }}</h2>
-                                            <p class="text-4-5 text-color-white font-weight-light text-center mb-4" data-plugin-animated-letters data-plugin-options="{'startDelay': 1000, 'minWindowWidth': 0, 'animationSpeed': 30}">{{ $item->description }}</p>
+                                            @if ($item->judul != '')
+                                                <h2 class="text-color-{!! \Str::lower($item->warna_text) !!} font-weight-extra-bold text-10 text-md-12-13 line-height-1 text-center mb-2 appear-animation" data-appear-animation="blurIn" data-appear-animation-delay="500" data-plugin-options="{'minWindowWidth': 0}">
+                                                    {{ $item->judul }}</h2>
+                                            @endif
+                                            @if ($item->deskripsi != '')
+                                                <p class="text-4-5 text-color-{!! \Str::lower($item->warna_text) !!} font-weight-light text-center mb-4" data-plugin-animated-letters data-plugin-options="{'startDelay': 1000, 'minWindowWidth': 0, 'animationSpeed': 30}">{{ $item->deskripsi }}</p>
+                                            @endif
+                                            @if ($item->url != '')
+                                                <a href="{!! $item->url !!}" class="btn btn-light btn-outline btn-rounded text-color-light text-color-hover-dark font-weight-bold text-3 btn-px-5 py-3 appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="2500"
+                                                    data-plugin-options="{'minWindowWidth': 0}">Informasi Lebih Lengkap</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -89,27 +98,33 @@
                     </div>
                 </div>
                 <div class="row justify-content-center recent-posts appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="200">
-                    @foreach ($posts->blogs as $item)
-                        <div class="col-sm-8 col-md-4 mb-4 mb-md-0">
+                    @foreach ($PortalPost as $item)
+                        @php
+                            $tags = \explode(',', $item->kategori);
+                        @endphp
+                        <div class="col-sm-8 col-md-4 mb-5">
                             <article>
                                 <div class="row">
                                     <div class="col">
-                                        <a href="{{ route('prt.post.read', ['berita', $item->id]) }}" class="text-decoration-none">
-                                            <img src="{{ $item->photo_url }}" class="img-fluid hover-effect-2 mb-3" alt="" />
+                                        <a href="{{ route('prt.post.read', [$tags[0], $item->slug]) }}" class="text-decoration-none">
+                                            <img src="{{ \CID::urlImg($item->thumbnails) }}" class="img-fluid hover-effect-2 mb-3" alt="" />
                                         </a>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <p class="text-color-primary text-2 mb-1">{{ \Str::upper($item->category) }}</p>
-                                        <h4 class="line-height-5 ls-0"><a href="{{ route('prt.post.read', ['berita', $item->id]) }}" class="text-dark text-decoration-none">{{ $item->title }}</a></h4>
-                                        <p class="text-color-dark opacity-7 mb-3">{{ $item->description }}</p>
-                                        <a href="{{ route('prt.post.read', ['berita', $item->id]) }}" class="read-more text-color-primary font-weight-semibold text-2">VIEW MORE <i class="fas fa-chevron-right text-3 ms-2"></i></a>
+                                        <p class="text-color-primary text-2 mb-1">{{ \Str::upper($tags[0]) }}</p>
+                                        <h4 class="line-height-5 ls-0"><a href="{{ route('prt.post.read', [$tags[0], $item->slug]) }}" class="text-dark text-decoration-none">{{ $item->judul }}</a></h4>
+                                        <p class="text-color-dark opacity-7 mb-3">{{ \Str::limit($item->deskripsi, 50, '...') }}</p>
+                                        <a href="{{ route('prt.post.read', [$tags[0], $item->slug]) }}" class="read-more text-color-primary font-weight-semibold text-2">Read More <i class="fas fa-chevron-right text-3 ms-2"></i></a>
                                     </div>
                                 </div>
                             </article>
                         </div>
                     @endforeach
+                </div>
+                <div class="text-center">
+                    <a href="{{ route('prt.post.index', ['berita']) }}" class="btn btn-outline btn-gradient mb-2">Load More</a>
                 </div>
             </div>
         </section>

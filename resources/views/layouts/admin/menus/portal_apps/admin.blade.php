@@ -19,6 +19,7 @@
                 <ul aria-expanded="false">
                     <li><a href="{{ route('prt.apps.mst.tags.index') }}">Kategori</a></li>
                     <li><a href="{{ route('prt.apps.mst.sosmed.index') }}">Sosial Media</a></li>
+                    <li><a href="{{ route('prt.apps.mst.setup.index') }}">Setup Portal</a></li>
                 </ul>
             </li>
             <li>
