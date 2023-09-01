@@ -152,8 +152,8 @@ class PAFotoController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data Foto Galeri UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data Foto Galeri UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

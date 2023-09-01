@@ -154,8 +154,8 @@ class PAPostinganController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menambahkan Data Postingan UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menambahkan Data Postingan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -268,8 +268,8 @@ class PAPostinganController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Postingan UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Postingan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -304,8 +304,8 @@ class PAPostinganController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data Postingan UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data Postingan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

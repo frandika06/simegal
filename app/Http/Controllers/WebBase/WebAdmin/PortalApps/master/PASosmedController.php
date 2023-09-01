@@ -86,8 +86,8 @@ class PASosmedController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Master Sosial Media UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Master Sosial Media UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

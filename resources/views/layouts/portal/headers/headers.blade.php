@@ -145,7 +145,7 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="#">
+                                                        <a class="dropdown-item" href="{{ route('prt.reg.index') }}">
                                                             Register
                                                         </a>
                                                     </li>

@@ -98,8 +98,8 @@ class PAProfileController extends Controller
                 "value" => array($value_1, $value_2),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Profile UUID= " . $uuid_profile,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Profile UUID= " . $uuid_profile,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

@@ -122,8 +122,8 @@ class PAFAQController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menambahkan Data FAQ UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menambahkan Data FAQ UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -201,8 +201,8 @@ class PAFAQController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data FAQ UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data FAQ UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -237,8 +237,8 @@ class PAFAQController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data FAQ UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data FAQ UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

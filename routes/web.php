@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\WebBase\WebAdmin\auth\LoginController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\PAProfileController;
+use App\Http\Controllers\WebBase\WebAdmin\auth\RegisterController;
 use App\Http\Controllers\WebBase\WebAdmin\configs\BaseAppsController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\dashboard\PADashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\kontak\PAPesanController;
@@ -75,6 +76,8 @@ Route::group(['middleware' => ['WebFECounter']], function () {
         Route::group(['prefix' => 'auth'], function () {
             Route::get('/login', [LoginController::class, 'index'])->name('prt.lgn.index');
             Route::post('/login', [LoginController::class, 'store'])->name('prt.lgn.post');
+            Route::get('/register', [RegisterController::class, 'index'])->name('prt.reg.index');
+            Route::post('/register', [RegisterController::class, 'store'])->name('prt.reg.post');
             // Route::get('/reset', [ResetController::class, 'index'])->name('prt.rst.index');
             // Route::post('/reset', [ResetController::class, 'store'])->name('prt.rst.post');
             // Route::get('/reset/{uuid}', [ResetController::class, 'edit'])->name('prt.rst.edit');

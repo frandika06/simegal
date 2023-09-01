@@ -112,8 +112,8 @@ class PAPesanController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data Pesan UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data Pesan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

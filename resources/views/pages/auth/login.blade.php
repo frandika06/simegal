@@ -69,7 +69,7 @@
                                 <span class="bg-light px-4 position-absolute left-50pct top-50pct transform3dxy-n50">atau</span>
                             </div>
                             <div class="form-group col">
-                                <a href="#" class="btn btn-success btn-modern w-100 text-uppercase rounded-0 font-weight-bold text-3 py-3">Register</a>
+                                <a href="{{ route('prt.reg.index') }}" class="btn btn-default btn-modern w-100 text-uppercase rounded-0 font-weight-bold text-3 py-3">Register</a>
                             </div>
                         </div>
                     </form>

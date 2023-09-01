@@ -77,8 +77,8 @@ class PASetupController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Master Setup Portal UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Master Setup Portal UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

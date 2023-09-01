@@ -146,8 +146,8 @@ class PAVideoController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menambahkan Data Video UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menambahkan Data Video UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -249,8 +249,8 @@ class PAVideoController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Video UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Video UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -285,8 +285,8 @@ class PAVideoController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data Video UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data Video UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

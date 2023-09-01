@@ -148,8 +148,8 @@ class PAHalamanController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menambahkan Data Halaman UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menambahkan Data Halaman UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -253,8 +253,8 @@ class PAHalamanController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Halaman UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Halaman UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -289,8 +289,8 @@ class PAHalamanController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data Halaman UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data Halaman UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

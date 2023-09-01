@@ -565,21 +565,43 @@ class CID
     // Add Log Activity
     public static function addToLogAktifitas($request, $detail)
     {
-        // User
-        $user = Auth::user();
-        // Log
-        $log = [];
-        $log['uuid'] = Str::uuid();
-        $log['uuid_profile'] = $user->uuid_profile;
-        $log['apps'] = $detail['apps'];
-        $log['role'] = $user->role;
-        $log['subjek'] = $detail['subjek'];
-        $log['method'] = $request->method();
-        $log['ip'] = $request->ip();
-        $log['agent'] = $request->header('user-agent');
-        $log['url'] = $request->fullUrl();
-        $log['aktifitas'] = json_encode($detail['aktifitas']);
-        $log['device'] = $detail['device'];
+        if (Auth::check()) {
+            // User
+            $user = Auth::user();
+            // Log
+            $log = [];
+            $log['uuid'] = Str::uuid();
+            $log['uuid_profile'] = $user->uuid_profile;
+            $log['apps'] = $detail['apps'];
+            $log['role'] = $user->role;
+            $log['subjek'] = $detail['subjek'];
+            $log['method'] = $request->method();
+            $log['ip'] = $request->ip();
+            $log['agent'] = $request->header('user-agent');
+            $log['url'] = $request->fullUrl();
+            $log['aktifitas'] = json_encode($detail['aktifitas']);
+            $log['device'] = $detail['device'];
+            if (isset($detail['dashboard'])) {
+                $log['dashboard'] = $detail['dashboard'];
+            }
+        } else {
+            // Log
+            $log = [];
+            $log['uuid'] = Str::uuid();
+            $log['uuid_profile'] = $detail['uuid_profile'];
+            $log['apps'] = $detail['apps'];
+            $log['role'] = $detail['role'];
+            $log['subjek'] = $detail['subjek'];
+            $log['method'] = $request->method();
+            $log['ip'] = $request->ip();
+            $log['agent'] = $request->header('user-agent');
+            $log['url'] = $request->fullUrl();
+            $log['aktifitas'] = json_encode($detail['aktifitas']);
+            $log['device'] = $detail['device'];
+            if (isset($detail['dashboard'])) {
+                $log['dashboard'] = $detail['dashboard'];
+            }
+        }
         SysLogAktifitas::create($log);
     }
     // Add Log Activity
@@ -619,6 +641,12 @@ class CID
         }
         return $tags;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PORTAL APPS
+    |--------------------------------------------------------------------------
+     */
     // Get Data Portal Setup
     public static function getPortalSetup()
     {
@@ -687,5 +715,27 @@ class CID
     {
         $data = PortalPage::whereStatus("1")->orderBy("judul", "ASC")->get();
         return $data;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENJADWALAN DAN PENUGASAN APPS
+    |--------------------------------------------------------------------------
+     */
+    // Generate Kode Perusahaan
+    public static function genKodePerusahaan($jp)
+    {
+        if ($jp == "Perusahaan") {
+            // Perusahaan
+            $kode = "1";
+            $kode .= date('ny');
+            $kode .= "-" . Str::upper(Self::gencode(2));
+        } else {
+            // Pemilik UTTP
+            $kode = "2";
+            $kode .= date('ny');
+            $kode .= "-" . Str::upper(Self::gencode(2));
+        }
+        return $kode;
     }
 }

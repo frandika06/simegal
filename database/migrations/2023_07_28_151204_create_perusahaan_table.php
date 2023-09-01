@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('perusahaan', function (Blueprint $table) {
             $table->string('uuid', 100)->primary();
             $table->string('kode_perusahaan', 100)->unique();
-            $table->string('jenis_perusahaan', 255)->nullable();
-            $table->string('nama_perusahaan', 255)->nullable();
-            $table->string('npwp', 255)->nullable();
-            $table->string('email', 255)->nullable();
-            $table->string('no_telp_1', 255)->nullable();
-            $table->string('no_telp_2', 255)->nullable();
+            $table->string('jenis_perusahaan', 100)->nullable();
+            $table->string('nama_perusahaan', 100)->nullable();
+            $table->string('nama_pic', 100)->nullable();
+            $table->string('npwp', 100)->nullable();
+            $table->string('email', 100)->nullable();
+            $table->string('no_telp_1', 100)->nullable();
+            $table->string('no_telp_2', 100)->nullable();
             $table->text('file_npwp')->nullable();
             $table->enum('verifikasi', ["0", "1"])->default("0");
             $table->enum('status', ["0", "1"])->default("1");

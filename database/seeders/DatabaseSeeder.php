@@ -35,5 +35,10 @@ class DatabaseSeeder extends Seeder
         $this->call(PortalPesanSeeder::class);
         // generate FAQ by API
         $this->call(PortalFAQSeeder::class);
+        /*
+        | PENJADWALAN DAN PENUGASAN APPS
+         */
+        // general generate
+        $this->call(PerusahaanSeeder::class);
     }
 }

@@ -24,6 +24,7 @@ class CreateSysLogAktifitasTable extends Migration
             $table->string('agent', 255)->nullable();
             $table->text('url')->nullable();
             $table->json('aktifitas')->nullable();
+            $table->enum('dashboard', ["0", "1"])->default(0);
             $table->enum('device', ['mobile', 'web'])->nullable();
             $table->timestamps();
         });

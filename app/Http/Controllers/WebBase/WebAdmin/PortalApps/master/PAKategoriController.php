@@ -125,17 +125,17 @@ class PAKategoriController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mnambahkan Data Master Kategori UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menambahkan Data Master Kategori UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Success', "Berhasil Mnambahkan Data!");
+            alert()->success('Success', "Berhasil Menambahkan Data!");
             return \redirect()->route('prt.apps.mst.tags.index');
         } else {
-            alert()->error('Error', "Gagal Mnambahkan Data!");
+            alert()->error('Error', "Gagal Menambahkan Data!");
             return \back()->withInput($request->all());
         }
     }
@@ -214,8 +214,8 @@ class PAKategoriController extends Controller
                 "value" => array($value_1),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Data Master Kategori UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Data Master Kategori UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -250,8 +250,8 @@ class PAKategoriController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Menghapus Data Master Kategori UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Menghapus Data Master Kategori UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -310,8 +310,8 @@ class PAKategoriController extends Controller
                 "value" => array($data),
             ];
             $log = [
-                "apps" => "SIMEGAL",
-                "subjek" => "Portal Apps | Mengubah Status Master Kategori UUID= " . $uuid,
+                "apps" => "Portal Apps",
+                "subjek" => "Mengubah Status Master Kategori UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
