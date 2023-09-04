@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('no_telp_1', 100)->nullable();
             $table->string('no_telp_2', 100)->nullable();
             $table->text('file_npwp')->nullable();
+            $table->text('foto')->nullable();
             $table->enum('verifikasi', ["0", "1"])->default("0");
             $table->enum('status', ["0", "1"])->default("1");
             $table->string('uuid_verifikasi', 100)->nullable();

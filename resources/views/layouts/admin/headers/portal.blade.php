@@ -108,7 +108,7 @@
                                     <div class="card-header p-3">
                                         <ul class="d-flex align-items-center">
                                             <li>
-                                                <img src="{{ asset('assets-admin/dist/images/user.jpg') }}" class="ms-0" alt="">
+                                                <img src="{{ \CID::pp() }}" class="ms-0" alt="{{ \CID::DataPP()['nama'] }}">
                                             </li>
                                             <li class="ms-2">
                                                 <h4 class="mb-0">{{ \CID::DataPP()['nama'] }}</h4>

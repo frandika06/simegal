@@ -25,6 +25,9 @@ class BaseAppsController extends Controller
             } else {
                 return \abort(404);
             }
+        } elseif ($role == "Perusahaan") {
+            // Perusahaan
+            return \redirect()->route('pdp.apps.home.index');
         } else {
             return \abort(404);
         }

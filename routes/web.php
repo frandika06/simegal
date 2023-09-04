@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\WebBase\WebAdmin\auth\LoginController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\PAProfileController;
+use App\Http\Controllers\WebBase\WebAdmin\auth\PDPProfileController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\RegisterController;
 use App\Http\Controllers\WebBase\WebAdmin\configs\BaseAppsController;
+use App\Http\Controllers\WebBase\WebAdmin\PdpApps\dashboard\PDPDashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\dashboard\PADashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\kontak\PAPesanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\master\PAKategoriController;
@@ -224,6 +226,23 @@ Route::group(['middleware' => ['pbh', 'auth']], function () {
         // portal faq
         Route::group(['prefix' => 'statistik'], function () {
             Route::get('/', [PAStatistikController::class, 'index'])->name('prt.apps.stat.index');
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENJADWALAN DAN PENUGASAN (PDP) APPS
+    | PATH : WebBase/WebAdmin/PdpApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'pdp-apps'], function () {
+        // dashboard
+        Route::get('/', [PDPDashboardController::class, 'index'])->name('pdp.apps.home.index');
+        // auth
+        // PATH : WebBase/WebAdmin/auth
+        Route::group(['prefix' => 'auth'], function () {
+            Route::get('/profile', [PDPProfileController::class, 'index'])->name('pdp.apps.auth.profile.index');
+            Route::put('/profile', [PDPProfileController::class, 'update'])->name('pdp.apps.auth.profile.update');
         });
     });
 });

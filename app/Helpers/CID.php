@@ -64,8 +64,13 @@ class CID
 
         if ($role == "Perusahaan") {
             // perusahaan
-            $nama = $auth->RelPerusahaan->nama_perusahaan;
-            $pp = "https://ui-avatars.com/api/?name=$nama";
+            $foto = $auth->RelPerusahaan->foto;
+            if ($foto != "") {
+                return Self::urlImg($foto);
+            } else {
+                $nama = $auth->RelPerusahaan->nama_perusahaan;
+                $pp = "https://ui-avatars.com/api/?name=$nama";
+            }
         } else {
             // pegawai dan admin
             $foto = $auth->RelPegawai->foto;
@@ -87,14 +92,28 @@ class CID
         if ($role == "Perusahaan") {
             // perusahaan
             $nama = $auth->RelPerusahaan->nama_perusahaan;
+            $email = $auth->RelPerusahaan->email;
+            $no_telp = $auth->RelPerusahaan->no_telp_1;
+            $npwp = $auth->RelPerusahaan->npwp;
+            $kode = $auth->RelPerusahaan->kode_perusahaan;
+            $data = [
+                "role" => $role,
+                "nama" => $nama,
+                "email" => $email,
+                "npwp" => $npwp,
+                "kode" => $kode,
+            ];
         } else {
             // pegawai dan admin
             $nama = $auth->RelPegawai->nama_lengkap;
+            $email = $auth->RelPegawai->email;
+            $no_telp = $auth->RelPegawai->no_telp;
+            $data = [
+                "role" => $role,
+                "nama" => $nama,
+                "email" => $email,
+            ];
         }
-        $data = [
-            "role" => $role,
-            "nama" => $nama,
-        ];
         return $data;
     }
     // Untuk Jenis Kelamin
