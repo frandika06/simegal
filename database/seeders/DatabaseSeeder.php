@@ -38,7 +38,9 @@ class DatabaseSeeder extends Seeder
         /*
         | PENJADWALAN DAN PENUGASAN APPS
          */
-        // general generate
+        // generate perusahaan
         $this->call(PerusahaanSeeder::class);
+        // generate alamat perusahaan
+        $this->call(AlamatPerusahaanSeeder::class);
     }
 }

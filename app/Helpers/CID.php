@@ -566,6 +566,35 @@ class CID
             return "0";
         }
     }
+    // Untuk Upload File & Gambar
+    public static function UpImgPdf($request, $field, $path)
+    {
+        $ext = strtolower($request->file($field)->extension());
+        $ext_array = array('jpg', 'jpeg', 'png', 'pdf');
+        if (in_array($ext, $ext_array)) {
+            $file = $request->file($field);
+            $filename = $file->getClientOriginalName();
+            $name = ucwords(pathinfo($filename, PATHINFO_FILENAME));
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $size = $file->getSize();
+            $file_name = Str::uuid() . "-" . rand(1000, 9999999999) . "." . Str::lower($ext);
+            $file_save = $path . "/" . $file_name;
+            if (!is_dir(storage_path('app/public/' . $path))) {
+                Storage::disk('public')->makeDirectory($path);
+            }
+            Storage::disk('public')->putFileAs($path, $file, $file_name);
+            $data = [
+                "judul_file" => $name,
+                "nama_file" => $file_name,
+                "tipe_file" => Str::lower($ext),
+                "ukuran_file" => $size,
+                "url" => $file_save,
+            ];
+            return $data;
+        } else {
+            return "0";
+        }
+    }
     // mengatasi path traversal
     public static function sanitize_input($input)
     {

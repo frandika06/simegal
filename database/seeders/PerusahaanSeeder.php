@@ -20,8 +20,8 @@ class PerusahaanSeeder extends Seeder
         $user = User::where("sub_role", "Admin Portal")->first();
 
         // cek perusahaan
-        $cekPost = Perusahaan::first();
-        if ($cekPost === null) {
+        $cekPerusahaan = Perusahaan::first();
+        if ($cekPerusahaan === null) {
             // GET POST
             $response = Http::get('https://dummyjson.com/users?limit=30');
             $posts = $response->object();
@@ -36,8 +36,10 @@ class PerusahaanSeeder extends Seeder
                 $verifikasi = rand(0, 1);
                 if ($verifikasi == "0") {
                     $verifikasi = "0";
+                    $file_npwp = null;
                 } else {
                     $verifikasi = "1";
+                    $file_npwp = $item->image;
                 }
                 // create perusahaan
                 $uuid_profile = Str::uuid();
@@ -50,7 +52,8 @@ class PerusahaanSeeder extends Seeder
                     "npwp" => rand(1000000000000000, 9000000000000000),
                     "email" => $item->email,
                     "no_telp_1" => str_replace([",", "+", "-"], [""], $item->phone),
-                    "file_npwp" => $item->image,
+                    "foto" => $item->image,
+                    "file_npwp" => $file_npwp,
                     "verifikasi" => $verifikasi,
                     "uuid_created" => $user->uuid_profile,
                 ];

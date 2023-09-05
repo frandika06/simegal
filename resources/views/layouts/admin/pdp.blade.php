@@ -45,13 +45,13 @@
     {{-- FAVICON --}}
 
     {{-- css-js::begin --}}
-    <!--begin::Fonts(mandatory for all pages)-->
+    {{-- begin::Fonts(mandatory for all pages) --}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <!--end::Fonts-->
-    <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
+    {{-- end::Fonts --}}
+    {{-- begin::Global Stylesheets Bundle(mandatory for all pages) --}}
     <link href="{{ asset('assets-pdp/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets-pdp/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-    <!--end::Global Stylesheets Bundle-->
+    {{-- end::Global Stylesheets Bundle --}}
 
     {{-- Internal Sweet-Alert css --}}
     <link href="{{ asset('assets-admin/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
@@ -66,7 +66,7 @@
 </head>
 
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
-    <!--begin::Theme mode setup on page load-->
+    {{-- begin::Theme mode setup on page load --}}
     <script>
         var defaultThemeMode = "light";
         var themeMode;
@@ -86,13 +86,13 @@
             document.documentElement.setAttribute("data-bs-theme", themeMode);
         }
     </script>
-    <!--end::Theme mode setup on page load-->
+    {{-- end::Theme mode setup on page load --}}
 
-    <!--begin::Root-->
+    {{-- begin::Root --}}
     <div class="d-flex flex-column flex-root">
-        <!--begin::Page-->
+        {{-- begin::Page --}}
         <div class="page d-flex flex-row flex-column-fluid">
-            <!--begin::Wrapper-->
+            {{-- begin::Wrapper --}}
             <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
                 {{-- header::begin --}}
                 @include('layouts.admin.headers.headers')
@@ -100,41 +100,41 @@
                 {{-- toolbox::begin --}}
                 @stack('toolbox')
                 {{-- toolbox::end --}}
-                <!--begin::Container-->
+                {{-- begin::Container --}}
                 <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
                     {{-- content::begin --}}
                     @yield('content')
                     {{-- content::end --}}
                 </div>
-                <!--end::Container-->
-                <!--begin::Footer-->
+                {{-- end::Container --}}
+                {{-- begin::Footer --}}
                 <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
-                    <!--begin::Container-->
+                    {{-- begin::Container --}}
                     <div class="container-xxl d-flex flex-column flex-md-row align-items-center justify-content-between">
-                        <!--begin::Copyright-->
+                        {{-- begin::Copyright --}}
                         <div class="text-dark order-2 order-md-1">
                             <span class="text-muted fw-semibold me-1">&copy; 2023 . Dinas Perindustrian dan Perdagangan Kabupaten Tangerang</span>
                         </div>
-                        <!--end::Copyright-->
+                        {{-- end::Copyright --}}
                     </div>
-                    <!--end::Container-->
+                    {{-- end::Container --}}
                 </div>
-                <!--end::Footer-->
+                {{-- end::Footer --}}
             </div>
-            <!--end::Wrapper-->
+            {{-- end::Wrapper --}}
         </div>
-        <!--end::Page-->
+        {{-- end::Page --}}
     </div>
-    <!--end::Root-->
+    {{-- end::Root --}}
 
-    <!--begin::Scrolltop-->
+    {{-- begin::Scrolltop --}}
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
         <i class="ki-duotone ki-arrow-up">
             <span class="path1"></span>
             <span class="path2"></span>
         </i>
     </div>
-    <!--end::Scrolltop-->
+    {{-- end::Scrolltop --}}
 
     {{-- modals::begin --}}
     @stack('modals')
@@ -144,10 +144,10 @@
     <script>
         var hostUrl = "{{ asset('assets-pdp') }}/";
     </script>
-    <!--begin::Global Javascript Bundle(mandatory for all pages)-->
+    {{-- begin::Global Javascript Bundle(mandatory for all pages) --}}
     <script src="{{ asset('assets-pdp/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets-pdp/js/scripts.bundle.js') }}"></script>
-    <!--end::Global Javascript Bundle-->
+    {{-- end::Global Javascript Bundle --}}
 
     {{-- scripts::begin --}}
     @stack('scripts')

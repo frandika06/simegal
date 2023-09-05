@@ -26,7 +26,7 @@ class RegisterController extends Controller
             "nama_perusahaan" => "required|string|max:100",
             "nama_pic" => "required|string|max:100",
             "npwp" => "required|string|max:100",
-            "email" => "required|string|max:100",
+            "email" => "required|string|unique:perusahaan,email|max:100",
             "no_telp_1" => "required|string|max:100",
             "username" => "required|string|unique:users,username|max:100",
             "password" => "required|string|max:100",
@@ -80,7 +80,7 @@ class RegisterController extends Controller
             $log = [
                 "uuid_profile" => $uuid_profile,
                 "apps" => "Penjadwalan dan Penugasan Apps",
-                "subjek" => "Menambahkan Data Master Kategori UUID= " . $uuid,
+                "subjek" => "Mendaftar Akun " . $jp . " dengan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
                 "device" => "web",

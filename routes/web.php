@@ -22,6 +22,7 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
 use App\Http\Controllers\WebBase\WebConfigs\ExDownController;
 use App\Http\Controllers\WebBase\WebConfigs\NocController;
+use App\Http\Controllers\WebBase\WebConfigs\WilAdmController;
 use App\Http\Controllers\WebBase\WebPortal\HomeController;
 use App\Http\Controllers\WebBase\WebPortal\MediaController;
 use App\Http\Controllers\WebBase\WebPortal\PostController;
@@ -86,13 +87,43 @@ Route::group(['middleware' => ['WebFECounter']], function () {
             // Route::put('/reset/{uuid}', [ResetController::class, 'update'])->name('prt.rst.update');
         });
     });
-
-    // exdown | Export - Download
-    Route::group(['prefix' => 'exdown'], function () {
-        // unduhan
-        Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
-    });
 });
+
+/*
+|--------------------------------------------------------------------------
+| WEB CONFIGS
+| PATH : WebBase/WebConfigs
+|--------------------------------------------------------------------------
+ */
+// wilayah-administrasi
+Route::group(['prefix' => 'wil-adm'], function () {
+    Route::group(['prefix' => 'data'], function () {
+        Route::get('/prov', [WilAdmController::class, 'dataProvinsi'])->name('wiladm.data.prov');
+        Route::get('/kab/{id}', [WilAdmController::class, 'dataKabupaten'])->name('wiladm.data.kab');
+        Route::get('/kec/{id}', [WilAdmController::class, 'dataKecamatan'])->name('wiladm.data.kec');
+        Route::get('/desa/{id}', [WilAdmController::class, 'dataDesa'])->name('wiladm.data.desa');
+    });
+    Route::group(['prefix' => 'detail'], function () {
+        Route::get('/prov/{id}', [WilAdmController::class, 'detailProvinsi'])->name('wiladm.detail.prov');
+        Route::get('/kab/{id}', [WilAdmController::class, 'detailKabupaten'])->name('wiladm.detail.kab');
+        Route::get('/kec/{id}', [WilAdmController::class, 'detailKecamatan'])->name('wiladm.detail.kec');
+        Route::get('/desa/{id}', [WilAdmController::class, 'detailDesa'])->name('wiladm.detail.desa');
+    });
+    Route::group(['prefix' => 'substr'], function () {
+        Route::get('/prov/{start}/{extract}/{id}', [WilAdmController::class, 'substrProvinsi'])->name('wiladm.substr.prov');
+        Route::get('/kab/{start}/{extract}/{id}', [WilAdmController::class, 'substrKabupaten'])->name('wiladm.substr.kab');
+        Route::get('/kec/{start}/{extract}/{id}', [WilAdmController::class, 'substrKecamatan'])->name('wiladm.substr.kec');
+        Route::get('/desa/{start}/{extract}/{id}', [WilAdmController::class, 'substrDesa'])->name('wiladm.substr.desa');
+    });
+
+});
+
+// exdown | Export - Download
+Route::group(['prefix' => 'exdown'], function () {
+    // unduhan
+    Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
+});
+
 // NOC
 Route::get('/noc/{name}', [NocController::class, 'index']);
 
@@ -101,7 +132,7 @@ Route::get('/noc/{name}', [NocController::class, 'index']);
 | Auth
 |--------------------------------------------------------------------------
  */
-Route::group(['middleware' => ['pbh', 'auth']], function () {
+Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
     // base-apps
     Route::get('/dashboard', [BaseAppsController::class, 'index'])->name('auth.home');
 
@@ -242,7 +273,9 @@ Route::group(['middleware' => ['pbh', 'auth']], function () {
         // PATH : WebBase/WebAdmin/auth
         Route::group(['prefix' => 'auth'], function () {
             Route::get('/profile', [PDPProfileController::class, 'index'])->name('pdp.apps.auth.profile.index');
-            Route::put('/profile', [PDPProfileController::class, 'update'])->name('pdp.apps.auth.profile.update');
+            Route::post('/profile', [PDPProfileController::class, 'update'])->name('pdp.apps.auth.profile.update');
+            Route::get('/alamat/{uuid}', [PDPProfileController::class, 'showAlamat'])->name('pdp.apps.auth.alamat.show');
+            Route::delete('/alamat', [PDPProfileController::class, 'destroy'])->name('pdp.apps.auth.alamat.destroy');
         });
     });
 });
