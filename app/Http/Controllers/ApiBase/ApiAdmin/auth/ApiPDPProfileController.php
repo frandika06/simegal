@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\WebBase\WebAdmin\auth;
+namespace App\Http\Controllers\ApiBase\ApiAdmin\auth;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
@@ -10,25 +10,18 @@ use App\Models\SysLogAktifitas;
 use App\Models\SysLogin;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class PDPProfileController extends Controller
+class ApiPDPProfileController extends Controller
 {
     // index
-    public function index()
+    public function index(Request $request)
     {
         // auth
-        $auth = Auth::user();
+        $auth = auth()->user();
         $profile = $auth->RelPerusahaan;
-
-        // get kecamatan
-        $idKab = "3603"; //Kab. Tangerang
-        $urlDataKec = route('wiladm.data.kec', [$idKab]);
-        $response = Http::get($urlDataKec);
-        $dataKec = $response->object()->data;
 
         // get data alamat
         $alamatPerusahaan = AlamatPerusahaan::whereUuidPerusahaan($profile->uuid)
@@ -45,14 +38,21 @@ class PDPProfileController extends Controller
             ->whereMonth("created_at", date('m'))
             ->orderBy("created_at", "DESC")
             ->get();
-        return view('pages.admin.pdp_apps.auth.profile', compact(
-            'auth',
-            'profile',
-            'dataKec',
-            'alamatPerusahaan',
-            'logs_login',
-            'logs_aktifitas',
-        ));
+
+        // data
+        $data = [
+            "auth" => $auth,
+            "profile" => $profile,
+            "alamat_perusahaan" => $alamatPerusahaan,
+            "logs_login" => $logs_login,
+            "logs_aktifitas" => $logs_aktifitas,
+        ];
+
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
     }
 
     // update
@@ -74,13 +74,13 @@ class PDPProfileController extends Controller
     private function updateProfile($request)
     {
         // auth
-        $auth = Auth::user();
+        $auth = auth()->user();
         $profile = $auth->RelPerusahaan;
         $uuid_profile = $auth->uuid_profile;
         $jp = $profile->jenis_perusahaan;
 
         // validate
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             "nama_perusahaan" => "required|string|max:100",
             "nama_pic" => "required|string|max:100",
             "npwp" => "required|string|max:100",
@@ -88,6 +88,17 @@ class PDPProfileController extends Controller
             "no_telp_1" => "required|string|max:15",
             "no_telp_2" => "sometimes|nullable|string|max:15",
         ]);
+
+        // response validasi
+        $response = [
+            "status" => false,
+            "message" => "Validation Error!!",
+            "errors" => $validator->errors(),
+            "request" => $request->all(),
+        ];
+        if ($validator->fails()) {
+            return response()->json($response, 422);
+        }
 
         //Submit Register
         $npwp = $request->npwp;
@@ -97,8 +108,12 @@ class PDPProfileController extends Controller
             $cekNpwp = Perusahaan::whereNpwp($npwp)->first();
             if ($cekNpwp !== null) {
                 // ada perusahaan
-                alert()->error('Gagal Simpan!', 'NPWP Sudah Digunakan Oleh Perusahaan Lain, Mohon Cek Kembali NPWP Anda!');
-                return back()->withInput($request->all());
+                $response = [
+                    "status" => false,
+                    "message" => "NPWP Sudah Digunakan Oleh Perusahaan Lain, Mohon Cek Kembali NPWP Anda!",
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
         }
         // cek email
@@ -106,8 +121,12 @@ class PDPProfileController extends Controller
             $cekEmail = Perusahaan::whereEmail($email)->first();
             if ($cekEmail !== null) {
                 // ada perusahaan
-                alert()->error('Gagal Simpan!', 'Email Sudah Digunakan Oleh Perusahaan Lain, Mohon Cek Kembali Email Anda!');
-                return back()->withInput($request->all());
+                $response = [
+                    "status" => false,
+                    "message" => "Email Sudah Digunakan Oleh Perusahaan Lain, Mohon Cek Kembali Email Anda!",
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
         }
 
@@ -126,8 +145,12 @@ class PDPProfileController extends Controller
         if ($request->hasFile('foto')) {
             $foto = CID::UpImg($request, "foto", $path);
             if ($foto == "0") {
-                alert()->error('Error!', 'Gagal Menyimpan Data, Foto Tidak Sesuai Format!');
-                return \back();
+                $response = [
+                    "status" => false,
+                    "message" => "Gagal Menyimpan Data, Foto Tidak Sesuai Format!",
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
             $value_1['foto'] = $foto;
         }
@@ -136,8 +159,12 @@ class PDPProfileController extends Controller
         if ($request->hasFile('file_npwp')) {
             $file_npwp = CID::UpImgPdf($request, "file_npwp", $path);
             if ($file_npwp == "0") {
-                alert()->error('Error!', 'Gagal Menyimpan Data, File NPWP Tidak Sesuai Format!');
-                return \back();
+                $response = [
+                    "status" => false,
+                    "message" => "Gagal Menyimpan Data, File NPWP Tidak Sesuai Format!",
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
             $value_1['file_npwp'] = $file_npwp['url'];
         }
@@ -156,27 +183,34 @@ class PDPProfileController extends Controller
                 "subjek" => "Berhasil Mengubah Profile " . $jp . " dengan UUID= " . $uuid_profile,
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
-                "device" => "web",
+                "device" => "mobile",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', 'Berhasil Mengubah Profile ' . $jp);
-            return back();
+            $response = [
+                "status" => true,
+                "message" => 'Berhasil Mengubah Profile ' . $jp,
+            ];
+            return response()->json($response, 201);
         } else {
-            alert()->error('Gagal!', 'Gagal Mengubah Profile ' . $jp);
-            return back()->withInput($request->all());
+            $response = [
+                "status" => false,
+                "message" => 'Gagal Mengubah Profile ' . $jp,
+                "request" => $request->all(),
+            ];
+            return response()->json($response, 422);
         }
     }
     // update alamat
     private function updateAlamat($request)
     {
         // auth
-        $auth = Auth::user();
+        $auth = auth()->user();
         $profile = $auth->RelPerusahaan;
         $uuid_profile = $auth->uuid_profile;
 
         // validate
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             "district_id" => "required|string|max:10",
             "village_id" => "required|string|max:10",
             "alamat" => "required|string|max:300",
@@ -188,10 +222,21 @@ class PDPProfileController extends Controller
             "google_maps" => "sometimes|nullable|string|max:300",
         ]);
 
+        // response validasi
+        $response = [
+            "status" => false,
+            "message" => "Validation Error!!",
+            "errors" => $validator->errors(),
+            "request" => $request->all(),
+        ];
+        if ($validator->fails()) {
+            return response()->json($response, 422);
+        }
+
         // cek update or create
         if (isset($request->uuid_form)) {
             // update
-            $uuid = CID::decode($request->uuid_form);
+            $uuid = $request->uuid_form;
             $data = AlamatPerusahaan::findOrFail($uuid);
             $value_1 = [
                 "district_id" => $request->district_id,
@@ -220,15 +265,22 @@ class PDPProfileController extends Controller
                     "subjek" => "Berhasil Mengubah Alamat Perusahaan/Usaha dengan UUID= " . $uuid,
                     "aktifitas" => $aktifitas,
                     "role" => "Perusahaan",
-                    "device" => "web",
+                    "device" => "mobile",
                 ];
                 CID::addToLogAktifitas($request, $log);
                 // alert success
-                alert()->success('Berhasil!', 'Berhasil Mengubah Alamat Perusahaan/Usaha.');
-                return back();
+                $response = [
+                    "status" => true,
+                    "message" => 'Berhasil Mengubah Alamat Perusahaan/Usaha.',
+                ];
+                return response()->json($response, 200);
             } else {
-                alert()->error('Gagal!', 'Gagal Mengubah Alamat Perusahaan/Usaha.');
-                return back()->withInput($request->all());
+                $response = [
+                    "status" => false,
+                    "message" => 'Gagal Mengubah Alamat Perusahaan/Usaha.',
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
         } else {
             // create
@@ -274,15 +326,22 @@ class PDPProfileController extends Controller
                     "subjek" => "Berhasil Menambahkan Alamat Perusahaan/Usaha dengan UUID= " . $uuid,
                     "aktifitas" => $aktifitas,
                     "role" => "Perusahaan",
-                    "device" => "web",
+                    "device" => "mobile",
                 ];
                 CID::addToLogAktifitas($request, $log);
                 // alert success
-                alert()->success('Berhasil!', 'Berhasil Menambahkan Alamat Perusahaan/Usaha.');
-                return back();
+                $response = [
+                    "status" => true,
+                    "message" => 'Berhasil Menambahkan Alamat Perusahaan/Usaha.',
+                ];
+                return response()->json($response, 200);
             } else {
-                alert()->error('Gagal!', 'Gagal Menambahkan Alamat Perusahaan/Usaha.');
-                return back()->withInput($request->all());
+                $response = [
+                    "status" => false,
+                    "message" => 'Gagal Menambahkan Alamat Perusahaan/Usaha.',
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
         }
     }
@@ -290,17 +349,28 @@ class PDPProfileController extends Controller
     private function updateKeamanan($request)
     {
         // auth
-        $auth = Auth::user();
+        $auth = auth()->user();
         $username = $auth->username;
         $profile = $auth->RelPerusahaan;
         $uuid_profile = $auth->uuid_profile;
 
         // validate
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             "username" => "required|string|max:100",
             "old_password" => "required|string|max:100",
             "new_password" => "required|string|max:100",
         ]);
+
+        // response validasi
+        $response = [
+            "status" => false,
+            "message" => "Validation Error!!",
+            "errors" => $validator->errors(),
+            "request" => $request->all(),
+        ];
+        if ($validator->fails()) {
+            return response()->json($response, 422);
+        }
 
         // value_1
         $new_username = $request->username;
@@ -310,16 +380,32 @@ class PDPProfileController extends Controller
         // cek password lama
         if (!Hash::check($old_password, $auth->password)) {
             // password lama salah
-            alert()->error('Gagal!', 'Password Lama Anda Salah!');
-            return back()->withInput($request->all());
+            $response = [
+                "status" => false,
+                "message" => 'Password Lama Anda Salah!',
+                "request" => $request->all(),
+            ];
+            return response()->json($response, 422);
         }
 
         // cek username
         if ($new_username != $username) {
             // validate
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 "username" => "required|unique:users,username|max:100",
             ]);
+
+            // response validasi
+            $response = [
+                "status" => false,
+                "message" => "Validation Error!!",
+                "errors" => $validator->errors(),
+                "request" => $request->all(),
+            ];
+            if ($validator->fails()) {
+                return response()->json($response, 422);
+            }
+
             $username = $new_username;
         }
         $value_1 = [
@@ -342,23 +428,35 @@ class PDPProfileController extends Controller
                 "subjek" => "Berhasil Mengubah Akun Login dengan UUID= " . $auth->uuid,
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
-                "device" => "web",
+                "device" => "mobile",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', 'Berhasil Mengubah Keamanan Akun.');
-            return back();
+            $response = [
+                "status" => true,
+                "message" => 'Berhasil Mengubah Keamanan Akun.',
+            ];
+            return response()->json($response, 200);
         } else {
-            alert()->error('Gagal!', 'Gagal Mengubah Keamanan Akun.');
-            return back()->withInput($request->all());
+            $response = [
+                "status" => false,
+                "message" => 'Gagal Mengubah Keamanan Akun.',
+                "request" => $request->all(),
+            ];
+            return response()->json($response, 422);
         }
     }
 
     // showAlamat
     public function showAlamat($uuid_enc)
     {
-        $uuid = CID::decode($uuid_enc);
-        $data = AlamatPerusahaan::find($uuid);
+        $uuid = $uuid_enc;
+        $data = AlamatPerusahaan::with('RelPerusahaan')
+            ->with("Provinsi")
+            ->with("Kabupaten")
+            ->with("Kecamatan")
+            ->with("Desa")
+            ->find($uuid);
         if ($data === null) {
             $response = [
                 "status" => false,
@@ -381,7 +479,7 @@ class PDPProfileController extends Controller
     public function destroy(Request $request)
     {
         // uuid
-        $uuid = CID::decode($request->uuid);
+        $uuid = $request->uuid;
 
         // data
         $data = AlamatPerusahaan::findOrFail($uuid);
@@ -400,7 +498,7 @@ class PDPProfileController extends Controller
                 "subjek" => "Berhasil Menghapus Alamat Perusahaan/Usaha dengan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
-                "device" => "web",
+                "device" => "mobile",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success

@@ -22,9 +22,4 @@ class Perusahaan extends Model
         "updated_at",
         "deleted_at",
     ];
-
-    // public function Publisher()
-    // {
-    //     return $this->belongsTo('App\Models\Pegawai', 'uuid_created', 'uuid')->withTrashed();
-    // }
 }

@@ -25,7 +25,7 @@ class AlamatPerusahaan extends Model
 
     public function RelPerusahaan()
     {
-        return $this->belongsTo('App\Models\Perusahaan', 'uuid_perushaan', 'uuid')->withTrashed();
+        return $this->belongsTo('App\Models\Perusahaan', 'uuid_perusahaan', 'uuid')->withTrashed();
     }
 
     public function Provinsi()

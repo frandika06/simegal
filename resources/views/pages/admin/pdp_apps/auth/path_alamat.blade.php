@@ -30,7 +30,7 @@
                         <div class="d-flex flex-column">
                             <span class="fw-bold">{{ $item->Kecamatan->name }}</span>
                             <div class="text-gray-600">
-                                {{ $item->alamat }}, RT. {{ $item->rt }}, RW. {{ $item->rt }},
+                                {{ $item->alamat }}, RT. {{ $item->rt }}, RW. {{ $item->rw }},
                                 {{ \Str::title($item->Desa->name) }}, {{ \Str::title($item->Kecamatan->name) }},
                                 {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }}
                                 @if ($item->kode_pos != '')

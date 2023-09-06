@@ -51,6 +51,7 @@
     {{-- begin::Global Stylesheets Bundle(mandatory for all pages) --}}
     <link href="{{ asset('assets-pdp/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets-pdp/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets-pdp/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
     {{-- end::Global Stylesheets Bundle --}}
 
     {{-- Internal Sweet-Alert css --}}
@@ -147,6 +148,7 @@
     {{-- begin::Global Javascript Bundle(mandatory for all pages) --}}
     <script src="{{ asset('assets-pdp/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets-pdp/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets-pdp/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     {{-- end::Global Javascript Bundle --}}
 
     {{-- scripts::begin --}}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiBase\ApiAdmin\auth\ApiPDPProfileController;
 use App\Http\Controllers\ApiBase\ApiAdmin\auth\LoginApiController;
 use App\Http\Controllers\ApiBase\ApiAdmin\auth\RegisterApiController;
 use Illuminate\Support\Facades\Route;
@@ -56,5 +57,22 @@ Route::group(['middleware' => ['auth:api', 'LastSeen']], function () {
     // AUTH
     Route::group(['prefix' => 'auth'], function () {
         Route::get('/logout', [LoginApiController::class, 'logout']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENJADWALAN DAN PENUGASAN (PDP) APPS
+    | PATH : ApiBase/ApiAdmin/PdpApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'pdp-apps'], function () {
+        // auth
+        // PATH : ApiBase/ApiAdmin/auth
+        Route::group(['prefix' => 'auth'], function () {
+            Route::get('/profile', [ApiPDPProfileController::class, 'index']);
+            Route::post('/profile', [ApiPDPProfileController::class, 'update']);
+            Route::get('/alamat/{uuid}', [ApiPDPProfileController::class, 'showAlamat']);
+            Route::delete('/alamat', [ApiPDPProfileController::class, 'destroy']);
+        });
     });
 });

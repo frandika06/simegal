@@ -16,7 +16,7 @@
             <!--begin::Table wrapper-->
             <div class="table-responsive">
                 <!--begin::Table-->
-                <table class="table align-middle table-row-dashed gy-5" id="kt_table_users_login_session">
+                <table id="datatable1" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                         <tr class="text-start text-muted text-uppercase gs-0">
                             <th>Status</th>
@@ -59,7 +59,7 @@
             <!--begin::Table wrapper-->
             <div class="table-responsive">
                 <!--begin::Table-->
-                <table class="table align-middle table-row-dashed gy-5" id="kt_table_users_login_session">
+                <table id="datatable2" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                         <tr class="text-start text-muted text-uppercase gs-0">
                             <th>Subjek</th>
@@ -90,3 +90,58 @@
     <!--end::Card-->
 </div>
 <!--end:::Tab pane-->
+
+@push('scripts')
+    <script>
+        $('#datatable1').DataTable({
+            "select": false,
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "processing": true,
+            "serverSide": false,
+            "responsive": false,
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom": "<'row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">",
+        });
+        $('#datatable2').DataTable({
+            "select": false,
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "processing": true,
+            "serverSide": false,
+            "responsive": false,
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom": "<'row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">",
+        });
+    </script>
+@endpush
