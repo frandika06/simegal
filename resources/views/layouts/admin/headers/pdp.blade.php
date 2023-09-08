@@ -208,7 +208,7 @@
                                             {{-- begin:Menu item --}}
                                             <div class="menu-item p-0 m-0">
                                                 {{-- begin:Menu link --}}
-                                                <a href="#" class="menu-link">
+                                                <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="menu-link">
                                                     <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
                                                         <i class="ki-duotone ki-send text-info fs-1">
                                                             <span class="path1"></span>

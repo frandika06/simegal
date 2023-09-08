@@ -1,21 +1,21 @@
-<!--begin:::Tab pane-->
+{{-- begin:::Tab pane --}}
 <div class="tab-pane fade" id="profile_tab_path_log" role="tabpanel">
-    <!--begin::Card-->
+    {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
-        <!--begin::Card header-->
+        {{-- begin::Card header --}}
         <div class="card-header border-0">
-            <!--begin::Card title-->
+            {{-- begin::Card title --}}
             <div class="card-title">
                 <h2>Log Login</h2>
             </div>
-            <!--end::Card title-->
+            {{-- end::Card title --}}
         </div>
-        <!--end::Card header-->
-        <!--begin::Card body-->
+        {{-- end::Card header --}}
+        {{-- begin::Card body --}}
         <div class="card-body pt-0 pb-5">
-            <!--begin::Table wrapper-->
+            {{-- begin::Table wrapper --}}
             <div class="table-responsive">
-                <!--begin::Table-->
+                {{-- begin::Table --}}
                 <table id="datatable1" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                         <tr class="text-start text-muted text-uppercase gs-0">
@@ -36,29 +36,29 @@
                         @endforeach
                     </tbody>
                 </table>
-                <!--end::Table-->
+                {{-- end::Table --}}
             </div>
-            <!--end::Table wrapper-->
+            {{-- end::Table wrapper --}}
         </div>
-        <!--end::Card body-->
+        {{-- end::Card body --}}
     </div>
-    <!--end::Card-->
-    <!--begin::Card-->
+    {{-- end::Card --}}
+    {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
-        <!--begin::Card header-->
+        {{-- begin::Card header --}}
         <div class="card-header border-0">
-            <!--begin::Card title-->
+            {{-- begin::Card title --}}
             <div class="card-title">
                 <h2>Log Aktifitas</h2>
             </div>
-            <!--end::Card title-->
+            {{-- end::Card title --}}
         </div>
-        <!--end::Card header-->
-        <!--begin::Card body-->
+        {{-- end::Card header --}}
+        {{-- begin::Card body --}}
         <div class="card-body py-0">
-            <!--begin::Table wrapper-->
+            {{-- begin::Table wrapper --}}
             <div class="table-responsive">
-                <!--begin::Table-->
+                {{-- begin::Table --}}
                 <table id="datatable2" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                         <tr class="text-start text-muted text-uppercase gs-0">
@@ -81,15 +81,15 @@
                         @endforeach
                     </tbody>
                 </table>
-                <!--end::Table-->
+                {{-- end::Table --}}
             </div>
-            <!--end::Table wrapper-->
+            {{-- end::Table wrapper --}}
         </div>
-        <!--end::Card body-->
+        {{-- end::Card body --}}
     </div>
-    <!--end::Card-->
+    {{-- end::Card --}}
 </div>
-<!--end:::Tab pane-->
+{{-- end:::Tab pane --}}
 
 @push('scripts')
     <script>

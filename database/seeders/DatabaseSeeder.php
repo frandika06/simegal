@@ -42,5 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PerusahaanSeeder::class);
         // generate alamat perusahaan
         $this->call(AlamatPerusahaanSeeder::class);
+        // generate permohonan peneraan
+        $this->call(PermohonanPeneraanSeeder::class);
     }
 }

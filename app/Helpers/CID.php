@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\PermohonanPeneraan;
 use App\Models\PortalKategori;
 use App\Models\PortalPage;
 use App\Models\PortalSetup;
@@ -371,6 +372,26 @@ class CID
             '10' => 'Oct',
             '11' => 'Nov',
             '12' => 'Dec',
+        );
+
+        return $array_bulan[$bln];
+    }
+    // Bulan to romawi
+    public static function bln2Romawi($bln)
+    {
+        $array_bulan = array(
+            '1' => 'I',
+            '2' => 'II',
+            '3' => 'III',
+            '4' => 'IV',
+            '5' => 'V',
+            '6' => 'VI',
+            '7' => 'VII',
+            '8' => 'VIII',
+            '9' => 'IX',
+            '10' => 'X',
+            '11' => 'XI',
+            '12' => 'XII',
         );
 
         return $array_bulan[$bln];
@@ -783,6 +804,31 @@ class CID
             $kode = "2";
             $kode .= date('ny');
             $kode .= "-" . Str::upper(Self::gencode(2));
+        }
+        return $kode;
+    }
+    // Generate Kode Permohonan
+    public static function genKodePermohonan($jp)
+    {
+        // cek jumlah permohonan bulan aktif
+        $jumlahPermohonan = PermohonanPeneraan::whereMonth("created_at", date('m'))->count();
+        if ($jumlahPermohonan == "0") {
+            $jumlahPermohonan = "1";
+        } else {
+            $jumlahPermohonan = $jumlahPermohonan + 1;
+        }
+        if ($jp == "Tera") {
+            $kode = "P.1.";
+            $kode .= Self::bln2Romawi(date('n')) . "." . date('y');
+            $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
+        } elseif ($jp == "Tera Ulang") {
+            $kode = "P.2.";
+            $kode .= Self::bln2Romawi(date('n')) . "." . date('y');
+            $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
+        } elseif ($jp == "Pengujian BDKT") {
+            $kode = "P.3.";
+            $kode .= Self::bln2Romawi(date('n')) . "." . date('y');
+            $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
         }
         return $kode;
     }

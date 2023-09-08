@@ -6,6 +6,7 @@ use App\Http\Controllers\WebBase\WebAdmin\auth\PDPProfileController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\RegisterController;
 use App\Http\Controllers\WebBase\WebAdmin\configs\BaseAppsController;
 use App\Http\Controllers\WebBase\WebAdmin\PdpApps\dashboard\PDPDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\PdpApps\permohonan\PDPPermohonanPeneraanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\dashboard\PADashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\kontak\PAPesanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\master\PAKategoriController;
@@ -276,6 +277,18 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             Route::post('/profile', [PDPProfileController::class, 'update'])->name('pdp.apps.auth.profile.update');
             Route::get('/alamat/{uuid}', [PDPProfileController::class, 'showAlamat'])->name('pdp.apps.auth.alamat.show');
             Route::delete('/alamat', [PDPProfileController::class, 'destroy'])->name('pdp.apps.auth.alamat.destroy');
+        });
+
+        // permohonan
+        Route::group(['prefix' => 'permohonan'], function () {
+            Route::get('/', [PDPPermohonanPeneraanController::class, 'index'])->name('pdp.apps.reqpeneraan.index');
+            Route::get('/create', [PDPPermohonanPeneraanController::class, 'create'])->name('pdp.apps.reqpeneraan.create');
+            Route::post('/create', [PDPPermohonanPeneraanController::class, 'store'])->name('pdp.apps.reqpeneraan.store');
+            Route::get('/edit/{uuid}', [PDPPermohonanPeneraanController::class, 'edit'])->name('pdp.apps.reqpeneraan.edit');
+            Route::put('/edit/{uuid}', [PDPPermohonanPeneraanController::class, 'update'])->name('pdp.apps.reqpeneraan.update');
+            Route::get('/show/{uuid}', [PDPPermohonanPeneraanController::class, 'show'])->name('pdp.apps.reqpeneraan.show');
+            Route::delete('/delete', [PDPPermohonanPeneraanController::class, 'destroy'])->name('pdp.apps.reqpeneraan.destroy');
+            Route::get('/data', [PDPPermohonanPeneraanController::class, 'data'])->name('pdp.apps.reqpeneraan.data');
         });
     });
 });
