@@ -32,4 +32,9 @@ class PermohonanPeneraan extends Model
     {
         return $this->belongsTo('App\Models\AlamatPerusahaan', 'uuid_alamat', 'uuid')->withTrashed();
     }
+
+    public function RelVerifikator()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_verifikator', 'uuid')->withTrashed();
+    }
 }

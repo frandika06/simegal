@@ -815,7 +815,17 @@ class CID
         if ($jumlahPermohonan == "0") {
             $jumlahPermohonan = "1";
         } else {
-            $jumlahPermohonan = $jumlahPermohonan + 1;
+            $data = [];
+            $PermohonanPeneraan = PermohonanPeneraan::select(\DB::raw("substr(kode_permohonan, 11) as kode"))
+                ->whereMonth("created_at", date('m'))
+                ->get();
+            foreach ($PermohonanPeneraan as $item) {
+                $convert_kode = (int) $item->kode;
+                $item->kode = $convert_kode;
+                $data[] = $item;
+            }
+            $current_kode = max($data);
+            $jumlahPermohonan = $current_kode->kode + 1;
         }
         if ($jp == "Tera") {
             $kode = "P.1.";

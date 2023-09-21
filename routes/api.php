@@ -3,6 +3,9 @@
 use App\Http\Controllers\ApiBase\ApiAdmin\auth\ApiPDPProfileController;
 use App\Http\Controllers\ApiBase\ApiAdmin\auth\LoginApiController;
 use App\Http\Controllers\ApiBase\ApiAdmin\auth\RegisterApiController;
+use App\Http\Controllers\ApiBase\ApiAdmin\configs\ApiDropdownsController;
+use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\dashboard\ApiPDPDashboardController;
+use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\permohonan\ApiPDPPermohonanPeneraanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +53,16 @@ Route::group(['prefix' => 'exim'], function () {
 
 /*
 |--------------------------------------------------------------------------
+| API DROPDOWNS
+| PATH : ApiBase/ApiAdmin/configs
+|--------------------------------------------------------------------------
+ */
+Route::group(['prefix' => 'dd'], function () {
+    Route::get('/get-alamat-perusahaan/{uuid}', [ApiDropdownsController::class, 'getAlamatPerusahaan']);
+});
+
+/*
+|--------------------------------------------------------------------------
 | Auth
 |--------------------------------------------------------------------------
  */
@@ -73,6 +86,21 @@ Route::group(['middleware' => ['auth:api', 'LastSeen']], function () {
             Route::post('/profile', [ApiPDPProfileController::class, 'update']);
             Route::get('/alamat/{uuid}', [ApiPDPProfileController::class, 'showAlamat']);
             Route::delete('/alamat', [ApiPDPProfileController::class, 'destroy']);
+        });
+
+        // dashboard
+        // PATH : ApiBase/ApiAdmin/dashboard
+        Route::group(['prefix' => 'dashboard'], function () {
+            Route::get('/{tahun}/{status}', [ApiPDPDashboardController::class, 'index']);
+        });
+
+        // permohonan
+        // PATH : ApiBase/ApiAdmin/permohonan
+        Route::group(['prefix' => 'permohonan'], function () {
+            Route::post('/create', [ApiPDPPermohonanPeneraanController::class, 'store']);
+            Route::put('/edit/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'update']);
+            Route::get('/show/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'show']);
+            Route::delete('/delete', [ApiPDPPermohonanPeneraanController::class, 'destroy']);
         });
     });
 });
