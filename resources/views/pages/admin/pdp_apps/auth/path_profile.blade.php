@@ -50,10 +50,10 @@
                 {{-- begin::npwp --}}
                 <div class="form-floating mb-5">
                     @if ($profile->jenis_perusahaan == 'Perusahaan')
-                        <input type="text" class="form-control @error('npwp') is-invalid @enderror" name="npwp" id="npwp2" placeholder="NPWP Perusahaan" autocomplete="off" maxlength="100" value="{{ $profile->npwp }}" required />
+                        <input type="text" class="form-control npwp @error('npwp') is-invalid @enderror" name="npwp" id="npwp2" placeholder="NPWP Perusahaan" autocomplete="off" maxlength="100" value="{{ $profile->npwp }}" required />
                         <label for="npwp">NPWP Perusahaan</label>
                     @else
-                        <input type="text" class="form-control @error('npwp') is-invalid @enderror" name="npwp" id="npwp2" placeholder="NPWP Pemilik UTTP" autocomplete="off" maxlength="100" value="{{ $profile->npwp }}" required />
+                        <input type="text" class="form-control npwp @error('npwp') is-invalid @enderror" name="npwp" id="npwp2" placeholder="NPWP Pemilik UTTP" autocomplete="off" maxlength="100" value="{{ $profile->npwp }}" required />
                         <label for="npwp">NPWP Pemilik UTTP</label>
                     @endif
                     @error('npwp')
@@ -153,3 +153,13 @@
     {{-- end::Card --}}
 </div>
 {{-- end:::Tab pane --}}
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.npwp').mask("99.999.999.9-999.999", {
+                placeholder: "99.999.999.9-999.999"
+            });
+        });
+    </script>
+@endpush

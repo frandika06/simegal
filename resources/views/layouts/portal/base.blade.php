@@ -147,6 +147,8 @@
     {{-- Internal Sweet-Alert js --}}
     <script src="{{ asset('assets-admin/plugins/sweet-alert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets-admin/plugins/sweet-alert/jquery.sweet-alert.js') }}"></script>
+    {{-- input mask jquery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     {{-- CUSTOM JS --}}
     <script src="{{ asset('assets-portal/dist/js/cid.js?=') . date('ymdHis') }}"></script>
     @stack('scripts')

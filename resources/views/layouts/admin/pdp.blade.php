@@ -150,6 +150,8 @@
     <script src="{{ asset('assets-pdp/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets-pdp/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     {{-- end::Global Javascript Bundle --}}
+    {{-- input mask jquery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     {{-- scripts::begin --}}
     @stack('scripts')

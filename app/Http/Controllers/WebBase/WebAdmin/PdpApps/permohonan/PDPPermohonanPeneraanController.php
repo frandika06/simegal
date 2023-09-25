@@ -98,6 +98,7 @@ class PDPPermohonanPeneraanController extends Controller
         $jp = $request->jenis_pengujian;
         $lokasi_peneraan = $request->lokasi_peneraan;
         $kode_permohonan = CID::genKodePermohonan($jp);
+
         if ($lokasi_peneraan == "Luar Kantor") {
             $uuid_alamat = $request->uuid_alamat;
         } else {
@@ -143,6 +144,7 @@ class PDPPermohonanPeneraanController extends Controller
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
                 "device" => "web",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -280,6 +282,7 @@ class PDPPermohonanPeneraanController extends Controller
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
                 "device" => "web",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -317,6 +320,7 @@ class PDPPermohonanPeneraanController extends Controller
                 "aktifitas" => $aktifitas,
                 "role" => "Perusahaan",
                 "device" => "web",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success

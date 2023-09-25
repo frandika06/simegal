@@ -840,6 +840,16 @@ class CID
             $kode .= Self::bln2Romawi(date('n')) . "." . date('y');
             $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
         }
+
+        // cek kode
+        $cekKode = PermohonanPeneraan::where("kode_permohonan", $kode)->withTrashed()->first();
+        if ($cekKode !== null) {
+            // ada duplikat
+            $exkode = explode("-", $kode);
+            $jumlahPermohonan = $exkode[1] + 1;
+            $kode = $exkode[0];
+            $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
+        }
         return $kode;
     }
 }

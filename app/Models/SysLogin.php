@@ -13,4 +13,9 @@ class SysLogin extends Model
     protected $primaryKey = "uuid";
     protected $keyType = 'string';
     protected $guarded = [];
+
+    public function Publisher()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_profile', 'uuid')->withTrashed();
+    }
 }

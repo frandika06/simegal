@@ -13,3 +13,12 @@
 .dropdown-menu {
     z-index: 9999;
 }
+
+/* LIST APPS */
+.page-bg-list-apps {
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* background-image: url(../images/page-bg/page-02.jpg); */
+}

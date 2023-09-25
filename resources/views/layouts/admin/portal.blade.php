@@ -166,6 +166,8 @@
     {{-- Internal Sweet-Alert js --}}
     <script src="{{ asset('assets-admin/plugins/sweet-alert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets-admin/plugins/sweet-alert/jquery.sweet-alert.js') }}"></script>
+    {{-- input mask jquery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     {{-- stack scripts --}}
     @stack('scripts')

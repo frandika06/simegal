@@ -13,4 +13,14 @@ class SysLogAktifitas extends Model
     protected $primaryKey = "uuid";
     protected $keyType = 'string';
     protected $guarded = [];
+
+    public function RelPegawai()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_profile', 'uuid')->withTrashed();
+    }
+
+    public function RelPerusahaan()
+    {
+        return $this->belongsTo('App\Models\Perusahaan', 'uuid_profile', 'uuid')->withTrashed();
+    }
 }

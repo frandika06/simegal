@@ -83,7 +83,7 @@
                                         <div class="row">
                                             <div class="form-group col">
                                                 <label class="form-label text-color-dark text-3">NPWP <span id="title_npwp"></span> <span class="text-color-danger">*</span></label>
-                                                <input type="text" class="form-control form-control-lg text-4 @error('npwp') is-invalid @enderror" name="npwp" id="npwp" value="{{ old('npwp') }}" placeholder="Masukkan NPWP." maxlength="100" autocomplete="off" required>
+                                                <input type="text" class="form-control form-control-lg npwp text-4 @error('npwp') is-invalid @enderror" name="npwp" id="npwp" value="{{ old('npwp') }}" placeholder="Masukkan NPWP." maxlength="100" autocomplete="off" required>
                                                 @error('npwp')
                                                     <div id="npwpFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -179,6 +179,9 @@
     <script>
         $(document).ready(function() {
             jenisPemohon();
+            $('.npwp').mask("99.999.999.9-999.999", {
+                placeholder: "99.999.999.9-999.999"
+            });
         });
 
         $("#jenis_perusahaan").change(function() {
