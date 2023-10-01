@@ -14,8 +14,13 @@ class SysLogin extends Model
     protected $keyType = 'string';
     protected $guarded = [];
 
-    public function Publisher()
+    public function RelPegawai()
     {
         return $this->belongsTo('App\Models\Pegawai', 'uuid_profile', 'uuid')->withTrashed();
+    }
+
+    public function RelPerusahaan()
+    {
+        return $this->belongsTo('App\Models\Perusahaan', 'uuid_profile', 'uuid')->withTrashed();
     }
 }

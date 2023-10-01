@@ -93,7 +93,7 @@
             </div>
             {{-- end::Wrapper --}}
             {{-- begin::Button --}}
-            <a href="{{ route('pdp.apps.reqpeneraan.create') }}" class="btn btn-info fw-bold">Ajukan Permohonan</a>
+            <a href="{{ route('pdp.apps.reqpeneraan.create') }}" class="btn btn-info fw-bold"><i class="fa-solid fa-plus"></i>Ajukan Permohonan</a>
             {{-- end::Button --}}
         </div>
         {{-- end::Actions --}}

@@ -3,12 +3,15 @@
 namespace App\Helpers;
 
 use App\Models\PermohonanPeneraan;
+use App\Models\Perusahaan;
 use App\Models\PortalKategori;
 use App\Models\PortalPage;
 use App\Models\PortalSetup;
 use App\Models\PortalSosmed;
 use App\Models\SysLogAktifitas;
 use Auth;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Storage;
@@ -58,29 +61,52 @@ class CID
         return $data;
     }
     // Untuk Foto Profil
-    public static function pp()
+    public static function pp($url = null)
     {
         $auth = Auth::user();
         $role = $auth->role;
 
-        if ($role == "Perusahaan") {
-            // perusahaan
-            $foto = $auth->RelPerusahaan->foto;
-            if ($foto != "") {
-                return Self::urlImg($foto);
+        if ($url !== null) {
+            if ($url != "") {
+                return Self::urlImg($url);
             } else {
-                $nama = $auth->RelPerusahaan->nama_perusahaan;
-                $pp = "https://ui-avatars.com/api/?name=$nama";
+                $pp = asset('assets-portal/dist/img/no_image.png');
             }
         } else {
-            // pegawai dan admin
-            $foto = $auth->RelPegawai->foto;
-            if ($foto != "") {
-                return Self::urlImg($foto);
+            if ($role == "Perusahaan") {
+                // perusahaan
+                $foto = $auth->RelPerusahaan->foto;
+                if ($foto != "") {
+                    return Self::urlImg($foto);
+                } else {
+                    $nama = $auth->RelPerusahaan->nama_perusahaan;
+                    $pp = "https://ui-avatars.com/api/?name=$nama";
+                }
             } else {
-                $nama = $auth->RelPegawai->nama_lengkap;
-                $pp = "https://ui-avatars.com/api/?name=$nama";
+                // pegawai dan admin
+                $foto = $auth->RelPegawai->foto;
+                if ($foto != "") {
+                    return Self::urlImg($foto);
+                } else {
+                    $nama = $auth->RelPegawai->nama_lengkap;
+                    $pp = "https://ui-avatars.com/api/?name=$nama";
+                }
             }
+        }
+
+        return $pp;
+    }
+    // Untuk Foto Profil
+    public static function ppPegawai($url = null)
+    {
+        if ($url !== null) {
+            if ($url != "") {
+                return Self::urlImg($url);
+            } else {
+                $pp = asset('assets-portal/dist/img/no_image.png');
+            }
+        } else {
+            $pp = asset('assets-portal/dist/img/no_image.png');
         }
         return $pp;
     }
@@ -402,6 +428,24 @@ class CID
         $jamMenit = date('H:i', strtotime($timestamp));
         return $jamMenit;
     }
+    // Hitung Berapa Hari Ke Sekarang
+    public static function hitungHariSekarang($tgl)
+    {
+        $date = Carbon::parse($tgl);
+        $now = Carbon::now();
+        $diff = $date->diffInDays($now);
+        $result = (int) $diff;
+        return $result;
+    }
+    // Hitung Berapa Jam Ke Sekarang
+    public static function hitungJamSekarang($tgl)
+    {
+        $date = Carbon::parse($tgl);
+        $now = Carbon::now();
+        $diff = $date->diffInHours($now);
+        $result = (int) $diff;
+        return $result;
+    }
     // Ucapan Waktu
     public static function Greeting()
     {
@@ -454,7 +498,7 @@ class CID
     // wellcomeBack
     public static function welcomeBack()
     {
-        $nama_lengkap = Auth::user()->RelAdministrator->nama_lengkap;
+        $nama_lengkap = Auth::user()->RelPegawai->nama_lengkap;
         $waktu = Self::Greeting();
         $welcome = $waktu . " " . $nama_lengkap;
         return $welcome;
@@ -710,6 +754,110 @@ class CID
         }
         return $tags;
     }
+    // Hak Akses subRolePegawai
+    public static function subRolePegawai()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Kasi', 'Petugas'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subRoleAdmin
+    public static function subRoleAdmin()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subRoleKasi
+    public static function subRoleKasi()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Kasi'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subRolePetugas
+    public static function subRolePetugas()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Petugas'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -725,7 +873,7 @@ class CID
             // create
             $value_1 = [
                 "uuid" => Str::uuid(),
-                "google_maps" => "https: //goo.gl/maps/HT6TtdJCVubJqRB69",
+                "google_maps" => "https://goo.gl/maps/HT6TtdJCVubJqRB69",
                 "alamat" => "Bidang Metrologi Legal, Balaraja, Kec. Balaraja, Kabupaten Tangerang, Banten 15610.",
                 "no_telp" => "+6221234567",
                 "email" => "info@simegal.tangerangkab.go.id",
@@ -794,16 +942,26 @@ class CID
     // Generate Kode Perusahaan
     public static function genKodePerusahaan($jp)
     {
+        $tahun = date('Y');
+        $jumlahPermohonan = Perusahaan::whereYear("created_at", $tahun)->withTrashed()->count();
+        if ($jumlahPermohonan > 0) {
+            $nomorUrut = (int) $jumlahPermohonan + 1;
+        } else {
+            $nomorUrut = 1;
+        }
+
         if ($jp == "Perusahaan") {
             // Perusahaan
-            $kode = "1";
+            $kode = "10";
             $kode .= date('ny');
-            $kode .= "-" . Str::upper(Self::gencode(2));
+            // $kode .= "-" . Str::upper(Self::gencode(2));
+            $kode .= Self::genzero(4, $nomorUrut);
         } else {
             // Pemilik UTTP
-            $kode = "2";
+            $kode = "11";
             $kode .= date('ny');
-            $kode .= "-" . Str::upper(Self::gencode(2));
+            // $kode .= "-" . Str::upper(Self::gencode(2));
+            $kode .= Self::genzero(4, $nomorUrut);
         }
         return $kode;
     }
@@ -851,5 +1009,45 @@ class CID
             $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
         }
         return $kode;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | LIST APPS
+    |--------------------------------------------------------------------------
+     */
+    // Generate Background
+    public static function genPageBg()
+    {
+        // background
+        $pageBg = Cache::get('pageBg');
+        if ($pageBg === null) {
+            $bgNumber = rand(1, 31);
+            Cache::put('pageBg', $bgNumber, now()->addMinutes(1));
+            $pageBg = $bgNumber;
+        } else {
+            $pageBg = $pageBg;
+        }
+
+        return $pageBg;
+    }
+    // Generate Background
+    public static function alertVerifikasiPerusahaan()
+    {
+        $allData = Perusahaan::where("file_npwp", "!=", null)
+            ->where("verifikasi", "=", "0")
+            ->orderBy("created_at", "DESC")
+            ->get();
+        $limitData = Perusahaan::where("file_npwp", "!=", null)
+            ->where("verifikasi", "=", "0")
+            ->orderBy("created_at", "DESC")
+            ->limit(5)
+            ->get();
+
+        $data = [
+            "all_data" => $allData,
+            "limit_data" => $limitData,
+        ];
+        return $data;
     }
 }

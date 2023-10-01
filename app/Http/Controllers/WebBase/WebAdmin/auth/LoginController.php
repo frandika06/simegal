@@ -45,8 +45,8 @@ class LoginController extends Controller
                     ];
                     SysFailedLogin::create($FailedLogin);
                     Auth::logout();
-                    alert()->error('Gagal Login!', 'Email/Password Yang Anda Masukkan Salah!');
-                    return \back()->withInput($request->only('email'));
+                    alert()->error('Gagal Login!', 'Username/Password Yang Anda Masukkan Salah!');
+                    return \back()->withInput($request->only('username'));
                 } else {
                     //Success Login
                     $SuccessLogin = [
@@ -54,7 +54,7 @@ class LoginController extends Controller
                         'uuid_profile' => $user->uuid_profile,
                         'ip' => $request->ip(),
                         "agent" => $request->header('user-agent'),
-                        "status" => "Login at " . date('Y-m-d H:i:s'),
+                        "status" => "Akun " . $username . " Login ke Aplikasi melalui Website",
                         "device" => "web",
                     ];
                     SysLogin::create($SuccessLogin);
@@ -75,7 +75,7 @@ class LoginController extends Controller
                 SysFailedLogin::create($FailedLogin);
                 Auth::logout();
                 alert()->error('Gagal Login!', 'Akun Anda Sudah Di Non-Aktifkan!');
-                return \back()->withInput($request->only('email'));
+                return \back()->withInput($request->only('username'));
             }
         } else {
             //Failed Login
@@ -84,12 +84,12 @@ class LoginController extends Controller
                 'username' => $username,
                 'ip' => $request->ip(),
                 "agent" => $request->header('user-agent'),
-                "status" => "Gagal Login, Email/Password Salah!",
+                "status" => "Gagal Login, Username/Password Salah!",
                 "device" => "web",
             ];
             SysFailedLogin::create($FailedLogin);
-            alert()->error('Gagal Login!', 'Email/Password Yang Anda Masukkan Salah!');
-            return \back()->withInput($request->only('email'));
+            alert()->error('Gagal Login!', 'Username/Password Yang Anda Masukkan Salah!');
+            return \back()->withInput($request->only('username'));
         }
     }
 
@@ -103,7 +103,7 @@ class LoginController extends Controller
             'uuid_profile' => $user->uuid_profile,
             'ip' => $request->ip(),
             "agent" => $request->header('user-agent'),
-            "status" => "Logout at " . date('Y-m-d H:i:s'),
+            "status" => "Akun " . $user->username . " Logout dari Aplikasi melalui Website",
             "device" => "web",
         ];
         SysLogin::create($SuccessLogout);

@@ -126,7 +126,7 @@ class PAKategoriController extends Controller
             ];
             $log = [
                 "apps" => "Portal Apps",
-                "subjek" => "Menambahkan Data Master Kategori UUID= " . $uuid,
+                "subjek" => "Menambahkan Data Master Kategori: " . $nama . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -215,7 +215,7 @@ class PAKategoriController extends Controller
             ];
             $log = [
                 "apps" => "Portal Apps",
-                "subjek" => "Mengubah Data Master Kategori UUID= " . $uuid,
+                "subjek" => "Mengubah Data Master Kategori: " . $nama . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -234,6 +234,9 @@ class PAKategoriController extends Controller
      */
     public function destroy(Request $request)
     {
+        // auth
+        $auth = Auth::user();
+
         // uuid
         $uuid = CID::decode($request->uuid);
 
@@ -251,7 +254,7 @@ class PAKategoriController extends Controller
             ];
             $log = [
                 "apps" => "Portal Apps",
-                "subjek" => "Menghapus Data Master Kategori UUID= " . $uuid,
+                "subjek" => "Menghapus Data Master Kategori: " . $data->nama . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];
@@ -275,7 +278,7 @@ class PAKategoriController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Status Aktif
      */
     public function status(Request $request)
     {
@@ -311,7 +314,7 @@ class PAKategoriController extends Controller
             ];
             $log = [
                 "apps" => "Portal Apps",
-                "subjek" => "Mengubah Status Master Kategori UUID= " . $uuid,
+                "subjek" => "Mengubah Status Master Kategori: " . $data->nama . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
             ];

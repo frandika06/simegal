@@ -1,13 +1,18 @@
 <div class="dlabnav">
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
+            <li style="margin-bottom:30px;">
+                <a href="{{ route('auth.home') }}">
+                    <i class="material-symbols-outlined">apps</i>
+                    <span class="nav-text">Launcher Aplikasi</span>
+                </a>
+            </li>
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">home</i>
                     <span class="nav-text">Dashboard</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('auth.home') }}">List Aplikasi</a></li>
                     <li><a href="{{ route('prt.apps.home.index') }}">Dashboard Portal</a></li>
                     <li><a target="_BLANK" href="{{ route('prt.home.index') }}">Portal Website</a></li>
                 </ul>

@@ -13,7 +13,7 @@
             {{-- begin::Actions --}}
             <div class="d-flex align-items-center py-2 py-md-1">
                 {{-- begin::Button --}}
-                <button type="button" class="btn btn-sm btn-info fw-bold" data-bs-toggle="modal" data-bs-target="#add_alamat_perusahaan" data-mode="add">Tambah Alamat</button>
+                <a type="button" class="btn btn-sm btn-info fw-bold" data-bs-toggle="modal" data-bs-target="#add_alamat_perusahaan" data-mode="add"><i class="fa-solid fa-plus"></i>Tambah Alamat</a>
                 {{-- end::Button --}}
             </div>
             {{-- end::Actions --}}
@@ -28,7 +28,16 @@
                     <div class="d-flex flex-stack">
                         {{-- begin::Content --}}
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">{{ $item->Kecamatan->name }}</span>
+                            <span data-kt-buttons="true" data-kt-buttons-target=".form-check-flex, .form-check-default">
+                                <label class="form-check-flex" data-default-uuid="{{ \CID::encode($item->uuid) }}">
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-default" type="radio" value="{{ $item->uuid }}" name="default" @if ($item->default == '1') checked @endif>
+                                        <div class="form-check-label fw-bold">
+                                            <strong>{{ $item->Kecamatan->name }}</strong>
+                                        </div>
+                                    </div>
+                                </label>
+                            </span>
                             <div class="text-gray-600">
                                 {{ $item->alamat }}, RT. {{ $item->rt }}, RW. {{ $item->rw }},
                                 {{ \Str::title($item->Desa->name) }}, {{ \Str::title($item->Kecamatan->name) }},
@@ -41,41 +50,38 @@
                         {{-- end::Content --}}
                         {{-- begin::Action --}}
                         <div class="d-flex justify-content-end align-items-center">
-                            {{-- begin::Button --}}
-                            @if ($item->google_maps != '' || ($item->lat != '' && $item->long != ''))
-                                @if ($item->google_maps != '')
-                                    @php
-                                        $url_maps = $item->google_maps;
-                                    @endphp
-                                @elseif($item->lat != '' && $item->long != '')
-                                    @php
-                                        $url_maps = 'https://www.google.com/maps/search/?api=1&query=' . $item->lat . ',' . $item->long . '';
-                                    @endphp
+                            {{-- begin::Actions --}}
+                            <a href="javascript:void(0);" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Aksi
+                                <i class="ki-duotone ki-down fs-5 ms-1"></i></a>
+                            {{-- begin::Menu --}}
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
+                                {{-- begin::Menu item --}}
+                                <div class="menu-item px-3">
+                                    <a href="javascript:void(0);" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#add_alamat_perusahaan" data-mode="edit" data-uuid-key="{{ \CID::encode($item->uuid) }}"><i class="fa-solid fa-edit me-2"></i> Edit</a>
+                                </div>
+                                {{-- end::Menu item --}}
+                                {{-- begin::Menu item --}}
+                                <div class="menu-item px-3">
+                                    <a href="javascript:void(0);" class="menu-link px-3 delete" data-uuid-key="{{ \CID::encode($item->uuid) }}"><i class="fa-solid fa-trash me-2"></i> Delete</a>
+                                </div>
+                                {{-- end::Menu item --}}
+                                @if ($item->google_maps != '' || ($item->lat != '' && $item->long != ''))
+                                    @if ($item->google_maps != '')
+                                        @php
+                                            $url_maps = $item->google_maps;
+                                        @endphp
+                                    @elseif($item->lat != '' && $item->long != '')
+                                        @php
+                                            $url_maps = 'https://www.google.com/maps/search/?api=1&query=' . $item->lat . ',' . $item->long . '';
+                                        @endphp
+                                    @endif
+                                    {{-- begin::Menu item --}}
+                                    <div class="menu-item px-3">
+                                        <a target="_BLANK" href="{{ $url_maps }}" class="menu-link px-3"><i class="fa-solid fa-map-location-dot me-2"></i> Maps</a>
+                                    </div>
                                 @endif
-                                <a target="_BLANK" href="{{ $url_maps }}" class="btn btn-icon btn-active-light-primary w-30px h-30px ms-auto me-5">
-                                    <i class="fa-solid fa-map-location-dot"></i>
-                                </a>
-                            @endif
-                            {{-- end::Button --}}
-                            {{-- begin::Button --}}
-                            <button type="button" class="btn btn-icon btn-active-light-primary w-30px h-30px ms-auto me-5" data-bs-toggle="modal" data-bs-target="#add_alamat_perusahaan" data-mode="edit" data-uuid-key="{{ \CID::encode($item->uuid) }}">
-                                <i class="ki-duotone ki-pencil fs-3">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                            </button>
-                            {{-- end::Button --}}
-                            {{-- begin::Button --}}
-                            <button type="button" class="btn btn-icon btn-active-light-primary w-30px h-30px ms-auto delete" data-uuid-key="{{ \CID::encode($item->uuid) }}">
-                                <i class="ki-duotone ki-trash fs-3">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                    <span class="path3"></span>
-                                    <span class="path4"></span>
-                                    <span class="path5"></span>
-                                </i>
-                            </button>
-                            {{-- end::Button --}}
+                            </div>
+                            {{-- end::Menu --}}
                         </div>
                         {{-- end::Action --}}
                     </div>
@@ -218,8 +224,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-info">Simpan</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class="fa-solid fa-times"></i>Batal</button>
+                        <button type="submit" class="btn btn-info"><i class="fa-solid fa-save"></i>Simpan</button>
                     </div>
                 </form>
             </div>
@@ -246,7 +252,7 @@
 
     {{-- edit form --}}
     <script>
-        $('button[data-bs-target^="#add_alamat_perusahaan"]').click(function() {
+        $('a[data-bs-target^="#add_alamat_perusahaan"]').click(function() {
             var mode = $(this).data("mode");
             if (mode == "add") {
                 $("#modal_title").html("Form Tambah Alamat");
@@ -343,6 +349,40 @@
                                 location.reload();
                             });
                         }
+                    });
+                }
+            });
+        });
+    </script>
+
+    {{-- ubah default --}}
+    <script>
+        $(".form-check-flex").click(function() {
+            var uuid = $(this).data("default-uuid");
+            $.ajax({
+                url: "{!! route('pdp.apps.auth.alamat.default') !!}",
+                type: 'POST',
+                data: {
+                    uuid: uuid,
+                    _method: 'post',
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    Swal.fire({
+                        title: "Success",
+                        text: res.message,
+                        icon: "success",
+                    }).then((result) => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: "Error",
+                        text: xhr.responseJSON.message,
+                        icon: "error",
+                    }).then((result) => {
+                        location.reload();
                     });
                 }
             });

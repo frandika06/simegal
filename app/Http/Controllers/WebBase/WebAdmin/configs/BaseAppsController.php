@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\WebBase\WebAdmin\configs;
 
+use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\SysLogAktifitas;
 use App\Models\SysLogin;
@@ -16,8 +17,6 @@ class BaseAppsController extends Controller
         // auth
         $auth = Auth::user();
         $role = $auth->role;
-        $sub_role = $auth->sub_role;
-        $sub_sub_role = $auth->sub_sub_role;
 
         // background
         $pageBg = Cache::get('pageBg');
@@ -32,13 +31,14 @@ class BaseAppsController extends Controller
 
         // Admin System
         if ($role == "Admin System" || $role == "Super Admin") {
-            return $this->adminSystem($request, $pageBg);
+            return $this->listApps($request, $pageBg);
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            if ($sub_role == "Admin Portal") {
+            $subRolePegawai = CID::subRolePegawai();
+            if ($subRolePegawai == false) {
                 return redirect()->route('prt.apps.home.index');
             } else {
-                return abort(404);
+                return $this->listApps($request, $pageBg);
             }
         } elseif ($role == "Perusahaan") {
             // Perusahaan
@@ -48,8 +48,8 @@ class BaseAppsController extends Controller
         }
     }
 
-    // adminSystem
-    private function adminSystem($request, $pageBg)
+    // listApps
+    private function listApps($request, $pageBg)
     {
         $dataLogs = [];
         $logAktifitas = SysLogAktifitas::where("dashboard", "1")
@@ -65,14 +65,11 @@ class BaseAppsController extends Controller
             ->limit(50)
             ->get();
         foreach ($loginLogs as $item) {
-            if ($item->publisher !== null) {
-                $item->tipe = "login";
-                $dataLogs[] = $item;
-            }
+            $item->tipe = "login";
+            $dataLogs[] = $item;
         }
 
-        // return $dataLogs;
-        return view('pages.admin.list_apps.admin', compact(
+        return view('pages.admin.list_apps.list_apps', compact(
             'dataLogs',
             'pageBg'
         ));

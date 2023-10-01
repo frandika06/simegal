@@ -94,6 +94,5 @@ class RegisterController extends Controller
             alert()->error('Error', "Gagal Mendaftarkan Akun " . $jp);
             return \back()->withInput($request->all());
         }
-
     }
 }

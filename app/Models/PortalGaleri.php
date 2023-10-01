@@ -30,6 +30,7 @@ class PortalGaleri extends Model
     {
         return $this->belongsTo('App\Models\Pegawai', 'uuid_created', 'uuid')->withTrashed();
     }
+
     public function RelDataGaleri()
     {
         return $this->hasMany('App\Models\PortalDataGaleri', 'uuid_galeri', 'uuid');

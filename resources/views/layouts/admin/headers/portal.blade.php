@@ -1,3 +1,21 @@
+<?php
+$auth = Auth::user();
+$role = $auth->role;
+$sub_role = \explode(',', $auth->sub_role);
+$sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+// PEGAWAI
+$ar_sub_role = ['Admin Aplikasi', 'Kasi', 'Petugas'];
+if ($role == 'Pegawai') {
+    if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+        $urlProfile = route('set.apps.profile.index');
+    } else {
+        $urlProfile = route('prt.apps.auth.profile.index');
+    }
+} else {
+    $urlProfile = route('set.apps.profile.index');
+}
+?>
 <div class="header">
     <div class="header-content">
         <nav class="navbar navbar-expand">
@@ -117,7 +135,7 @@
                                         </ul>
                                     </div>
                                     <div class="card-body p-3">
-                                        <a href="{{ route('prt.apps.auth.profile.index') }}" class="dropdown-item ai-icon ">
+                                        <a href="{{ $urlProfile }}" class="dropdown-item ai-icon ">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <polygon points="0 0 24 0 24 24 0 24" />

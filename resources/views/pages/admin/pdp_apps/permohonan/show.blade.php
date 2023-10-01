@@ -219,7 +219,7 @@
                 {{-- end::Card body --}}
                 {{-- begin::Card footer --}}
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
-                    <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="btn btn-light btn-active-light-primary me-2">Tutup</a>
+                    <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="btn btn-light btn-active-light-primary me-2"><i class="fa-solid fa-times"></i>Tutup</a>
                 </div>
                 {{-- end::Card footer --}}
                 {{-- end:Form --}}

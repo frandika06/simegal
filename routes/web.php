@@ -4,6 +4,7 @@ use App\Http\Controllers\WebBase\WebAdmin\auth\LoginController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\PAProfileController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\PDPProfileController;
 use App\Http\Controllers\WebBase\WebAdmin\auth\RegisterController;
+use App\Http\Controllers\WebBase\WebAdmin\auth\SetAppsProfileController;
 use App\Http\Controllers\WebBase\WebAdmin\configs\BaseAppsController;
 use App\Http\Controllers\WebBase\WebAdmin\PdpApps\dashboard\PDPDashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\PdpApps\permohonan\PDPPermohonanPeneraanController;
@@ -21,6 +22,9 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAPostinganController
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAStatistikController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\pegawai\SetAppsPegawaiController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\perusahaan\SetAppsPerusahaanController;
 use App\Http\Controllers\WebBase\WebConfigs\ExDownController;
 use App\Http\Controllers\WebBase\WebConfigs\NocController;
 use App\Http\Controllers\WebBase\WebConfigs\WilAdmController;
@@ -149,115 +153,118 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
     |--------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'portal-apps'], function () {
-        // dashboard
-        Route::get('/', [PADashboardController::class, 'index'])->name('prt.apps.home.index');
-        // auth
-        // PATH : WebBase/WebAdmin/auth
-        Route::group(['prefix' => 'auth'], function () {
-            Route::get('/profile', [PAProfileController::class, 'index'])->name('prt.apps.auth.profile.index');
-            Route::put('/profile', [PAProfileController::class, 'update'])->name('prt.apps.auth.profile.update');
-        });
-        // master
-        Route::group(['prefix' => 'master'], function () {
-            // portal kategori
-            Route::group(['prefix' => 'kategori'], function () {
-                Route::get('/', [PAKategoriController::class, 'index'])->name('prt.apps.mst.tags.index');
-                Route::get('/create', [PAKategoriController::class, 'create'])->name('prt.apps.mst.tags.create');
-                Route::post('/create', [PAKategoriController::class, 'store'])->name('prt.apps.mst.tags.store');
-                Route::get('/edit/{uuid}', [PAKategoriController::class, 'edit'])->name('prt.apps.mst.tags.edit');
-                Route::put('/edit/{uuid}', [PAKategoriController::class, 'update'])->name('prt.apps.mst.tags.update');
-                Route::post('/status', [PAKategoriController::class, 'status'])->name('prt.apps.mst.tags.status');
-                Route::post('/delete', [PAKategoriController::class, 'destroy'])->name('prt.apps.mst.tags.destroy');
+        // middleware : AdminPortal
+        Route::group(['middleware' => ['AdminPortal']], function () {
+            // dashboard
+            Route::get('/', [PADashboardController::class, 'index'])->name('prt.apps.home.index');
+            // auth
+            // PATH : WebBase/WebAdmin/auth
+            Route::group(['prefix' => 'auth'], function () {
+                Route::get('/profile', [PAProfileController::class, 'index'])->name('prt.apps.auth.profile.index');
+                Route::put('/profile', [PAProfileController::class, 'update'])->name('prt.apps.auth.profile.update');
             });
-            // portal sosmed
-            Route::group(['prefix' => 'sosmed'], function () {
-                Route::get('/', [PASosmedController::class, 'index'])->name('prt.apps.mst.sosmed.index');
-                Route::put('/', [PASosmedController::class, 'update'])->name('prt.apps.mst.sosmed.update');
+            // master
+            Route::group(['prefix' => 'master'], function () {
+                // portal kategori
+                Route::group(['prefix' => 'kategori'], function () {
+                    Route::get('/', [PAKategoriController::class, 'index'])->name('prt.apps.mst.tags.index');
+                    Route::get('/create', [PAKategoriController::class, 'create'])->name('prt.apps.mst.tags.create');
+                    Route::post('/create', [PAKategoriController::class, 'store'])->name('prt.apps.mst.tags.store');
+                    Route::get('/edit/{uuid}', [PAKategoriController::class, 'edit'])->name('prt.apps.mst.tags.edit');
+                    Route::put('/edit/{uuid}', [PAKategoriController::class, 'update'])->name('prt.apps.mst.tags.update');
+                    Route::post('/status', [PAKategoriController::class, 'status'])->name('prt.apps.mst.tags.status');
+                    Route::post('/delete', [PAKategoriController::class, 'destroy'])->name('prt.apps.mst.tags.destroy');
+                });
+                // portal sosmed
+                Route::group(['prefix' => 'sosmed'], function () {
+                    Route::get('/', [PASosmedController::class, 'index'])->name('prt.apps.mst.sosmed.index');
+                    Route::put('/', [PASosmedController::class, 'update'])->name('prt.apps.mst.sosmed.update');
+                });
+                // portal setup
+                Route::group(['prefix' => 'setup'], function () {
+                    Route::get('/', [PASetupController::class, 'index'])->name('prt.apps.mst.setup.index');
+                    Route::put('/', [PASetupController::class, 'update'])->name('prt.apps.mst.setup.update');
+                });
             });
-            // portal setup
-            Route::group(['prefix' => 'setup'], function () {
-                Route::get('/', [PASetupController::class, 'index'])->name('prt.apps.mst.setup.index');
-                Route::put('/', [PASetupController::class, 'update'])->name('prt.apps.mst.setup.update');
+            // portal postingan
+            Route::group(['prefix' => 'postingan'], function () {
+                Route::get('/', [PAPostinganController::class, 'index'])->name('prt.apps.post.index');
+                Route::get('/create', [PAPostinganController::class, 'create'])->name('prt.apps.post.create');
+                Route::post('/create', [PAPostinganController::class, 'store'])->name('prt.apps.post.store');
+                Route::get('/edit/{uuid}', [PAPostinganController::class, 'edit'])->name('prt.apps.post.edit');
+                Route::put('/edit/{uuid}', [PAPostinganController::class, 'update'])->name('prt.apps.post.update');
+                Route::post('/delete', [PAPostinganController::class, 'destroy'])->name('prt.apps.post.destroy');
             });
-        });
-        // portal postingan
-        Route::group(['prefix' => 'postingan'], function () {
-            Route::get('/', [PAPostinganController::class, 'index'])->name('prt.apps.post.index');
-            Route::get('/create', [PAPostinganController::class, 'create'])->name('prt.apps.post.create');
-            Route::post('/create', [PAPostinganController::class, 'store'])->name('prt.apps.post.store');
-            Route::get('/edit/{uuid}', [PAPostinganController::class, 'edit'])->name('prt.apps.post.edit');
-            Route::put('/edit/{uuid}', [PAPostinganController::class, 'update'])->name('prt.apps.post.update');
-            Route::post('/delete', [PAPostinganController::class, 'destroy'])->name('prt.apps.post.destroy');
-        });
-        // portal halaman
-        Route::group(['prefix' => 'halaman'], function () {
-            Route::get('/', [PAHalamanController::class, 'index'])->name('prt.apps.page.index');
-            Route::get('/create', [PAHalamanController::class, 'create'])->name('prt.apps.page.create');
-            Route::post('/create', [PAHalamanController::class, 'store'])->name('prt.apps.page.store');
-            Route::get('/edit/{uuid}', [PAHalamanController::class, 'edit'])->name('prt.apps.page.edit');
-            Route::put('/edit/{uuid}', [PAHalamanController::class, 'update'])->name('prt.apps.page.update');
-            Route::post('/delete', [PAHalamanController::class, 'destroy'])->name('prt.apps.page.destroy');
-        });
-        // portal banner
-        Route::group(['prefix' => 'banner'], function () {
-            Route::get('/', [PABannerController::class, 'index'])->name('prt.apps.banner.index');
-            Route::get('/create', [PABannerController::class, 'create'])->name('prt.apps.banner.create');
-            Route::post('/create', [PABannerController::class, 'store'])->name('prt.apps.banner.store');
-            Route::get('/edit/{uuid}', [PABannerController::class, 'edit'])->name('prt.apps.banner.edit');
-            Route::put('/edit/{uuid}', [PABannerController::class, 'update'])->name('prt.apps.banner.update');
-            Route::post('/delete', [PABannerController::class, 'destroy'])->name('prt.apps.banner.destroy');
-        });
-        // portal galeri
-        Route::group(['prefix' => 'galeri'], function () {
-            Route::get('/', [PAGaleriController::class, 'index'])->name('prt.apps.gallery.index');
-            Route::get('/create', [PAGaleriController::class, 'create'])->name('prt.apps.gallery.create');
-            Route::post('/create', [PAGaleriController::class, 'store'])->name('prt.apps.gallery.store');
-            Route::get('/edit/{uuid}', [PAGaleriController::class, 'edit'])->name('prt.apps.gallery.edit');
-            Route::put('/edit/{uuid}', [PAGaleriController::class, 'update'])->name('prt.apps.gallery.update');
-            Route::post('/delete', [PAGaleriController::class, 'destroy'])->name('prt.apps.gallery.destroy');
-            // portal foto galeri
-            Route::group(['prefix' => '{uuid}/foto'], function () {
-                Route::get('/', [PAFotoController::class, 'index'])->name('prt.apps.foto.index');
-                Route::post('/upload', [PAFotoController::class, 'upload'])->name('prt.apps.foto.upload');
-                Route::post('/delete', [PAFotoController::class, 'destroy'])->name('prt.apps.foto.destroy');
+            // portal halaman
+            Route::group(['prefix' => 'halaman'], function () {
+                Route::get('/', [PAHalamanController::class, 'index'])->name('prt.apps.page.index');
+                Route::get('/create', [PAHalamanController::class, 'create'])->name('prt.apps.page.create');
+                Route::post('/create', [PAHalamanController::class, 'store'])->name('prt.apps.page.store');
+                Route::get('/edit/{uuid}', [PAHalamanController::class, 'edit'])->name('prt.apps.page.edit');
+                Route::put('/edit/{uuid}', [PAHalamanController::class, 'update'])->name('prt.apps.page.update');
+                Route::post('/delete', [PAHalamanController::class, 'destroy'])->name('prt.apps.page.destroy');
             });
-        });
-        // portal video
-        Route::group(['prefix' => 'video'], function () {
-            Route::get('/', [PAVideoController::class, 'index'])->name('prt.apps.video.index');
-            Route::get('/create', [PAVideoController::class, 'create'])->name('prt.apps.video.create');
-            Route::post('/create', [PAVideoController::class, 'store'])->name('prt.apps.video.store');
-            Route::get('/edit/{uuid}', [PAVideoController::class, 'edit'])->name('prt.apps.video.edit');
-            Route::put('/edit/{uuid}', [PAVideoController::class, 'update'])->name('prt.apps.video.update');
-            Route::post('/delete', [PAVideoController::class, 'destroy'])->name('prt.apps.video.destroy');
-        });
-        // portal unduhan
-        Route::group(['prefix' => 'unduhan'], function () {
-            Route::get('/', [PAUnduhanController::class, 'index'])->name('prt.apps.unduh.index');
-            Route::get('/create', [PAUnduhanController::class, 'create'])->name('prt.apps.unduh.create');
-            Route::post('/create', [PAUnduhanController::class, 'store'])->name('prt.apps.unduh.store');
-            Route::get('/edit/{uuid}', [PAUnduhanController::class, 'edit'])->name('prt.apps.unduh.edit');
-            Route::put('/edit/{uuid}', [PAUnduhanController::class, 'update'])->name('prt.apps.unduh.update');
-            Route::post('/delete', [PAUnduhanController::class, 'destroy'])->name('prt.apps.unduh.destroy');
-        });
-        // portal pesan
-        Route::group(['prefix' => 'pesan'], function () {
-            Route::get('/', [PAPesanController::class, 'index'])->name('prt.apps.pesan.index');
-            Route::get('/read/{uuid}', [PAPesanController::class, 'read'])->name('prt.apps.pesan.read');
-            Route::post('/delete', [PAPesanController::class, 'destroy'])->name('prt.apps.pesan.destroy');
-        });
-        // portal faq
-        Route::group(['prefix' => 'faq'], function () {
-            Route::get('/', [PAFAQController::class, 'index'])->name('prt.apps.faq.index');
-            Route::get('/create', [PAFAQController::class, 'create'])->name('prt.apps.faq.create');
-            Route::post('/create', [PAFAQController::class, 'store'])->name('prt.apps.faq.store');
-            Route::get('/edit/{uuid}', [PAFAQController::class, 'edit'])->name('prt.apps.faq.edit');
-            Route::put('/edit/{uuid}', [PAFAQController::class, 'update'])->name('prt.apps.faq.update');
-            Route::post('/delete', [PAFAQController::class, 'destroy'])->name('prt.apps.faq.destroy');
-        });
-        // portal faq
-        Route::group(['prefix' => 'statistik'], function () {
-            Route::get('/', [PAStatistikController::class, 'index'])->name('prt.apps.stat.index');
+            // portal banner
+            Route::group(['prefix' => 'banner'], function () {
+                Route::get('/', [PABannerController::class, 'index'])->name('prt.apps.banner.index');
+                Route::get('/create', [PABannerController::class, 'create'])->name('prt.apps.banner.create');
+                Route::post('/create', [PABannerController::class, 'store'])->name('prt.apps.banner.store');
+                Route::get('/edit/{uuid}', [PABannerController::class, 'edit'])->name('prt.apps.banner.edit');
+                Route::put('/edit/{uuid}', [PABannerController::class, 'update'])->name('prt.apps.banner.update');
+                Route::post('/delete', [PABannerController::class, 'destroy'])->name('prt.apps.banner.destroy');
+            });
+            // portal galeri
+            Route::group(['prefix' => 'galeri'], function () {
+                Route::get('/', [PAGaleriController::class, 'index'])->name('prt.apps.gallery.index');
+                Route::get('/create', [PAGaleriController::class, 'create'])->name('prt.apps.gallery.create');
+                Route::post('/create', [PAGaleriController::class, 'store'])->name('prt.apps.gallery.store');
+                Route::get('/edit/{uuid}', [PAGaleriController::class, 'edit'])->name('prt.apps.gallery.edit');
+                Route::put('/edit/{uuid}', [PAGaleriController::class, 'update'])->name('prt.apps.gallery.update');
+                Route::post('/delete', [PAGaleriController::class, 'destroy'])->name('prt.apps.gallery.destroy');
+                // portal foto galeri
+                Route::group(['prefix' => '{uuid}/foto'], function () {
+                    Route::get('/', [PAFotoController::class, 'index'])->name('prt.apps.foto.index');
+                    Route::post('/upload', [PAFotoController::class, 'upload'])->name('prt.apps.foto.upload');
+                    Route::post('/delete', [PAFotoController::class, 'destroy'])->name('prt.apps.foto.destroy');
+                });
+            });
+            // portal video
+            Route::group(['prefix' => 'video'], function () {
+                Route::get('/', [PAVideoController::class, 'index'])->name('prt.apps.video.index');
+                Route::get('/create', [PAVideoController::class, 'create'])->name('prt.apps.video.create');
+                Route::post('/create', [PAVideoController::class, 'store'])->name('prt.apps.video.store');
+                Route::get('/edit/{uuid}', [PAVideoController::class, 'edit'])->name('prt.apps.video.edit');
+                Route::put('/edit/{uuid}', [PAVideoController::class, 'update'])->name('prt.apps.video.update');
+                Route::post('/delete', [PAVideoController::class, 'destroy'])->name('prt.apps.video.destroy');
+            });
+            // portal unduhan
+            Route::group(['prefix' => 'unduhan'], function () {
+                Route::get('/', [PAUnduhanController::class, 'index'])->name('prt.apps.unduh.index');
+                Route::get('/create', [PAUnduhanController::class, 'create'])->name('prt.apps.unduh.create');
+                Route::post('/create', [PAUnduhanController::class, 'store'])->name('prt.apps.unduh.store');
+                Route::get('/edit/{uuid}', [PAUnduhanController::class, 'edit'])->name('prt.apps.unduh.edit');
+                Route::put('/edit/{uuid}', [PAUnduhanController::class, 'update'])->name('prt.apps.unduh.update');
+                Route::post('/delete', [PAUnduhanController::class, 'destroy'])->name('prt.apps.unduh.destroy');
+            });
+            // portal pesan
+            Route::group(['prefix' => 'pesan'], function () {
+                Route::get('/', [PAPesanController::class, 'index'])->name('prt.apps.pesan.index');
+                Route::get('/read/{uuid}', [PAPesanController::class, 'read'])->name('prt.apps.pesan.read');
+                Route::post('/delete', [PAPesanController::class, 'destroy'])->name('prt.apps.pesan.destroy');
+            });
+            // portal faq
+            Route::group(['prefix' => 'faq'], function () {
+                Route::get('/', [PAFAQController::class, 'index'])->name('prt.apps.faq.index');
+                Route::get('/create', [PAFAQController::class, 'create'])->name('prt.apps.faq.create');
+                Route::post('/create', [PAFAQController::class, 'store'])->name('prt.apps.faq.store');
+                Route::get('/edit/{uuid}', [PAFAQController::class, 'edit'])->name('prt.apps.faq.edit');
+                Route::put('/edit/{uuid}', [PAFAQController::class, 'update'])->name('prt.apps.faq.update');
+                Route::post('/delete', [PAFAQController::class, 'destroy'])->name('prt.apps.faq.destroy');
+            });
+            // portal faq
+            Route::group(['prefix' => 'statistik'], function () {
+                Route::get('/', [PAStatistikController::class, 'index'])->name('prt.apps.stat.index');
+            });
         });
     });
 
@@ -270,25 +277,85 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
     Route::group(['prefix' => 'pdp-apps'], function () {
         // dashboard
         Route::get('/', [PDPDashboardController::class, 'index'])->name('pdp.apps.home.index');
-        // auth
-        // PATH : WebBase/WebAdmin/auth
-        Route::group(['prefix' => 'auth'], function () {
-            Route::get('/profile', [PDPProfileController::class, 'index'])->name('pdp.apps.auth.profile.index');
-            Route::post('/profile', [PDPProfileController::class, 'update'])->name('pdp.apps.auth.profile.update');
-            Route::get('/alamat/{uuid}', [PDPProfileController::class, 'showAlamat'])->name('pdp.apps.auth.alamat.show');
-            Route::delete('/alamat', [PDPProfileController::class, 'destroy'])->name('pdp.apps.auth.alamat.destroy');
-        });
 
-        // permohonan
-        Route::group(['prefix' => 'permohonan'], function () {
-            Route::get('/', [PDPPermohonanPeneraanController::class, 'index'])->name('pdp.apps.reqpeneraan.index');
-            Route::get('/create', [PDPPermohonanPeneraanController::class, 'create'])->name('pdp.apps.reqpeneraan.create');
-            Route::post('/create', [PDPPermohonanPeneraanController::class, 'store'])->name('pdp.apps.reqpeneraan.store');
-            Route::get('/edit/{uuid}', [PDPPermohonanPeneraanController::class, 'edit'])->name('pdp.apps.reqpeneraan.edit');
-            Route::put('/edit/{uuid}', [PDPPermohonanPeneraanController::class, 'update'])->name('pdp.apps.reqpeneraan.update');
-            Route::get('/show/{uuid}', [PDPPermohonanPeneraanController::class, 'show'])->name('pdp.apps.reqpeneraan.show');
-            Route::delete('/delete', [PDPPermohonanPeneraanController::class, 'destroy'])->name('pdp.apps.reqpeneraan.destroy');
-            Route::get('/data', [PDPPermohonanPeneraanController::class, 'data'])->name('pdp.apps.reqpeneraan.data');
+        // middleware : Perusahaan
+        Route::group(['middleware' => ['Perusahaan']], function () {
+            // auth
+            // PATH : WebBase/WebAdmin/auth
+            Route::group(['prefix' => 'auth'], function () {
+                Route::get('/profile', [PDPProfileController::class, 'index'])->name('pdp.apps.auth.profile.index');
+                Route::post('/profile', [PDPProfileController::class, 'update'])->name('pdp.apps.auth.profile.update');
+                Route::post('/default-alamat', [PDPProfileController::class, 'defaultAlamat'])->name('pdp.apps.auth.alamat.default');
+                Route::get('/alamat/{uuid}', [PDPProfileController::class, 'showAlamat'])->name('pdp.apps.auth.alamat.show');
+                Route::delete('/alamat', [PDPProfileController::class, 'destroy'])->name('pdp.apps.auth.alamat.destroy');
+            });
+
+            // permohonan
+            Route::group(['prefix' => 'permohonan'], function () {
+                Route::get('/', [PDPPermohonanPeneraanController::class, 'index'])->name('pdp.apps.reqpeneraan.index');
+                Route::get('/create', [PDPPermohonanPeneraanController::class, 'create'])->name('pdp.apps.reqpeneraan.create');
+                Route::post('/create', [PDPPermohonanPeneraanController::class, 'store'])->name('pdp.apps.reqpeneraan.store');
+                Route::get('/edit/{uuid}', [PDPPermohonanPeneraanController::class, 'edit'])->name('pdp.apps.reqpeneraan.edit');
+                Route::put('/edit/{uuid}', [PDPPermohonanPeneraanController::class, 'update'])->name('pdp.apps.reqpeneraan.update');
+                Route::get('/show/{uuid}', [PDPPermohonanPeneraanController::class, 'show'])->name('pdp.apps.reqpeneraan.show');
+                Route::delete('/delete', [PDPPermohonanPeneraanController::class, 'destroy'])->name('pdp.apps.reqpeneraan.destroy');
+                Route::get('/data', [PDPPermohonanPeneraanController::class, 'data'])->name('pdp.apps.reqpeneraan.data');
+            });
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGATURAN APPS
+    | PATH : WebBase/WebAdmin/SettingsApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'settings-apps'], function () {
+        // middleware : Pegawai
+        Route::group(['middleware' => ['Pegawai']], function () {
+            // dashboard
+            Route::get('/', [SetAppsDashboardController::class, 'index'])->name('set.apps.home.index');
+
+            // auth
+            // PATH : WebBase/WebAdmin/auth
+            Route::group(['prefix' => 'profile'], function () {
+                Route::get('/', [SetAppsProfileController::class, 'index'])->name('set.apps.profile.index');
+                Route::put('/', [SetAppsProfileController::class, 'update'])->name('set.apps.profile.update');
+            });
+
+            // perusahaan
+            Route::group(['prefix' => 'perusahaan'], function () {
+                Route::get('/{tags}', [SetAppsPerusahaanController::class, 'index'])->name('set.apps.perusahaan.index');
+                // middleware : Admin
+                Route::group(['middleware' => ['Admin']], function () {
+                    Route::post('/{tags}/create', [SetAppsPerusahaanController::class, 'store'])->name('set.apps.perusahaan.store');
+                    Route::post('/{tags}/status-aktifkan', [SetAppsPerusahaanController::class, 'statusAktifkan'])->name('set.apps.perusahaan.status.aktifkan');
+                    Route::post('/{tags}/status-tangguhkan', [SetAppsPerusahaanController::class, 'statusTangguhkan'])->name('set.apps.perusahaan.status.tangguhkan');
+                    Route::get('/{tags}/edit/{uuid}', [SetAppsPerusahaanController::class, 'edit'])->name('set.apps.perusahaan.edit');
+                    Route::put('/{tags}/edit/{uuid}', [SetAppsPerusahaanController::class, 'update'])->name('set.apps.perusahaan.update');
+                    Route::delete('/{tags}/delete', [SetAppsPerusahaanController::class, 'destroy'])->name('set.apps.perusahaan.destroy');
+                    Route::post('/{tags}/default-alamat', [SetAppsPerusahaanController::class, 'defaultAlamat'])->name('set.apps.perusahaan.alamat.default');
+                    Route::delete('/{tags}/delete-alamat', [SetAppsPerusahaanController::class, 'destroyAlamat'])->name('set.apps.perusahaan.alamat.destroy');
+                });
+                Route::get('/{tags}/show/{uuid}', [SetAppsPerusahaanController::class, 'show'])->name('set.apps.perusahaan.show');
+                Route::get('/{tags}/data', [SetAppsPerusahaanController::class, 'data'])->name('set.apps.perusahaan.data');
+                Route::get('/{tags}/show-alamat/{uuid}', [SetAppsPerusahaanController::class, 'showAlamat'])->name('set.apps.perusahaan.alamat.show');
+            });
+
+            // pegawai
+            Route::group(['prefix' => 'pegawai'], function () {
+                Route::get('/', [SetAppsPegawaiController::class, 'index'])->name('set.apps.pegawai.index');
+                // middleware : Admin
+                Route::group(['middleware' => ['Admin']], function () {
+                    Route::post('/create', [SetAppsPegawaiController::class, 'store'])->name('set.apps.pegawai.store');
+                    Route::get('/edit/{uuid}', [SetAppsPegawaiController::class, 'edit'])->name('set.apps.pegawai.edit');
+                    Route::put('/edit/{uuid}', [SetAppsPegawaiController::class, 'update'])->name('set.apps.pegawai.update');
+                    Route::put('/status', [SetAppsPegawaiController::class, 'status'])->name('set.apps.pegawai.status');
+                    Route::delete('/delete', [SetAppsPegawaiController::class, 'destroy'])->name('set.apps.pegawai.destroy');
+                });
+                Route::get('/show/{uuid}', [SetAppsPegawaiController::class, 'show'])->name('set.apps.pegawai.show');
+                Route::get('/data', [SetAppsPegawaiController::class, 'data'])->name('set.apps.pegawai.data');
+            });
         });
     });
 });

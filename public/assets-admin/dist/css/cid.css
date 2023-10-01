@@ -22,3 +22,9 @@
     background-position: center;
     /* background-image: url(../images/page-bg/page-02.jpg); */
 }
+
+.header-bg-list-apps {
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-image: url(../media/misc/header-bg.png); */
+}

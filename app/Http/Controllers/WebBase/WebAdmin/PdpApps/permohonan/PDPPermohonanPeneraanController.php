@@ -29,7 +29,7 @@ class PDPPermohonanPeneraanController extends Controller
             $status = $request->session()->get('filter_status');
         } else {
             $request->session()->put('filter_tahun', date('Y'));
-            $request->session()->put('filter_status', date('Y'));
+            $request->session()->put('filter_status', "Baru");
             $tahun = date('Y');
             $status = "Baru";
         }
@@ -140,9 +140,8 @@ class PDPPermohonanPeneraanController extends Controller
             ];
             $log = [
                 "apps" => "Penjadwalan dan Penugasan Apps",
-                "subjek" => "Berhasil Mengajukan Permohonan Pengujian (" . $kode_permohonan . ") dengan UUID= " . $uuid,
+                "subjek" => "Berhasil Mengajukan Permohonan Pengujian (" . $kode_permohonan . ") - " . $uuid,
                 "aktifitas" => $aktifitas,
-                "role" => "Perusahaan",
                 "device" => "web",
                 "dashboard" => "1",
             ];
@@ -278,9 +277,8 @@ class PDPPermohonanPeneraanController extends Controller
             ];
             $log = [
                 "apps" => "Penjadwalan dan Penugasan Apps",
-                "subjek" => "Berhasil Mengubah Permohonan Pengujian (" . $kode_permohonan . ") dengan UUID= " . $uuid,
+                "subjek" => "Berhasil Mengubah Permohonan Pengujian (" . $kode_permohonan . ") - " . $uuid,
                 "aktifitas" => $aktifitas,
-                "role" => "Perusahaan",
                 "device" => "web",
                 "dashboard" => "1",
             ];
@@ -316,9 +314,8 @@ class PDPPermohonanPeneraanController extends Controller
             ];
             $log = [
                 "apps" => "Penjadwalan dan Penugasan Apps",
-                "subjek" => "Berhasil Menghapus Permohonan Peneraan (" . $data->kode_permohonan . ") dengan UUID= " . $uuid,
+                "subjek" => "Berhasil Menghapus Permohonan Peneraan (" . $data->kode_permohonan . ") - " . $uuid,
                 "aktifitas" => $aktifitas,
-                "role" => "Perusahaan",
                 "device" => "web",
                 "dashboard" => "1",
             ];

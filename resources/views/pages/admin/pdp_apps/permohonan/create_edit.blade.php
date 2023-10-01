@@ -231,8 +231,8 @@
                     {{-- end::Card body --}}
                     {{-- begin::Card footer --}}
                     <div class="card-footer d-flex justify-content-end py-6 px-9">
-                        <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="btn btn-light btn-active-light-primary me-2">Batal</a>
-                        <button type="submit" class="btn btn-info">{{ $submit }}</button>
+                        <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="btn btn-light btn-active-light-primary me-2"><i class="fa-solid fa-times"></i>Batal</a>
+                        <button type="submit" class="btn btn-info"><i class="fa-solid fa-save"></i>{{ $submit }}</button>
                     </div>
                     {{-- end::Card footer --}}
                 </form>

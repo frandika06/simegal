@@ -124,7 +124,7 @@ class LoginApiController extends Controller
             'uuid_profile' => $user->uuid_profile,
             'ip' => $request->ip(),
             "agent" => $request->header('user-agent'),
-            "status" => "Login at " . date('Y-m-d H:i:s'),
+            "status" => "Akun " . $username . " Login ke Aplikasi melalui Mobile",
             "device" => "mobile",
         ];
         SysLogin::create($SuccessLogin);
@@ -150,7 +150,7 @@ class LoginApiController extends Controller
                 'uuid_profile' => $user->uuid_profile,
                 'ip' => $request->ip(),
                 "agent" => $request->header('user-agent'),
-                "status" => "Logout at " . date('Y-m-d H:i:s'),
+                "status" => "Akun " . $user->username . " Logout dari Aplikasi melalui Mobile",
                 "device" => "mobile",
             ];
             SysLogin::create($SuccessLogin);

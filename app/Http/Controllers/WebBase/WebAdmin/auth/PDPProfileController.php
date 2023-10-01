@@ -119,6 +119,7 @@ class PDPProfileController extends Controller
             "email" => Str::lower($email),
             "no_telp_1" => $request->no_telp_1,
             "no_telp_2" => $request->no_telp_2,
+            "uuid_updated" => $uuid_profile,
         ];
 
         // foto
@@ -155,7 +156,6 @@ class PDPProfileController extends Controller
                 "apps" => "Penjadwalan dan Penugasan Apps",
                 "subjek" => "Berhasil Mengubah Profile " . $jp . " dengan UUID= " . $uuid_profile,
                 "aktifitas" => $aktifitas,
-                "role" => "Perusahaan",
                 "device" => "web",
             ];
             CID::addToLogAktifitas($request, $log);
@@ -219,7 +219,6 @@ class PDPProfileController extends Controller
                     "apps" => "Penjadwalan dan Penugasan Apps",
                     "subjek" => "Berhasil Mengubah Alamat Perusahaan/Usaha dengan UUID= " . $uuid,
                     "aktifitas" => $aktifitas,
-                    "role" => "Perusahaan",
                     "device" => "web",
                 ];
                 CID::addToLogAktifitas($request, $log);
@@ -273,7 +272,6 @@ class PDPProfileController extends Controller
                     "apps" => "Penjadwalan dan Penugasan Apps",
                     "subjek" => "Berhasil Menambahkan Alamat Perusahaan/Usaha dengan UUID= " . $uuid,
                     "aktifitas" => $aktifitas,
-                    "role" => "Perusahaan",
                     "device" => "web",
                 ];
                 CID::addToLogAktifitas($request, $log);
@@ -341,7 +339,6 @@ class PDPProfileController extends Controller
                 "apps" => "Penjadwalan dan Penugasan Apps",
                 "subjek" => "Berhasil Mengubah Akun Login dengan UUID= " . $auth->uuid,
                 "aktifitas" => $aktifitas,
-                "role" => "Perusahaan",
                 "device" => "web",
             ];
             CID::addToLogAktifitas($request, $log);
@@ -351,6 +348,62 @@ class PDPProfileController extends Controller
         } else {
             alert()->error('Gagal!', 'Gagal Mengubah Keamanan Akun.');
             return back()->withInput($request->all());
+        }
+    }
+
+    // defaultAlamat
+    public function defaultAlamat(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+        $uuid_profile = $auth->uuid_profile;
+
+        // uuid
+        $uuid = CID::decode($request->uuid);
+
+        // data
+        $data = AlamatPerusahaan::findOrFail($uuid);
+        $uuid_perusahaan = $data->uuid_perusahaan;
+
+        // value
+        $value_1 = [
+            "default" => "1",
+            "uuid_updated" => $uuid_profile,
+        ];
+
+        // update default
+        $save_1 = AlamatPerusahaan::where("uuid_perusahaan", $uuid_perusahaan)->update(["default" => "0"]);
+        $save_2 = AlamatPerusahaan::where("uuid", $uuid)->update($value_1);
+
+        if ($save_1 && $save_2) {
+            // create log
+            $aktifitas = [
+                "tabel" => array("alamat_perusahaan"),
+                "uuid" => array($uuid),
+                "value" => array($data),
+            ];
+            $log = [
+                "apps" => "Penjadwalan dan Penugasan Apps",
+                "subjek" => "Berhasil Mengubah Alamat Default Perusahaan/Usaha dengan UUID= " . $uuid,
+                "aktifitas" => $aktifitas,
+                "device" => "web",
+            ];
+            CID::addToLogAktifitas($request, $log);
+            // alert success
+            $msg = "Berhasil Mengubah Alamat Default Perusahaan/Usaha!";
+            $response = [
+                "status" => true,
+                "message" => $msg,
+            ];
+            return response()->json($response, 200);
+        } else {
+            // success
+            $msg = "Gagal Mengubah Alamat Default Perusahaan/Usaha!";
+            $response = [
+                "status" => false,
+                "message" => $msg,
+            ];
+            return response()->json($response, 422);
         }
     }
 
@@ -399,7 +452,6 @@ class PDPProfileController extends Controller
                 "apps" => "Penjadwalan dan Penugasan Apps",
                 "subjek" => "Berhasil Menghapus Alamat Perusahaan/Usaha dengan UUID= " . $uuid,
                 "aktifitas" => $aktifitas,
-                "role" => "Perusahaan",
                 "device" => "web",
             ];
             CID::addToLogAktifitas($request, $log);

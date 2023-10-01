@@ -22,4 +22,9 @@ class Pegawai extends Model
         "updated_at",
         "deleted_at",
     ];
+
+    public function RelUser()
+    {
+        return $this->belongsTo('App\Models\User', 'uuid', 'uuid_profile')->withTrashed();
+    }
 }

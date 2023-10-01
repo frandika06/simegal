@@ -55,12 +55,7 @@
                 {{-- begin::Action buttons --}}
                 <div class="d-flex justify-content-end align-items-center mt-12">
                     {{-- begin::Button --}}
-                    <button type="submit" class="btn btn-info" id="form_simpan_path_profile">
-                        <span class="indicator-label">Simpan</span>
-                        <span class="indicator-progress">Mohon Tunggu...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                        </span>
-                    </button>
+                    <button type="submit" class="btn btn-info"><i class="fa-solid fa-save"></i>Simpan</button>
                     {{-- end::Button --}}
                 </div>
                 {{-- begin::Action buttons --}}

@@ -67,5 +67,11 @@ class Kernel extends HttpKernel
         'LastSeen' => \App\Http\Middleware\LastSeen::class,
         'WebFECounter' => \App\Http\Middleware\WebFECounter::class,
         'pbh' => \App\Http\Middleware\PreventBackHistory::class,
+        'Pegawai' => \App\Http\Middleware\Pegawai::class,
+        'Admin' => \App\Http\Middleware\Admin::class,
+        'Kasi' => \App\Http\Middleware\Kasi::class,
+        'Petugas' => \App\Http\Middleware\Petugas::class,
+        'AdminPortal' => \App\Http\Middleware\AdminPortal::class,
+        'Perusahaan' => \App\Http\Middleware\Perusahaan::class,
     ];
 }

@@ -2,5 +2,6 @@
     @include('layouts.admin.headers.portal')
 @elseif(Request::is('pdp-apps*'))
     @include('layouts.admin.headers.pdp')
-@else
+@elseif(Request::is('settings-apps*'))
+    @include('layouts.admin.headers.settings')
 @endif
