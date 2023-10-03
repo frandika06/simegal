@@ -105,6 +105,15 @@ class AdminSimegalSeeder extends Seeder
                     $subRole = "Kasi";
                 }
 
+                $randSubSubRole = rand(1, 3);
+                if ($randSubSubRole == "1") {
+                    $subSubRole = "Kasi UAPV";
+                } elseif ($randSubSubRole == "2") {
+                    $subSubRole = "Kasi MASSA";
+                } elseif ($randSubSubRole == "3") {
+                    $subSubRole = "Kasi BDKT";
+                }
+
                 if ($item->email == "nwytchard10@blogspot.com") {
                     $subRole = "Admin Aplikasi";
                 } elseif ($item->email == "jevanson1b@admin.ch") {
@@ -113,6 +122,11 @@ class AdminSimegalSeeder extends Seeder
                     $subRole = "Kasi";
                 }
 
+                if ($subRole == "Kasi") {
+                    $subSubRole = $subSubRole;
+                } else {
+                    $subSubRole = null;
+                }
                 // value
                 $uuid_root = Str::uuid();
                 $value_adm_root = [
@@ -133,6 +147,7 @@ class AdminSimegalSeeder extends Seeder
                     "password" => \bcrypt('admin1234'),
                     "role" => "Pegawai",
                     "sub_role" => $subRole,
+                    "sub_sub_role" => $subSubRole,
                     "uuid_created" => $uuid_root,
                 ];
                 // create user

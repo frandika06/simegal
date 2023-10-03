@@ -3,13 +3,13 @@
     SIMEGAL
 @endpush
 @push('title')
-    Edit {{ $data->nama_lengkap }} | SIMEGAL
+    Edit {{ $data->nama_lengkap }} | Pengaturan Aplikasi | SIMEGAL
 @endpush
 @push('description')
-    Edit {{ $data->nama_lengkap }} | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    Edit {{ $data->nama_lengkap }} | Pengaturan Aplikasi | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    Edit {{ $data->nama_lengkap }}
+    Edit {{ $data->nama_lengkap }} | Pengaturan Aplikasi
 @endpush
 @push('styles')
     {{-- begin::Vendor Stylesheets(used for this page only) --}}

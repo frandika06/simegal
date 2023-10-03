@@ -7,6 +7,7 @@
             data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu, #kt_aside_menu_wrapper" data-kt-scroll-offset="102">
             {{-- begin::Menu --}}
             <div class="menu menu-column menu-rounded menu-sub-indention menu-active-bg fw-semibold my-auto" id="#kt_aside_menu" data-kt-menu="true">
+
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
@@ -19,6 +20,7 @@
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
+
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
@@ -32,6 +34,86 @@
                 </div>
                 {{-- end:Menu item --}}
 
+                {{-- begin::Master Data --}}
+                {{-- begin:Menu item --}}
+                <div class="menu-item pt-5">
+                    {{-- begin:Menu content --}}
+                    <div class="menu-content">
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Master Data</span>
+                    </div>
+                    {{-- end:Menu content --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('set.apps.mst.sa.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-user-lock fs-2"></i>
+                        </span>
+                        <span class="menu-title">Super Admin</span>
+                    </a>
+                    {{-- end:Menu link --}}
+
+                    {{-- begin:Menu item --}}
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                        {{-- begin:Menu link --}}
+                        <span class="menu-link">
+                            <span class="menu-icon">
+                                <i class="fa-solid fa-toolbox fs-2"></i>
+                            </span>
+                            <span class="menu-title">Master UTTP</span>
+                            <span class="menu-arrow"></span>
+                        </span>
+                        {{-- end:Menu link --}}
+                        {{-- begin:Menu sub --}}
+                        <div class="menu-sub menu-sub-accordion">
+                            {{-- begin:Menu item --}}
+                            <div class="menu-item">
+                                {{-- begin:Menu link --}}
+                                <a class="menu-link" href="{{ route('set.apps.mst.uttp.jp.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Jenis Pelayanan</span>
+                                </a>
+                                {{-- end:Menu link --}}
+                            </div>
+                            {{-- end:Menu item --}}
+                            {{-- begin:Menu item --}}
+                            <div class="menu-item">
+                                {{-- begin:Menu link --}}
+                                <a class="menu-link" href="{{ route('set.apps.mst.uttp.klpk.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Kelompok UTTP</span>
+                                </a>
+                                {{-- end:Menu link --}}
+                            </div>
+                            {{-- end:Menu item --}}
+                            {{-- begin:Menu item --}}
+                            <div class="menu-item">
+                                {{-- begin:Menu link --}}
+                                <a class="menu-link" href="{{ route('set.apps.mst.uttp.tags.klpk.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Kategori Kelompok</span>
+                                </a>
+                                {{-- end:Menu link --}}
+                            </div>
+                            {{-- end:Menu item --}}
+                        </div>
+                        {{-- end:Menu sub --}}
+                    </div>
+                    {{-- end:Menu item --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Master Data --}}
+
+                {{-- begin::Pengguna --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
@@ -120,7 +202,9 @@
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
+                {{-- end::Pengguna --}}
 
+                {{-- begin::Bantuan --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
@@ -145,6 +229,8 @@
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
+                {{-- end::Bantuan --}}
+
             </div>
             {{-- end::Menu --}}
         </div>
@@ -165,7 +251,7 @@
                 {{-- begin::User info --}}
                 <div class="ms-2">
                     {{-- begin::Name --}}
-                    <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">{{ \CID::DataPP()['nama'] }}</a>
+                    <a href="{{ route('set.apps.profile.index') }}" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">{{ \CID::DataPP()['nama'] }}</a>
                     {{-- end::Name --}}
                     {{-- begin::Major --}}
                     <span class="text-muted fw-semibold d-block fs-7 lh-1">Role: {{ \CID::DataPP()['role'] }}</span>

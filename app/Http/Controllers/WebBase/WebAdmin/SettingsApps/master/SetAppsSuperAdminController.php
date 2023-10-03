@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\WebBase\WebAdmin\SettingsApps\pegawai;
+namespace App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
@@ -13,14 +13,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class SetAppsPegawaiController extends Controller
+class SetAppsSuperAdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return view('pages.admin.settings_apps.pegawai.index');
+        return view('pages.admin.settings_apps.master.super_admin.index');
     }
 
     /**
@@ -43,7 +43,6 @@ class SetAppsPegawaiController extends Controller
             "no_telp" => "required|string|max:15",
             "username" => "required|string|unique:users,username|max:100",
             "password" => "required|string|max:100",
-            "sub_role" => "required|array|max:100",
         ]);
 
         // value Pegawai
@@ -67,8 +66,7 @@ class SetAppsPegawaiController extends Controller
             "uuid_profile" => $uuid_pegawai,
             "username" => $request->username,
             "password" => bcrypt($request->password),
-            "role" => "Pegawai",
-            "sub_role" => implode(",", $request->sub_role),
+            "role" => "Super Admin",
         ];
 
         // foto
@@ -96,15 +94,16 @@ class SetAppsPegawaiController extends Controller
                 "apps" => "Settings Apps",
                 "subjek" => "Menambahkan Akun Pegawai: " . $request->nama_lengkap . " - " . $uuid_pegawai,
                 "aktifitas" => $aktifitas,
+                "role" => "Perusahaan",
                 "device" => "web",
-                "dashboard" => "1",
+                "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', "Berhasil Menambahkan Pegawai: " . $request->nama_lengkap);
+            alert()->success('Berhasil!', "Berhasil Mengubah Profile Pegawai: " . $request->nama_lengkap);
             return back();
         } else {
-            alert()->error('Gagal!', "Gagal Menambahkan Pegawai: " . $request->nama_lengkap);
+            alert()->error('Gagal!', "Gagal Mengubah Profile Pegawai: " . $request->nama_lengkap);
             return back()->withInput($request->all());
         }
     }
@@ -130,7 +129,7 @@ class SetAppsPegawaiController extends Controller
             ->whereMonth("created_at", date('m'))
             ->orderBy("created_at", "DESC")
             ->get();
-        return view('pages.admin.settings_apps.pegawai.edit_profile.profile', compact(
+        return view('pages.admin.settings_apps.master.super_admin.edit_profile.profile', compact(
             'enc_uuid',
             'data',
             'logs_login',
@@ -148,8 +147,6 @@ class SetAppsPegawaiController extends Controller
             return $this->updateProfile($request, $uuid);
         } elseif ($path_form == "keamanan") {
             return $this->updateKeamanan($request, $uuid);
-        } elseif ($path_form == "hak_akses") {
-            return $this->updateHakAkses($request, $uuid);
         } else {
             return abort(404);
         }
@@ -222,7 +219,7 @@ class SetAppsPegawaiController extends Controller
                 "subjek" => "Berhasil Mengubah Profile Pegawai: " . $request->nama_lengkap . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "1",
+                "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -280,7 +277,7 @@ class SetAppsPegawaiController extends Controller
                 "subjek" => "Berhasil Mengubah Akun Login Pegawai " . $data->nama_lengkap . " - " . $data->uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "1",
+                "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -290,90 +287,6 @@ class SetAppsPegawaiController extends Controller
             alert()->error('Gagal!', 'Gagal Mengubah Keamanan Akun.');
             return back()->withInput($request->all());
         }
-    }
-    // update hak akses
-    private function updateHakAkses($request, $uuid_pegawai)
-    {
-        // auth
-        $auth = Auth::user();
-        $uuid_profile = $auth->uuid_profile;
-        $data = Pegawai::findOrFail($uuid_pegawai);
-
-        // validate
-        $request->validate([
-            "sub_role" => "required|array|max:100",
-        ]);
-
-        // value_1
-        $value_1 = [
-            "sub_role" => implode(",", $request->sub_role),
-            "uuid_updated" => $uuid_profile,
-        ];
-
-        // cek sub_role_kasi
-        if (in_array("Kasi", $request->sub_role)) {
-            // validate
-            $request->validate([
-                "sub_role_kasi" => "required|string|max:100",
-            ]);
-            $value_1['sub_sub_role'] = $request->sub_role_kasi;
-        } else {
-            $value_1['sub_sub_role'] = null;
-        }
-
-        // save
-        $save_1 = User::whereUuidProfile($uuid_pegawai)->update($value_1);
-        if ($save_1) {
-            // create log
-            $aktifitas = [
-                "tabel" => array("users"),
-                "uuid" => array($data->RelUser->uuid),
-                "value" => array($value_1),
-            ];
-            $log = [
-                "apps" => "Settings Apps",
-                "subjek" => "Berhasil Mengubah Hak Akses Login Pegawai " . $data->nama_lengkap . " - " . $data->uuid,
-                "aktifitas" => $aktifitas,
-                "device" => "web",
-                "dashboard" => "1",
-            ];
-            CID::addToLogAktifitas($request, $log);
-            // alert success
-            alert()->success('Berhasil!', 'Berhasil Mengubah Keamanan Hak Akses Login.');
-            return back();
-        } else {
-            alert()->error('Gagal!', 'Gagal Mengubah Keamanan Hak Akses Login.');
-            return back()->withInput($request->all());
-        }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function show(Request $request, $enc_uuid)
-    {
-        // uuid
-        $uuid = CID::decode($enc_uuid);
-
-        // data
-        $data = Pegawai::findOrFail($uuid);
-
-        // get data log
-        $uuid_profile = $data->uuid;
-        $logs_login = SysLogin::whereUuidProfile($uuid_profile)
-            ->whereMonth("created_at", date('m'))
-            ->orderBy("created_at", "DESC")
-            ->get();
-        $logs_aktifitas = SysLogAktifitas::whereUuidProfile($uuid_profile)
-            ->whereMonth("created_at", date('m'))
-            ->orderBy("created_at", "DESC")
-            ->get();
-        return view('pages.admin.settings_apps.pegawai.view_profile.profile', compact(
-            'enc_uuid',
-            'data',
-            'logs_login',
-            'logs_aktifitas',
-        ));
     }
 
     /**
@@ -404,7 +317,7 @@ class SetAppsPegawaiController extends Controller
                 "subjek" => "Berhasil Menghapus Pegawai: " . $data->nama_lengkap . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "1",
+                "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -465,7 +378,7 @@ class SetAppsPegawaiController extends Controller
                 "subjek" => "Mengubah Status Pegawai: " . $data->RelPegawai->nama_lengkap . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "1",
+                "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -493,7 +406,7 @@ class SetAppsPegawaiController extends Controller
     {
         $data = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
             ->select("pegawai.*", "users.role", "users.sub_role", "users.sub_sub_role", "users.status", "users.uuid as uuid_user")
-            ->where("users.role", "Pegawai")
+            ->where("users.role", "Super Admin")
             ->orderBy("pegawai.nama_lengkap", "ASC")
             ->get();
 
@@ -518,7 +431,6 @@ class SetAppsPegawaiController extends Controller
                 })
                 ->addColumn('status', function ($data) {
                     $uuid = CID::encode($data->uuid_user);
-                    $subRoleAdmin = CID::subRoleAdmin();
                     if ($data->status == "1") {
                         $toogle = "checked";
                         $text = "Aktif";
@@ -526,43 +438,26 @@ class SetAppsPegawaiController extends Controller
                         $toogle = "";
                         $text = "Tidak Aktif";
                     }
-                    if ($subRoleAdmin == true) {
-                        $status = '
-                            <div class="form-check form-switch form-switch-custom form-switch-primary mb-3">
-                                <input class="form-check-input" type="checkbox" role="switch" id="status" data-onclick="ubah-status" data-status="' . $uuid . '" data-status-value="' . $data->status . '" ' . $toogle . '>
-                                <label class="form-check-label" for="status">' . $text . '</label>
-                            </div>
-                        ';
-                    } else {
-                        $status = '<label class="form-check-label" for="status">' . $text . '</label>';
-                    }
+                    $status = '
+                        <div class="form-check form-switch form-switch-custom form-switch-primary mb-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="status" data-onclick="ubah-status" data-status="' . $uuid . '" data-status-value="' . $data->status . '" ' . $toogle . '>
+                            <label class="form-check-label" for="status">' . $text . '</label>
+                        </div>
+                    ';
                     return $status;
                 })
                 ->addColumn('aksi', function ($data) {
                     $enc_uuid = CID::encode($data->uuid);
-                    $subRoleAdmin = CID::subRoleAdmin();
-                    $edit = route('set.apps.pegawai.edit', [$enc_uuid]);
-                    $show = route('set.apps.pegawai.show', [$enc_uuid]);
-                    if ($subRoleAdmin == true) {
-                        $aksi = '<div class="dropdown">
-                            <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Aksi
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-edit me-2"></i> Edit</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-delete="' . $enc_uuid . '"><i class="fa-solid fa-trash me-2"></i> Hapus</a></li>
-                            </ul>
-                            </div>';
-                    } else {
-                        $aksi = '<div class="dropdown">
-                            <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Aksi
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="' . $show . '"><i class="fa-solid fa-info-circle me-2"></i> Detail</a></li>
-                            </ul>
-                            </div>';
-                    }
+                    $edit = route('set.apps.mst.sa.edit', [$enc_uuid]);
+                    $aksi = '<div class="dropdown">
+                        <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aksi
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-edit me-2"></i> Edit</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0);" data-delete="' . $enc_uuid . '"><i class="fa-solid fa-trash me-2"></i> Hapus</a></li>
+                        </ul>
+                        </div>';
                     return $aksi;
                 })
                 ->escapeColumns([''])

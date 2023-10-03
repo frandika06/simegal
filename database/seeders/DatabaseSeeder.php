@@ -44,5 +44,14 @@ class DatabaseSeeder extends Seeder
         $this->call(AlamatPerusahaanSeeder::class);
         // generate permohonan peneraan
         $this->call(PermohonanPeneraanSeeder::class);
+        /*
+        | PENGATURAN APPS
+         */
+        // generate UTTP - jenis pelayanan
+        $this->call(MasterUTTPJenisPelayananSeeder::class);
+        // generate UTTP - kelompok uttp
+        $this->call(MasterUTTPKelompokUTTPSeeder::class);
+        // generate UTTP - kategori kelompok
+        $this->call(MasterUTTPKategoriKelompokSeeder::class);
     }
 }

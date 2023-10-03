@@ -16,8 +16,8 @@ class PDPDashboardController extends Controller
         // auth
         $auth = Auth::user();
         $role = $auth->role;
-        $sub_role = $auth->sub_role;
-        $sub_sub_role = $auth->sub_sub_role;
+        $sub_role = \explode(",", $auth->sub_role);
+        $sub_sub_role = \explode(",", $auth->sub_sub_role);
 
         // Admin System
         if ($role == "Admin System" || $role == "Super Admin") {
@@ -40,6 +40,7 @@ class PDPDashboardController extends Controller
             return redirect()->route('auth.home');
         }
     }
+
     // index perusahaan
     private function indexPerusahaan($request)
     {

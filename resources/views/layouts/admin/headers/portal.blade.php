@@ -1,13 +1,8 @@
 <?php
 $auth = Auth::user();
 $role = $auth->role;
-$sub_role = \explode(',', $auth->sub_role);
-$sub_sub_role = \explode(',', $auth->sub_sub_role);
-
-// PEGAWAI
-$ar_sub_role = ['Admin Aplikasi', 'Kasi', 'Petugas'];
 if ($role == 'Pegawai') {
-    if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+    if (\CID::subRolePegawai() == true) {
         $urlProfile = route('set.apps.profile.index');
     } else {
         $urlProfile = route('prt.apps.auth.profile.index');

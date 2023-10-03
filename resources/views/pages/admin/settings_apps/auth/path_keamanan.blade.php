@@ -1,4 +1,4 @@
-<!--begin:::Tab pane-->
+{{-- begin:::Tab pane --}}
 <div class="tab-pane fade" id="profile_tab_path_keamanan" role="tabpanel">
     {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
@@ -68,4 +68,4 @@
     </div>
     {{-- end::Card --}}
 </div>
-<!--end:::Tab pane-->
+{{-- end:::Tab pane --}}

@@ -111,24 +111,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="row mt-3">
-                                            <div class="form-group col">
-                                                <label>Tanda bintang <strong class="text-color-danger">(*)</strong> adalah field yang wajib diisi.</label>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- data-perusahaan --}}
-
-                        {{-- username & password --}}
-                        <div class="row">
-                            <div class="form-group col">
-                                <div class="card border-0 border-radius-0 card-border card-border-top bg-color-grey">
-                                    <div class="card-body">
-                                        <h4 class="card-title mb-1 text-4 font-weight-bold mb-3">Buat Akun Login</h4>
+                                        <h4 class="card-title mb-1 text-4 font-weight-bold mb-3 mt-4">Buat Akun Login</h4>
 
                                         <div class="row">
                                             <div class="form-group col">
@@ -150,11 +133,16 @@
                                             </div>
                                         </div>
 
+                                        <div class="row mt-3">
+                                            <div class="form-group col">
+                                                <label>Tanda bintang <strong class="text-color-danger">(*)</strong> adalah field yang wajib diisi.</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- username & password --}}
+                        {{-- data-perusahaan --}}
 
                         <div class="row">
                             <div class="form-group col">

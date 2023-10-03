@@ -1,4 +1,4 @@
-<!--begin:::Tab pane-->
+{{-- begin:::Tab pane --}}
 <div class="tab-pane fade" id="profile_tab_path_keamanan" role="tabpanel">
     {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
@@ -33,16 +33,6 @@
                 </div>
                 {{-- end::username --}}
 
-                {{-- begin::old_password --}}
-                <div class="form-floating mb-5">
-                    <input type="password" class="form-control @error('old_password') is-invalid @enderror" name="old_password" id="old_password2" placeholder="Password" autocomplete="off" maxlength="100" value="{{ old('old_password') }}" required />
-                    <label for="old_password">Password Lama</label>
-                    @error('old_password')
-                        <div id="old_passwordFeedback" class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                {{-- end::password --}}
-
                 {{-- begin::new_password --}}
                 <div class="form-floating mb-5">
                     <input type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" id="new_password2" placeholder="Password" autocomplete="off" maxlength="100" value="{{ old('old_password') }}" required />
@@ -70,4 +60,4 @@
     </div>
     {{-- end::Card --}}
 </div>
-<!--end:::Tab pane-->
+{{-- end:::Tab pane --}}

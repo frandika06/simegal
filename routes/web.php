@@ -23,6 +23,10 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAStatistikController
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\SetAppsSuperAdminController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpJenisPelayananController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpKelompokController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpTagsKelompokController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\pegawai\SetAppsPegawaiController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\perusahaan\SetAppsPerusahaanController;
 use App\Http\Controllers\WebBase\WebConfigs\ExDownController;
@@ -321,6 +325,70 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             Route::group(['prefix' => 'profile'], function () {
                 Route::get('/', [SetAppsProfileController::class, 'index'])->name('set.apps.profile.index');
                 Route::put('/', [SetAppsProfileController::class, 'update'])->name('set.apps.profile.update');
+            });
+
+            // master
+            // PATH : WebBase/WebAdmin/SettingsApps/master
+            Route::group(['prefix' => 'master'], function () {
+                // middleware : AdminSystem
+                Route::group(['middleware' => ['AdminSystem']], function () {
+                    // super-admin
+                    Route::group(['prefix' => 'super-admin'], function () {
+                        Route::get('/', [SetAppsSuperAdminController::class, 'index'])->name('set.apps.mst.sa.index');
+                        Route::post('/create', [SetAppsSuperAdminController::class, 'store'])->name('set.apps.mst.sa.store');
+                        Route::get('/edit/{uuid}', [SetAppsSuperAdminController::class, 'edit'])->name('set.apps.mst.sa.edit');
+                        Route::put('/edit/{uuid}', [SetAppsSuperAdminController::class, 'update'])->name('set.apps.mst.sa.update');
+                        Route::put('/status', [SetAppsSuperAdminController::class, 'status'])->name('set.apps.mst.sa.status');
+                        Route::delete('/delete', [SetAppsSuperAdminController::class, 'destroy'])->name('set.apps.mst.sa.destroy');
+                        Route::get('/data', [SetAppsSuperAdminController::class, 'data'])->name('set.apps.mst.sa.data');
+                    });
+                });
+                // uttp
+                // PATH : WebBase/WebAdmin/SettingsApps/master
+                Route::group(['prefix' => 'uttp'], function () {
+                    // jenis-pelayanan
+                    Route::group(['prefix' => 'jenis-pelayanan'], function () {
+                        Route::get('/', [SetAppsUttpJenisPelayananController::class, 'index'])->name('set.apps.mst.uttp.jp.index');
+                        // middleware : Admin
+                        Route::group(['middleware' => ['Admin']], function () {
+                            Route::post('/create', [SetAppsUttpJenisPelayananController::class, 'store'])->name('set.apps.mst.uttp.jp.store');
+                            Route::get('/edit/{uuid}', [SetAppsUttpJenisPelayananController::class, 'edit'])->name('set.apps.mst.uttp.jp.edit');
+                            Route::put('/edit/{uuid}', [SetAppsUttpJenisPelayananController::class, 'update'])->name('set.apps.mst.uttp.jp.update');
+                            Route::put('/status', [SetAppsUttpJenisPelayananController::class, 'status'])->name('set.apps.mst.uttp.jp.status');
+                            Route::delete('/delete', [SetAppsUttpJenisPelayananController::class, 'destroy'])->name('set.apps.mst.uttp.jp.destroy');
+                        });
+                        Route::get('/data', [SetAppsUttpJenisPelayananController::class, 'data'])->name('set.apps.mst.uttp.jp.data');
+                        Route::get('/show/{uuid}', [SetAppsUttpJenisPelayananController::class, 'show'])->name('set.apps.mst.uttp.jp.show');
+                    });
+                    // kelompok-uttp
+                    Route::group(['prefix' => 'kelompok-uttp'], function () {
+                        Route::get('/', [SetAppsUttpKelompokController::class, 'index'])->name('set.apps.mst.uttp.klpk.index');
+                        // middleware : Admin
+                        Route::group(['middleware' => ['Admin']], function () {
+                            Route::post('/create', [SetAppsUttpKelompokController::class, 'store'])->name('set.apps.mst.uttp.klpk.store');
+                            Route::get('/edit/{uuid}', [SetAppsUttpKelompokController::class, 'edit'])->name('set.apps.mst.uttp.klpk.edit');
+                            Route::put('/edit/{uuid}', [SetAppsUttpKelompokController::class, 'update'])->name('set.apps.mst.uttp.klpk.update');
+                            Route::put('/status', [SetAppsUttpKelompokController::class, 'status'])->name('set.apps.mst.uttp.klpk.status');
+                            Route::delete('/delete', [SetAppsUttpKelompokController::class, 'destroy'])->name('set.apps.mst.uttp.klpk.destroy');
+                        });
+                        Route::get('/data', [SetAppsUttpKelompokController::class, 'data'])->name('set.apps.mst.uttp.klpk.data');
+                        Route::get('/show/{uuid}', [SetAppsUttpKelompokController::class, 'show'])->name('set.apps.mst.uttp.klpk.show');
+                    });
+                    // kategori-kelompok
+                    Route::group(['prefix' => 'kategori-kelompok'], function () {
+                        Route::get('/', [SetAppsUttpTagsKelompokController::class, 'index'])->name('set.apps.mst.uttp.tags.klpk.index');
+                        // middleware : Admin
+                        Route::group(['middleware' => ['Admin']], function () {
+                            Route::post('/create', [SetAppsUttpTagsKelompokController::class, 'store'])->name('set.apps.mst.uttp.tags.klpk.store');
+                            Route::get('/edit/{uuid}', [SetAppsUttpTagsKelompokController::class, 'edit'])->name('set.apps.mst.uttp.tags.klpk.edit');
+                            Route::put('/edit/{uuid}', [SetAppsUttpTagsKelompokController::class, 'update'])->name('set.apps.mst.uttp.tags.klpk.update');
+                            Route::put('/status', [SetAppsUttpTagsKelompokController::class, 'status'])->name('set.apps.mst.uttp.tags.klpk.status');
+                            Route::delete('/delete', [SetAppsUttpTagsKelompokController::class, 'destroy'])->name('set.apps.mst.uttp.tags.klpk.destroy');
+                        });
+                        Route::get('/data', [SetAppsUttpTagsKelompokController::class, 'data'])->name('set.apps.mst.uttp.tags.klpk.data');
+                        Route::get('/show/{uuid}', [SetAppsUttpTagsKelompokController::class, 'show'])->name('set.apps.mst.uttp.tags.klpk.show');
+                    });
+                });
             });
 
             // perusahaan

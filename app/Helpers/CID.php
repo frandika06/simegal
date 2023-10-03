@@ -858,6 +858,39 @@ class CID
             return false;
         }
     }
+    // Hak Akses subRoleKasi
+    public static function subSubRoleKasi()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Kasi'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                $ar_sub_sub_role = ['Kasi UAPV', 'Kasi MASSA', 'Kasi BDKT'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return true;
+                } else {
+                    // blokir
+                    return false;
+                }
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -1049,5 +1082,23 @@ class CID
             "limit_data" => $limitData,
         ];
         return $data;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGATURAN APPS
+    |--------------------------------------------------------------------------
+     */
+    // cek kategori master kategori kelompok
+    public static function getKategoriStatus($value)
+    {
+        if ($value == "0") {
+            $kategori = "Jenis UTTP";
+        } elseif ($value == "1") {
+            $kategori = "Alat Standar & Perlengkapannya";
+        } elseif ($value == "2") {
+            $kategori = "CTT";
+        }
+        return $kategori;
     }
 }

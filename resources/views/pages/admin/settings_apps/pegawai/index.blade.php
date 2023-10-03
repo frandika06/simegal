@@ -23,23 +23,23 @@
                 {{-- begin::Title --}}
                 <h1 class="d-flex text-dark fw-bold my-1 fs-3">Pegawai</h1>
                 {{-- end::Title --}}
-                <!--begin::Breadcrumb-->
+                {{-- begin::Breadcrumb --}}
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 pt-1">
-                    <!--begin::Item-->
+                    {{-- begin::Item --}}
                     <li class="breadcrumb-item text-muted">
                         <a href="{{ route('set.apps.home.index') }}" class="text-muted text-hover-primary">Dashboard</a>
                     </li>
-                    <!--end::Item-->
-                    <!--begin::Item-->
+                    {{-- end::Item --}}
+                    {{-- begin::Item --}}
                     <li class="breadcrumb-item">
                         <span class="bullet bg-gray-200 w-5px h-2px"></span>
                     </li>
-                    <!--end::Item-->
-                    <!--begin::Item-->
+                    {{-- end::Item --}}
+                    {{-- begin::Item --}}
                     <li class="breadcrumb-item text-dark">Pegawai</li>
-                    <!--end::Item-->
+                    {{-- end::Item --}}
                 </ul>
-                <!--end::Breadcrumb-->
+                {{-- end::Breadcrumb --}}
             </div>
             {{-- end::Page title --}}
             @if (\CID::subRoleAdmin() == true)
@@ -60,11 +60,11 @@
 @section('content')
     {{-- begin::Post --}}
     <div class="post d-flex flex-column-fluid" id="kt_post">
-        <!--begin::Container-->
+        {{-- begin::Container --}}
         <div id="kt_content_container" class="container-xxl">
-            <!--begin::card-->
+            {{-- begin::card --}}
             <div class="card card-flush">
-                <!--begin::Card body-->
+                {{-- begin::Card body --}}
                 <div class="card-body">
                     <div class="table-responsive">
                         {{-- begin::Table --}}
@@ -86,11 +86,11 @@
                         {{-- end::Table --}}
                     </div>
                 </div>
-                <!--end::Card body-->
+                {{-- end::Card body --}}
             </div>
-            <!--end::card-->
+            {{-- end::card --}}
         </div>
-        <!--end::Container-->
+        {{-- end::Container --}}
     </div>
     {{-- end::Post --}}
 @endsection

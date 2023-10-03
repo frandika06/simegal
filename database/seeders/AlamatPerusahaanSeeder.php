@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\AlamatPerusahaan;
 use App\Models\Perusahaan;
-use App\Models\User;
 use App\Models\WilDesa;
 use App\Models\WilKecamatan;
 use Illuminate\Database\Seeder;
@@ -17,9 +16,6 @@ class AlamatPerusahaanSeeder extends Seeder
      */
     public function run(): void
     {
-        // user
-        $user = User::where("sub_role", "Admin Portal")->first();
-
         // cek perusahaan
         $cekPerusahaan = Perusahaan::first();
         if ($cekPerusahaan !== null) {

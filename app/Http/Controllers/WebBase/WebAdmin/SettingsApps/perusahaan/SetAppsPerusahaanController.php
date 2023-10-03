@@ -12,7 +12,6 @@ use App\Models\User;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -392,7 +391,7 @@ class SetAppsPerusahaanController extends Controller
                 "subjek" => "Berhasil Mengubah Profile " . $jp . " : " . $request->nama_perusahaan . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "0",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -415,21 +414,12 @@ class SetAppsPerusahaanController extends Controller
         // validate
         $request->validate([
             "username" => "required|string|max:100",
-            "old_password" => "required|string|max:100",
             "new_password" => "required|string|max:100",
         ]);
 
         // value_1
         $new_username = $request->username;
-        $old_password = $request->old_password;
         $new_password = $request->new_password;
-
-        // cek password lama
-        if (!Hash::check($old_password, $profile->RelUser->password)) {
-            // password lama salah
-            alert()->error('Gagal!', 'Password Lama Perusahaan Salah!');
-            return back()->withInput($request->all());
-        }
 
         // cek username
         if ($new_username != $username) {
@@ -459,7 +449,7 @@ class SetAppsPerusahaanController extends Controller
                 "subjek" => "Berhasil Mengubah Akun Login Perusahaan " . $profile->nama_perusahaan . " - " . $profile->uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "0",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -621,7 +611,7 @@ class SetAppsPerusahaanController extends Controller
                     "subjek" => "Berhasil Mengubah Alamat Perusahaan/Usaha : " . $profile->nama_perusahaan . " - " . $uuid,
                     "aktifitas" => $aktifitas,
                     "device" => "web",
-                    "dashboard" => "0",
+                    "dashboard" => "1",
                 ];
                 CID::addToLogAktifitas($request, $log);
                 // alert success
@@ -675,7 +665,7 @@ class SetAppsPerusahaanController extends Controller
                     "subjek" => "Berhasil Menambahkan Alamat Perusahaan/Usaha : " . $profile->nama_perusahaan . " - " . $uuid,
                     "aktifitas" => $aktifitas,
                     "device" => "web",
-                    "dashboard" => "0",
+                    "dashboard" => "1",
                 ];
                 CID::addToLogAktifitas($request, $log);
                 // alert success
@@ -723,7 +713,7 @@ class SetAppsPerusahaanController extends Controller
                 "subjek" => "Berhasil Mengubah Alamat Default Perusahaan/Usaha - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "0",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
@@ -789,7 +779,7 @@ class SetAppsPerusahaanController extends Controller
                 "subjek" => "Berhasil Menghapus Alamat Perusahaan/Usaha - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
-                "dashboard" => "0",
+                "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success

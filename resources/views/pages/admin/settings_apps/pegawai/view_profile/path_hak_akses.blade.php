@@ -1,4 +1,4 @@
-<!--begin:::Tab pane-->
+{{-- begin:::Tab pane --}}
 <div class="tab-pane fade" id="profile_tab_path_hak_akses" role="tabpanel">
     {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
@@ -18,6 +18,8 @@
             @php
                 $sub_role = $data->RelUser->sub_role;
                 $exsub_role = \explode(',', $sub_role);
+                $sub_sub_role = $data->RelUser->sub_sub_role;
+                $exsub_sub_role = \explode(',', $sub_sub_role);
             @endphp
 
             {{-- begin::Admin Portal --}}
@@ -59,6 +61,44 @@
             @error('sub_role')
                 <div id="sub_roleFeedback" class="text-danger">Hak Akses Wajib Dipilih Minimal 1.</div>
             @enderror
+
+            <div class="d-none" id="sub_role_kasi">
+                <div class='separator separator-dashed my-5'></div>
+                <h4>Hak Akses Kasi</h4>
+                <div class="ps-5 pt-3">
+                    {{-- begin::Kasi UAPV --}}
+                    <div class="form-check form-check-custom form-check-solid mb-4">
+                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi UAPV" name="sub_role_kasi" id="UAPV" @if (in_array('Kasi UAPV', $exsub_sub_role)) checked @endif disabled />
+                        <label class="form-check-label" for="UAPV">
+                            Kasi UAPV
+                        </label>
+                    </div>
+                    {{-- end::Kasi UAPV --}}
+
+                    {{-- begin::Kasi MASSA --}}
+                    <div class="form-check form-check-custom form-check-solid mb-4">
+                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi MASSA" name="sub_role_kasi" id="MASSA" @if (in_array('Kasi MASSA', $exsub_sub_role)) checked @endif disabled />
+                        <label class="form-check-label" for="MASSA">
+                            Kasi MASSA
+                        </label>
+                    </div>
+                    {{-- end::Kasi MASSA --}}
+
+                    {{-- begin::Kasi BDKT --}}
+                    <div class="form-check form-check-custom form-check-solid mb-4">
+                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi BDKT" name="sub_role_kasi" id="BDKT" @if (in_array('Kasi BDKT', $exsub_sub_role)) checked @endif disabled />
+                        <label class="form-check-label" for="BDKT">
+                            Kasi BDKT
+                        </label>
+                    </div>
+                    {{-- end::Kasi BDKT --}}
+
+                    @error('sub_role_kasi')
+                        <div id="sub_role_kasiFeedback" class="text-danger">Hak Akses Kasi Wajib Dipilih Salah Satu.</div>
+                    @enderror
+                </div>
+            </div>
+
             {{-- end::Form --}}
         </div>
         {{-- end::Card body --}}
@@ -67,4 +107,15 @@
     </div>
     {{-- end::Card --}}
 </div>
-<!--end:::Tab pane-->
+{{-- end:::Tab pane --}}
+
+@push('scripts')
+    @if (in_array('Kasi', $exsub_role))
+        {{-- sub role kasi --}}
+        <script>
+            $(document).ready(function() {
+                $("#sub_role_kasi").removeClass("d-none");
+            });
+        </script>
+    @endif
+@endpush

@@ -3,13 +3,13 @@
     SIMEGAL
 @endpush
 @push('title')
-    Detail {{ $profile->nama_perusahaan }} | Pengaturan Aplikasi | SIMEGAL
+    Edit {{ $data->nama_lengkap }}| Pengaturan Aplikasi | SIMEGAL
 @endpush
 @push('description')
-    Detail {{ $profile->nama_perusahaan }} | Pengaturan Aplikasi | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    Edit {{ $data->nama_lengkap }} | Pengaturan Aplikasi | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    Detail {{ $profile->nama_perusahaan }} | Pengaturan Aplikasi
+    Edit {{ $data->nama_lengkap }} | Pengaturan Aplikasi
 @endpush
 @push('styles')
     {{-- begin::Vendor Stylesheets(used for this page only) --}}
@@ -25,7 +25,7 @@
             {{-- begin::Page title --}}
             <div class="page-title d-flex flex-column me-3">
                 {{-- begin::Title --}}
-                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Perusahaan</h1>
+                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Super Admin</h1>
                 {{-- end::Title --}}
                 {{-- begin::Breadcrumb --}}
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 pt-1">
@@ -40,8 +40,16 @@
                     </li>
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
+                    <li class="breadcrumb-item text-muted">Master Data</li>
+                    {{-- end::Item --}}
+                    {{-- begin::Item --}}
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-200 w-5px h-2px"></span>
+                    </li>
+                    {{-- end::Item --}}
+                    {{-- begin::Item --}}
                     <li class="breadcrumb-item text-muted">
-                        <a href="{{ route('set.apps.perusahaan.index', [$enc_tags]) }}" class="text-muted text-hover-primary">Perusahaan</a>
+                        <a href="{{ route('set.apps.mst.sa.index') }}" class="text-muted text-hover-primary">Super Admin</a>
                     </li>
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
@@ -50,7 +58,7 @@
                     </li>
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
-                    <li class="breadcrumb-item text-dark">Detail Perusahaan</li>
+                    <li class="breadcrumb-item text-dark">Edit Super Admin</li>
                     {{-- end::Item --}}
                 </ul>
                 {{-- end::Breadcrumb --}}
@@ -59,7 +67,7 @@
             {{-- begin::Actions --}}
             <div class="d-flex align-items-center py-2 py-md-1">
                 {{-- begin::Button --}}
-                <a href="{{ route('set.apps.perusahaan.index', [$enc_tags]) }}" class="btn btn-dark btn-sm btn-icon"><i class="fa-solid fa-chevron-left"></i></a>
+                <a href="{{ route('set.apps.mst.sa.index') }}" class="btn btn-dark btn-sm btn-icon"><i class="fa-solid fa-chevron-left"></i></a>
                 {{-- end::Button --}}
             </div>
             {{-- end::Actions --}}
@@ -90,16 +98,16 @@
                             <div class="d-flex flex-center flex-column py-5">
                                 {{-- begin::Avatar --}}
                                 <div class="symbol symbol-100px symbol-circle mb-7">
-                                    <img src="{{ \CID::pp($profile->foto) }}" alt="{{ $profile->nama_perusahaan }}" />
+                                    <img src="{{ \CID::ppPegawai($data->foto) }}" alt="{{ $data->nama_lengkap }}" />
                                 </div>
                                 {{-- end::Avatar --}}
                                 {{-- begin::Name --}}
-                                <p class="fs-3 text-gray-800 fw-bold mb-3">{{ $profile->nama_perusahaan }}</p>
+                                <p class="fs-3 text-gray-800 fw-bold mb-3">{{ $data->nama_lengkap }}</p>
                                 {{-- end::Name --}}
                                 {{-- begin::Position --}}
                                 <div class="mb-9">
                                     {{-- begin::Badge --}}
-                                    <div class="badge badge-lg badge-light-info d-inline">{{ $profile->jenis_perusahaan }}</div>
+                                    <div class="badge badge-lg badge-light-info d-inline">{{ $data->RelUser->role }}</div>
                                     {{-- begin::Badge --}}
                                 </div>
                                 {{-- end::Position --}}
@@ -120,25 +128,21 @@
                             <div id="kt_user_view_details" class="collapse show">
                                 <div class="pb-5 fs-6">
                                     {{-- begin::Details item --}}
-                                    <div class="fw-bold mt-5">Kode Akun</div>
-                                    <div class="text-gray-600">{{ $profile->kode_perusahaan }}</div>
+                                    {{-- begin::Details item --}}
+                                    <div class="fw-bold mt-5">No. Telp/HP</div>
+                                    <div class="text-gray-600">
+                                        <a href="#" class="text-gray-600 text-hover-info">{{ $data->no_telp }}</a>
+                                    </div>
                                     {{-- begin::Details item --}}
                                     {{-- begin::Details item --}}
                                     <div class="fw-bold mt-5">Email</div>
                                     <div class="text-gray-600">
-                                        <a href="#" class="text-gray-600 text-hover-info">{{ $profile->email }}</a>
+                                        <a href="#" class="text-gray-600 text-hover-info">{{ $data->email }}</a>
                                     </div>
                                     {{-- begin::Details item --}}
                                     {{-- begin::Details item --}}
-                                    {{-- <div class="fw-bold mt-5">Address</div>
-                                <div class="text-gray-600">101 Collin Street,
-                                    <br />Melbourne 3000 VIC
-                                    <br />Australia
-                                </div> --}}
-                                    {{-- begin::Details item --}}
-                                    {{-- begin::Details item --}}
                                     <div class="fw-bold mt-5">Terakhir Login</div>
-                                    <div class="text-gray-600">{{ \CID::TglJam($profile->RelUser->last_seen) }}</div>
+                                    <div class="text-gray-600">{{ \CID::TglJam($data->RelUser->last_seen) }}</div>
                                     {{-- begin::Details item --}}
                                 </div>
                             </div>
@@ -161,7 +165,7 @@
                         {{-- end:::Tab item --}}
                         {{-- begin:::Tab item --}}
                         <li class="nav-item">
-                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#profile_tab_path_alamat">Alamat</a>
+                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#profile_tab_path_keamanan">Keamanan</a>
                         </li>
                         {{-- end:::Tab item --}}
                         {{-- begin:::Tab item --}}
@@ -175,13 +179,13 @@
                     {{-- begin:::Tab content --}}
                     <div class="tab-content" id="myTabContent">
                         {{-- path-profile::begin --}}
-                        @include('pages.admin.settings_apps.perusahaan.view_profile.path_profile')
+                        @include('pages.admin.settings_apps.master.super_admin.edit_profile.path_profile')
                         {{-- path-profile::end --}}
                         {{-- path-keamanan::begin --}}
-                        @include('pages.admin.settings_apps.perusahaan.view_profile.path_alamat')
+                        @include('pages.admin.settings_apps.master.super_admin.edit_profile.path_keamanan')
                         {{-- path-keamanan::end --}}
                         {{-- path-keamanan::begin --}}
-                        @include('pages.admin.settings_apps.perusahaan.view_profile.path_log')
+                        @include('pages.admin.settings_apps.master.super_admin.edit_profile.path_log')
                         {{-- path-keamanan::end --}}
                     </div>
                     {{-- end:::Tab content --}}
@@ -205,14 +209,14 @@
             getTabsProfil();
             $(".path-tab").click(function() {
                 var href = $(this).attr('href');
-                localStorage.setItem('tabsProfilDetail', href);
+                localStorage.setItem('tabsSAAktif', href);
             })
         });
 
         function getTabsProfil() {
-            var tabsProfilDetail = localStorage.getItem('tabsProfilDetail');
-            if (tabsProfilDetail === null) {
-                localStorage.setItem('tabsProfilDetail', '#profile_tab_path_profile');
+            var tabsSAAktif = localStorage.getItem('tabsSAAktif');
+            if (tabsSAAktif === null) {
+                localStorage.setItem('tabsSAAktif', '#profile_tab_path_profile');
                 $(".tabs-profile>li").each(function(index) {
                     if ($(this).find('a[href^="#profile_tab_path_profile"]')) {
                         $('a[href^="#profile_tab_path_profile"]').addClass(" active");
@@ -221,9 +225,9 @@
                 });
             } else {
                 $(".tabs-profile>li").each(function(index) {
-                    if ($(this).find('a[href^="' + tabsProfilDetail + '"]')) {
-                        $('a[href^="' + tabsProfilDetail + '"]').addClass(" active");
-                        $(tabsProfilDetail).addClass(" show active");
+                    if ($(this).find('a[href^="' + tabsSAAktif + '"]')) {
+                        $('a[href^="' + tabsSAAktif + '"]').addClass(" active");
+                        $(tabsSAAktif).addClass(" show active");
                     }
                 });
             }
