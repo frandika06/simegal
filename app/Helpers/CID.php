@@ -767,7 +767,7 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Kasi', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Verifikator', 'Kepala Tim', 'Petugas'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -806,8 +806,8 @@ class CID
             return false;
         }
     }
-    // Hak Akses subRoleKasi
-    public static function subRoleKasi()
+    // Hak Akses subRoleVerifikator
+    public static function subRoleVerifikator()
     {
         $auth = Auth::user();
         $role = $auth->role;
@@ -819,7 +819,33 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Kasi'];
+            $ar_sub_role = ['Admin Aplikasi', 'Verifikator'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subRoleKepalaTim
+    public static function subRoleKepalaTim()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Kepala Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -858,8 +884,8 @@ class CID
             return false;
         }
     }
-    // Hak Akses subRoleKasi
-    public static function subSubRoleKasi()
+    // Hak Akses subSubRoleKepalaTim
+    public static function subSubRoleKepalaTim()
     {
         $auth = Auth::user();
         $role = $auth->role;
@@ -871,10 +897,10 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Kasi'];
+            $ar_sub_role = ['Admin Aplikasi', 'Kepala Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
-                $ar_sub_sub_role = ['Kasi UAPV', 'Kasi MASSA', 'Kasi BDKT'];
+                $ar_sub_sub_role = ['Kepala Tim Pelayanan', 'Kepala Tim Pengawasan', 'Kepala Tim Bina SDM'];
                 if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
                     // izinkan
                     return true;
@@ -907,7 +933,7 @@ class CID
             $value_1 = [
                 "uuid" => Str::uuid(),
                 "google_maps" => "https://goo.gl/maps/HT6TtdJCVubJqRB69",
-                "alamat" => "Bidang Metrologi Legal, Balaraja, Kec. Balaraja, Kabupaten Tangerang, Banten 15610.",
+                "alamat" => "Bidang Metrologi Legal, Kec. Balaraja, Kabupaten Tangerang, Banten 15610.",
                 "no_telp" => "+6221234567",
                 "email" => "info@simegal.tangerangkab.go.id",
                 "link_survey" => "https://s.id/survey-simegal-23",

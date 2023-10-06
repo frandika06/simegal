@@ -4,9 +4,9 @@ $role = $auth->role;
 ?>
 
 @if ($role == 'Admin System')
-    @include('layouts.admin.menus.settings_apps.admin_system')
+    @include('layouts.admin.menus.schedule_apps.admin_system')
 @elseif ($role == 'Pegawai' || $role == 'Super Admin')
     @if (\CID::subRolePegawai() == true)
-        @include('layouts.admin.menus.settings_apps.admin_aplikasi')
+        @include('layouts.admin.menus.schedule_apps.admin_system')
     @endif
 @endif

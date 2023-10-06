@@ -22,6 +22,9 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAPostinganController
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAStatistikController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\dashboard\ScdDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdTindakLanjutController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\SetAppsSuperAdminController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpJenisPelayananController;
@@ -29,6 +32,7 @@ use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpKe
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpTagsKelompokController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\pegawai\SetAppsPegawaiController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\perusahaan\SetAppsPerusahaanController;
+use App\Http\Controllers\WebBase\WebConfigs\AjaxController;
 use App\Http\Controllers\WebBase\WebConfigs\ExDownController;
 use App\Http\Controllers\WebBase\WebConfigs\NocController;
 use App\Http\Controllers\WebBase\WebConfigs\WilAdmController;
@@ -131,6 +135,15 @@ Route::group(['prefix' => 'wil-adm'], function () {
 Route::group(['prefix' => 'exdown'], function () {
     // unduhan
     Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
+});
+
+// AJAX
+Route::group(['prefix' => 'ajax'], function () {
+    // schedule-apps
+    Route::group(['prefix' => 'schedule-apps'], function () {
+        Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
+        Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.tl');
+    });
 });
 
 // NOC
@@ -274,16 +287,15 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PENJADWALAN DAN PENUGASAN (PDP) APPS
+    | PENJADWALAN DAN PENUGASAN APPS - PERUSAHAAN (PdpApps)
     | PATH : WebBase/WebAdmin/PdpApps
     |--------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'pdp-apps'], function () {
-        // dashboard
-        Route::get('/', [PDPDashboardController::class, 'index'])->name('pdp.apps.home.index');
-
         // middleware : Perusahaan
         Route::group(['middleware' => ['Perusahaan']], function () {
+            // dashboard
+            Route::get('/', [PDPDashboardController::class, 'index'])->name('pdp.apps.home.index');
             // auth
             // PATH : WebBase/WebAdmin/auth
             Route::group(['prefix' => 'auth'], function () {
@@ -304,6 +316,33 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::get('/show/{uuid}', [PDPPermohonanPeneraanController::class, 'show'])->name('pdp.apps.reqpeneraan.show');
                 Route::delete('/delete', [PDPPermohonanPeneraanController::class, 'destroy'])->name('pdp.apps.reqpeneraan.destroy');
                 Route::get('/data', [PDPPermohonanPeneraanController::class, 'data'])->name('pdp.apps.reqpeneraan.data');
+            });
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENJADWALAN DAN PENUGASAN APPS - ADMIN (ScheduleApps)
+    | PATH : WebBase/WebAdmin/ScheduleApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'schedule-apps'], function () {
+        // middleware : Pegawai
+        Route::group(['middleware' => ['Pegawai']], function () {
+            // dashboard
+            Route::get('/', [ScdDashboardController::class, 'index'])->name('scd.apps.home.index');
+            // permohonan
+            Route::group(['prefix' => 'permohonan/{tags}'], function () {
+                Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('scd.apps.pp.index');
+                Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
+                Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('scd.apps.pp.data');
+            });
+            // tindak-lanjut
+            Route::group(['prefix' => 'input-penjadwalan-penugasan'], function () {
+                Route::get('/', [ScdTindakLanjutController::class, 'index'])->name('scd.apps.tl.index');
+                Route::get('/create', [ScdTindakLanjutController::class, 'create'])->name('scd.apps.tl.create');
+                Route::post('/create', [ScdTindakLanjutController::class, 'store'])->name('scd.apps.tl.store');
+                Route::get('/data', [ScdTindakLanjutController::class, 'data'])->name('scd.apps.tl.data');
             });
         });
     });
@@ -394,8 +433,8 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             // perusahaan
             Route::group(['prefix' => 'perusahaan'], function () {
                 Route::get('/{tags}', [SetAppsPerusahaanController::class, 'index'])->name('set.apps.perusahaan.index');
-                // middleware : Admin
-                Route::group(['middleware' => ['Admin']], function () {
+                // middleware : Verifikator
+                Route::group(['middleware' => ['Verifikator']], function () {
                     Route::post('/{tags}/create', [SetAppsPerusahaanController::class, 'store'])->name('set.apps.perusahaan.store');
                     Route::post('/{tags}/status-aktifkan', [SetAppsPerusahaanController::class, 'statusAktifkan'])->name('set.apps.perusahaan.status.aktifkan');
                     Route::post('/{tags}/status-tangguhkan', [SetAppsPerusahaanController::class, 'statusTangguhkan'])->name('set.apps.perusahaan.status.tangguhkan');

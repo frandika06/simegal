@@ -237,36 +237,82 @@
                             </div>
                             {{-- end::Admin Portal --}}
 
-                            {{-- begin::Admin Portal --}}
+                            {{-- begin::Admin Aplikasi --}}
                             <div class="form-check mb-5">
                                 <input class="form-check-input @error('sub_role') is-invalid @enderror"" type="checkbox" value="Admin Aplikasi" name="sub_role[]" id="admin_aplikasi" />
                                 <label class="form-check-label" for="admin_aplikasi">
                                     Admin Aplikasi
                                 </label>
                             </div>
-                            {{-- end::Admin Portal --}}
+                            {{-- end::Admin Aplikasi --}}
 
-                            {{-- begin::Admin Portal --}}
+                            {{-- begin::Verifikator --}}
+                            <div class="form-check mb-5">
+                                <input class="form-check-input @error('sub_role') is-invalid @enderror"" type="checkbox" value="Verifikator" name="sub_role[]" id="verifikator" />
+                                <label class="form-check-label" for="verifikator">
+                                    Verifikator
+                                </label>
+                            </div>
+                            {{-- end::Verifikator --}}
+
+                            {{-- begin::Petugas --}}
                             <div class="form-check mb-5">
                                 <input class="form-check-input @error('sub_role') is-invalid @enderror"" type="checkbox" value="Petugas" name="sub_role[]" id="petugas" />
                                 <label class="form-check-label" for="petugas">
                                     Petugas
                                 </label>
                             </div>
-                            {{-- end::Admin Portal --}}
+                            {{-- end::Petugas --}}
 
-                            {{-- begin::Admin Portal --}}
+                            {{-- begin::Kasi --}}
                             <div class="form-check mb-5">
                                 <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Kasi" name="sub_role[]" id="kasi" />
                                 <label class="form-check-label" for="kasi">
                                     Kasi
                                 </label>
                             </div>
-                            {{-- end::Admin Portal --}}
+                            {{-- end::Kasi --}}
 
                             @error('sub_role')
                                 <div id="sub_roleFeedback" class="text-danger">Hak Akses Wajib Dipilih Minimal 1.</div>
                             @enderror
+
+                            <div class="d-none" id="sub_role_kasi">
+                                <div class='separator separator-dashed my-5'></div>
+                                <h4>Hak Akses Kasi</h4>
+                                <div class="ps-5 pt-3">
+                                    {{-- begin::Kasi UAPV --}}
+                                    <div class="form-check form-check-custom form-check-solid mb-4">
+                                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi UAPV" name="sub_role_kasi" id="UAPV" />
+                                        <label class="form-check-label" for="UAPV">
+                                            Kasi UAPV
+                                        </label>
+                                    </div>
+                                    {{-- end::Kasi UAPV --}}
+
+                                    {{-- begin::Kasi MASSA --}}
+                                    <div class="form-check form-check-custom form-check-solid mb-4">
+                                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi MASSA" name="sub_role_kasi" id="MASSA" />
+                                        <label class="form-check-label" for="MASSA">
+                                            Kasi MASSA
+                                        </label>
+                                    </div>
+                                    {{-- end::Kasi MASSA --}}
+
+                                    {{-- begin::Kasi BDKT --}}
+                                    <div class="form-check form-check-custom form-check-solid mb-4">
+                                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi BDKT" name="sub_role_kasi" id="BDKT" />
+                                        <label class="form-check-label" for="BDKT">
+                                            Kasi BDKT
+                                        </label>
+                                    </div>
+                                    {{-- end::Kasi BDKT --}}
+
+                                    @error('sub_role_kasi')
+                                        <div id="sub_role_kasiFeedback" class="text-danger">Hak Akses Kasi Wajib Dipilih Salah Satu.</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -449,6 +495,30 @@
                 $("#modal_title").html("Form Tambah Pegawai");
                 $("#formPegawai").trigger("reset");
             }
+        });
+    </script>
+
+    {{-- sub role kasi --}}
+    @error('sub_role_kasi')
+        {{-- sub role kasi --}}
+        <script>
+            $(document).ready(function() {
+                $('#kasi').prop("checked", true);
+                $("#sub_role_kasi").removeClass("d-none");
+            });
+        </script>
+    @enderror
+    {{-- sub role kasi --}}
+    <script>
+        $(document).ready(function() {
+            $('#kasi').change(function() {
+                if (this.checked) {
+                    $(this).prop("checked", true);
+                    $("#sub_role_kasi").removeClass("d-none");
+                } else {
+                    $("#sub_role_kasi").addClass("d-none");
+                }
+            });
         });
     </script>
 @endpush

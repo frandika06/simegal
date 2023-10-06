@@ -24,7 +24,7 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('set.apps.home.index') }}">
+                    <a class="menu-link" href="{{ route('scd.apps.home.index') }}">
                         <span class="menu-icon">
                             <i class="fa fa-home fs-2"></i>
                         </span>
@@ -34,12 +34,12 @@
                 </div>
                 {{-- end:Menu item --}}
 
-                {{-- begin::Master Data --}}
+                {{-- begin::Permohonan --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Master Data</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Permohonan Pengujian</span>
                     </div>
                     {{-- end:Menu content --}}
                 </div>
@@ -47,180 +47,195 @@
 
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
-                    {{-- begin:Menu item --}}
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                        {{-- begin:Menu link --}}
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fa-solid fa-toolbox fs-2"></i>
-                            </span>
-                            <span class="menu-title">Master UTTP</span>
-                            <span class="menu-arrow"></span>
-                        </span>
-                        {{-- end:Menu link --}}
-                        {{-- begin:Menu sub --}}
-                        <div class="menu-sub menu-sub-accordion">
-                            {{-- begin:Menu item --}}
-                            <div class="menu-item">
-                                {{-- begin:Menu link --}}
-                                <a class="menu-link" href="{{ route('set.apps.mst.uttp.jp.index') }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Jenis Pelayanan</span>
-                                </a>
-                                {{-- end:Menu link --}}
-                            </div>
-                            {{-- end:Menu item --}}
-                            {{-- begin:Menu item --}}
-                            <div class="menu-item">
-                                {{-- begin:Menu link --}}
-                                <a class="menu-link" href="{{ route('set.apps.mst.uttp.klpk.index') }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Kelompok UTTP</span>
-                                </a>
-                                {{-- end:Menu link --}}
-                            </div>
-                            {{-- end:Menu item --}}
-                            {{-- begin:Menu item --}}
-                            <div class="menu-item">
-                                {{-- begin:Menu link --}}
-                                <a class="menu-link" href="{{ route('set.apps.mst.uttp.tags.klpk.index') }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Kategori Kelompok</span>
-                                </a>
-                                {{-- end:Menu link --}}
-                            </div>
-                            {{-- end:Menu item --}}
-                        </div>
-                        {{-- end:Menu sub --}}
-                    </div>
-                    {{-- end:Menu item --}}
-                </div>
-                {{-- end:Menu item --}}
-                {{-- end::Master Data --}}
-
-                {{-- begin::Pengguna --}}
-                {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
-                    <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Pengguna</span>
-                    </div>
-                    {{-- end:Menu content --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                     {{-- begin:Menu link --}}
-                    <span class="menu-link">
+                    <a class="menu-link" href="{{ route('scd.apps.pp.index', [\CID::encode('Tera')]) }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-hotel fs-2"></i>
+                            <i class="fa-solid fa-scale-balanced fs-2"></i>
                         </span>
-                        <span class="menu-title">Perusahaan</span>
-                        <span class="menu-arrow"></span>
-                    </span>
-                    {{-- end:Menu link --}}
-                    {{-- begin:Menu sub --}}
-                    <div class="menu-sub menu-sub-accordion">
-                        {{-- begin:Menu item --}}
-                        <div class="menu-item">
-                            {{-- begin:Menu link --}}
-                            <a class="menu-link" href="{{ route('set.apps.perusahaan.index', [\CID::encode('Baru Daftar')]) }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Baru Daftar</span>
-                            </a>
-                            {{-- end:Menu link --}}
-                        </div>
-                        {{-- end:Menu item --}}
-                        {{-- begin:Menu item --}}
-                        <div class="menu-item">
-                            {{-- begin:Menu link --}}
-                            <a class="menu-link" href="{{ route('set.apps.perusahaan.index', [\CID::encode('Perlu Verifikasi')]) }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Perlu Verifikasi</span>
-                            </a>
-                            {{-- end:Menu link --}}
-                        </div>
-                        {{-- end:Menu item --}}
-                        {{-- begin:Menu item --}}
-                        <div class="menu-item">
-                            {{-- begin:Menu link --}}
-                            <a class="menu-link" href="{{ route('set.apps.perusahaan.index', [\CID::encode('Aktif')]) }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Aktif</span>
-                            </a>
-                            {{-- end:Menu link --}}
-                        </div>
-                        {{-- end:Menu item --}}
-                        {{-- begin:Menu item --}}
-                        <div class="menu-item">
-                            {{-- begin:Menu link --}}
-                            <a class="menu-link" href="{{ route('set.apps.perusahaan.index', [\CID::encode('Ditangguhkan')]) }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Ditangguhkan</span>
-                            </a>
-                            {{-- end:Menu link --}}
-                        </div>
-                        {{-- end:Menu item --}}
-                    </div>
-                    {{-- end:Menu sub --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('set.apps.pegawai.index') }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-users fs-2"></i>
-                        </span>
-                        <span class="menu-title">Pegawai</span>
+                        <span class="menu-title">Tera</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
-                {{-- end::Pengguna --}}
 
-                {{-- begin::Bantuan --}}
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('scd.apps.pp.index', [\CID::encode('Tera Ulang')]) }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-scale-balanced fs-2"></i>
+                        </span>
+                        <span class="menu-title">Tera Ulang</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('scd.apps.pp.index', [\CID::encode('Pengujian BDKT')]) }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-scale-balanced fs-2"></i>
+                        </span>
+                        <span class="menu-title">Pengujian BDKT</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Permohonan --}}
+
+                {{-- begin::Penjadwalan --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Bantuan</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Penjadwalan & Penugasan</span>
                     </div>
                     {{-- end:Menu content --}}
                 </div>
                 {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('scd.apps.tl.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-calendar-days fs-2"></i>
+                        </span>
+                        <span class="menu-title">Input Data</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Penjadwalan --}}
+
+                {{-- begin::Tindak Lanjut Kasi --}}
+                {{-- begin:Menu item --}}
+                <div class="menu-item pt-5">
+                    {{-- begin:Menu content --}}
+                    <div class="menu-content">
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Tindak Lanjut Kasi</span>
+                    </div>
+                    {{-- end:Menu content --}}
+                </div>
+                {{-- end:Menu item --}}
+
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
                     <a class="menu-link" href="#">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-26 fs-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
                         </span>
-                        <span class="menu-title">Panduan</span>
+                        <span class="menu-title">MASSA</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
-                {{-- end::Bantuan --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="#">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                        </span>
+                        <span class="menu-title">UAPV</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="#">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                        </span>
+                        <span class="menu-title">BDKT</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Tindak Lanjut Kasi --}}
+
+                {{-- begin::Pembayaran Retribusi --}}
+                {{-- begin:Menu item --}}
+                <div class="menu-item pt-5">
+                    {{-- begin:Menu content --}}
+                    <div class="menu-content">
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Pembayaran Retribusi</span>
+                    </div>
+                    {{-- end:Menu content --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="#">
+                        <span class="menu-icon">
+                            <i class="fa-regular fa-square fs-2"></i>
+                        </span>
+                        <span class="menu-title text-danger">Belum Terverifikasi</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="#">
+                        <span class="menu-icon">
+                            <i class="fa-regular fa-square-check fs-2"></i>
+                        </span>
+                        <span class="menu-title text-success">Sudah Terverifikasi</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Pembayaran Retribusi --}}
+
+                {{-- begin::Report --}}
+                {{-- begin:Menu item --}}
+                <div class="menu-item pt-5">
+                    {{-- begin:Menu content --}}
+                    <div class="menu-content">
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Report</span>
+                    </div>
+                    {{-- end:Menu content --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="#">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-chart-column fs-2"></i>
+                        </span>
+                        <span class="menu-title">Rekapitulasi</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="#">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-file-export fs-2"></i>
+                        </span>
+                        <span class="menu-title">Export Data</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Pembayaran Retribusi --}}
 
             </div>
             {{-- end::Menu --}}

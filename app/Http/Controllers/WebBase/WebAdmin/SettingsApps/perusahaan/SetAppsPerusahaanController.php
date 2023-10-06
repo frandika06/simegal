@@ -844,11 +844,11 @@ class SetAppsPerusahaanController extends Controller
                 })
                 ->addColumn('aksi', function ($data) use ($enc_tags) {
                     $enc_uuid = CID::encode($data->uuid);
-                    $subRoleAdmin = CID::subRoleAdmin();
+                    $subRoleVerifikator = CID::subRoleVerifikator();
                     $edit = route('set.apps.perusahaan.edit', [$enc_tags, $enc_uuid]);
                     $show = route('set.apps.perusahaan.show', [$enc_tags, $enc_uuid]);
 
-                    if ($subRoleAdmin == true) {
+                    if ($subRoleVerifikator == true) {
                         // tags
                         $tags = CID::decode($enc_tags);
                         if ($tags == "Baru Daftar") {

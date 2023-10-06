@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Kasi
+class Verifikator
 {
     /**
      * Handle an incoming request.
@@ -26,8 +26,8 @@ class Kasi
         ];
         if (in_array($role, $ar_role)) {
             if ($role == "Pegawai") {
-                $subRoleKasi = CID::subRoleKasi();
-                if ($subRoleKasi == false) {
+                $subRoleVerifikator = CID::subRoleVerifikator();
+                if ($subRoleVerifikator == false) {
                     alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
                     return \back();
                 }

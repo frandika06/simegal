@@ -2,4 +2,6 @@
     @include('layouts.admin.menus.portal_apps.menus')
 @elseif (Request::is('settings-apps*'))
     @include('layouts.admin.menus.settings_apps.menus')
+@elseif (Request::is('schedule-apps*'))
+    @include('layouts.admin.menus.schedule_apps.menus')
 @endif

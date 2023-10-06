@@ -366,7 +366,7 @@ class PDPPermohonanPeneraanController extends Controller
                 $request->session()->put('filter_status', $status);
             } else {
                 $tahun = $request->session()->get('filter_tahun');
-                $tahun = $request->session()->get('filter_status');
+                $status = $request->session()->get('filter_status');
             }
 
             if ($status == "Semua Data") {

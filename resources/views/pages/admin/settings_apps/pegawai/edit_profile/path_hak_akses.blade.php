@@ -45,6 +45,15 @@
                 </div>
                 {{-- end::Admin Aplikasi --}}
 
+                {{-- begin::Verifikator --}}
+                <div class="form-check mb-5">
+                    <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Verifikator" name="sub_role[]" id="verifikator" @if (in_array('Verifikator', $exsub_role)) checked @endif />
+                    <label class="form-check-label" for="verifikator">
+                        Verifikator
+                    </label>
+                </div>
+                {{-- end::Verifikator --}}
+
                 {{-- begin::Petugas --}}
                 <div class="form-check mb-5">
                     <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Petugas" name="sub_role[]" id="petugas" @if (in_array('Petugas', $exsub_role)) checked @endif />
@@ -54,52 +63,52 @@
                 </div>
                 {{-- end::Petugas --}}
 
-                {{-- begin::Kasi --}}
+                {{-- begin::Kepala Tim --}}
                 <div class="form-check mb-5">
-                    <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Kasi" name="sub_role[]" id="kasi" @if (in_array('Kasi', $exsub_role)) checked @endif />
-                    <label class="form-check-label" for="kasi">
-                        Kasi
+                    <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Kepala Tim" name="sub_role[]" id="kepala_tim" @if (in_array('Kepala Tim', $exsub_role)) checked @endif />
+                    <label class="form-check-label" for="kepala_tim">
+                        Kepala Tim
                     </label>
                 </div>
-                {{-- end::Kasi --}}
+                {{-- end::Kepala Tim --}}
 
                 @error('sub_role')
                     <div id="sub_roleFeedback" class="text-danger">Hak Akses Wajib Dipilih Minimal 1.</div>
                 @enderror
 
-                <div class="d-none" id="sub_role_kasi">
+                <div class="d-none" id="sub_role_kepala_tim">
                     <div class='separator separator-dashed my-5'></div>
-                    <h4>Hak Akses Kasi</h4>
+                    <h4>Hak Akses Kepala Tim</h4>
                     <div class="ps-5 pt-3">
-                        {{-- begin::Kasi UAPV --}}
+                        {{-- begin::Kepala Tim Pelayanan --}}
                         <div class="form-check form-check-custom form-check-solid mb-4">
-                            <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi UAPV" name="sub_role_kasi" id="UAPV" @if (in_array('Kasi UAPV', $exsub_sub_role)) checked @endif />
-                            <label class="form-check-label" for="UAPV">
-                                Kasi UAPV
+                            <input class="form-check-input @error('sub_role_kepala_tim') is-invalid @enderror" type="radio" value="Kepala Tim Pelayanan" name="sub_role_kepala_tim" id="Pelayanan" @if (in_array('Kepala Tim Pelayanan', $exsub_sub_role)) checked @endif />
+                            <label class="form-check-label" for="Pelayanan">
+                                Kepala Tim Pelayanan
                             </label>
                         </div>
-                        {{-- end::Kasi UAPV --}}
+                        {{-- end::Kepala Tim Pelayanan --}}
 
-                        {{-- begin::Kasi MASSA --}}
+                        {{-- begin::Kepala Tim Pengawasa --}}
                         <div class="form-check form-check-custom form-check-solid mb-4">
-                            <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi MASSA" name="sub_role_kasi" id="MASSA" @if (in_array('Kasi MASSA', $exsub_sub_role)) checked @endif />
-                            <label class="form-check-label" for="MASSA">
-                                Kasi MASSA
+                            <input class="form-check-input @error('sub_role_kepala_tim') is-invalid @enderror" type="radio" value="Kepala Tim Pengawasa" name="sub_role_kepala_tim" id="Pengawasan" @if (in_array('Kepala Tim Pengawasa', $exsub_sub_role)) checked @endif />
+                            <label class="form-check-label" for="Pengawasan">
+                                Kepala Tim Pengawasan
                             </label>
                         </div>
-                        {{-- end::Kasi MASSA --}}
+                        {{-- end::Kepala Tim Pengawasa --}}
 
-                        {{-- begin::Kasi BDKT --}}
+                        {{-- begin::Kepala Tim Bina SDM --}}
                         <div class="form-check form-check-custom form-check-solid mb-4">
-                            <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi BDKT" name="sub_role_kasi" id="BDKT" @if (in_array('Kasi BDKT', $exsub_sub_role)) checked @endif />
-                            <label class="form-check-label" for="BDKT">
-                                Kasi BDKT
+                            <input class="form-check-input @error('sub_role_kepala_tim') is-invalid @enderror" type="radio" value="Kepala Tim Bina SDM" name="sub_role_kepala_tim" id="SDM" @if (in_array('Kepala Tim Bina SDM', $exsub_sub_role)) checked @endif />
+                            <label class="form-check-label" for="SDM">
+                                Kepala Tim Bina SDM
                             </label>
                         </div>
-                        {{-- end::Kasi BDKT --}}
+                        {{-- end::Kepala Tim Bina SDM --}}
 
-                        @error('sub_role_kasi')
-                            <div id="sub_role_kasiFeedback" class="text-danger">Hak Akses Kasi Wajib Dipilih Salah Satu.</div>
+                        @error('sub_role_kepala_tim')
+                            <div id="sub_role_kepala_timFeedback" class="text-danger">Hak Akses Kasi Wajib Dipilih Salah Satu.</div>
                         @enderror
                     </div>
                 </div>
@@ -124,32 +133,32 @@
 {{-- end:::Tab pane --}}
 
 @push('scripts')
-    @if (in_array('Kasi', $exsub_role))
-        {{-- sub role kasi --}}
+    @if (in_array('Kepala Tim', $exsub_role))
+        {{-- sub role kepala_tim --}}
         <script>
             $(document).ready(function() {
-                $("#sub_role_kasi").removeClass("d-none");
+                $("#sub_role_kepala_tim").removeClass("d-none");
             });
         </script>
     @endif
-    @error('sub_role_kasi')
-        {{-- sub role kasi --}}
+    @error('sub_role_kepala_tim')
+        {{-- sub role kepala_tim --}}
         <script>
             $(document).ready(function() {
-                $('#kasi').prop("checked", true);
-                $("#sub_role_kasi").removeClass("d-none");
+                $('#kepala_tim').prop("checked", true);
+                $("#sub_role_kepala_tim").removeClass("d-none");
             });
         </script>
     @enderror
-    {{-- sub role kasi --}}
+    {{-- sub role kepala_tim --}}
     <script>
         $(document).ready(function() {
-            $('#kasi').change(function() {
+            $('#kepala_tim').change(function() {
                 if (this.checked) {
                     $(this).prop("checked", true);
-                    $("#sub_role_kasi").removeClass("d-none");
+                    $("#sub_role_kepala_tim").removeClass("d-none");
                 } else {
-                    $("#sub_role_kasi").addClass("d-none");
+                    $("#sub_role_kepala_tim").addClass("d-none");
                 }
             });
         });

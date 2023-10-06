@@ -93,16 +93,18 @@ class AdminSimegalSeeder extends Seeder
             User::create($value_user_root);
 
             // 4. Pegawai
-            $response = Http::get('https://dummyjson.com/users?limit=30&skip=30');
+            $response = Http::get('https://dummyjson.com/users?limit=30&skip=60');
             $dataApi = $response->object();
             foreach ($dataApi->users as $item) {
-                $randSubRole = rand(1, 3);
+                $randSubRole = rand(1, 4);
                 if ($randSubRole == "1") {
                     $subRole = "Admin Aplikasi";
                 } elseif ($randSubRole == "2") {
                     $subRole = "Petugas";
                 } elseif ($randSubRole == "3") {
                     $subRole = "Kasi";
+                } elseif ($randSubRole == "4") {
+                    $subRole = "Verifikator";
                 }
 
                 $randSubSubRole = rand(1, 3);
@@ -114,12 +116,21 @@ class AdminSimegalSeeder extends Seeder
                     $subSubRole = "Kasi BDKT";
                 }
 
-                if ($item->email == "nwytchard10@blogspot.com") {
+                if ($item->email == "hfasey1t@home.pl") {
                     $subRole = "Admin Aplikasi";
-                } elseif ($item->email == "jevanson1b@admin.ch") {
+                } elseif ($item->email == "gbarhams1u@cnet.com") {
                     $subRole = "Petugas";
-                } elseif ($item->email == "dalmondz@joomla.org") {
+                } elseif ($item->email == "hollet1s@trellian.com") {
+                    $subRole = "Verifikator";
+                } elseif ($item->email == "eburras1q@go.com") {
                     $subRole = "Kasi";
+                    $subSubRole = "Kasi UAPV";
+                } elseif ($item->email == "cmasurel1x@baidu.com") {
+                    $subRole = "Kasi";
+                    $subSubRole = "Kasi MASSA";
+                } elseif ($item->email == "wfeldon20@netlog.com") {
+                    $subRole = "Kasi";
+                    $subSubRole = "Kasi BDKT";
                 }
 
                 if ($subRole == "Kasi") {

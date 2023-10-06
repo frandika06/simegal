@@ -23,7 +23,7 @@ class PerusahaanSeeder extends Seeder
         $cekPerusahaan = Perusahaan::first();
         if ($cekPerusahaan === null) {
             // GET POST
-            $response = Http::get('https://dummyjson.com/users?limit=30');
+            $response = Http::get('https://dummyjson.com/users?limit=60');
             $posts = $response->object();
             foreach ($posts->users as $item) {
                 // rand
@@ -33,14 +33,29 @@ class PerusahaanSeeder extends Seeder
                 } else {
                     $jenis_perusahaan = "Pemilik UTTP";
                 }
-                $verifikasi = rand(0, 1);
+                $verifikasi = rand(0, 3);
                 if ($verifikasi == "0") {
+                    // Baru Daftar
                     $verifikasi = "0";
                     $file_npwp = null;
-                } else {
+                    $status = "1";
+                } else if ($verifikasi == "1") {
+                    // Perlu Verifikasi
+                    $verifikasi = "0";
+                    $file_npwp = $item->image;
+                    $status = "1";
+                } else if ($verifikasi == "2") {
+                    // Aktif
                     $verifikasi = "1";
                     $file_npwp = $item->image;
+                    $status = "1";
+                } else if ($verifikasi == "3") {
+                    // Ditangguhkan
+                    $verifikasi = "1";
+                    $file_npwp = $item->image;
+                    $status = "0";
                 }
+
                 // create perusahaan
                 $uuid_profile = Str::uuid();
                 $value_1 = [
@@ -55,6 +70,7 @@ class PerusahaanSeeder extends Seeder
                     "foto" => $item->image,
                     "file_npwp" => $file_npwp,
                     "verifikasi" => $verifikasi,
+                    "status" => $status,
                     "uuid_created" => $user->uuid_profile,
                 ];
                 // save

@@ -15,37 +15,6 @@ class PDPDashboardController extends Controller
     {
         // auth
         $auth = Auth::user();
-        $role = $auth->role;
-        $sub_role = \explode(",", $auth->sub_role);
-        $sub_sub_role = \explode(",", $auth->sub_sub_role);
-
-        // Admin System
-        if ($role == "Admin System" || $role == "Super Admin") {
-            return $role;
-        } elseif ($role == "Pegawai") {
-            // PEGAWAI
-            if ($sub_role == "Admin Aplikasi") {
-                return $sub_role;
-            } elseif ($sub_role == "Petugas") {
-                return $sub_role;
-            } elseif ($sub_role == "Kasi") {
-                return $sub_role;
-            } else {
-                return redirect()->route('auth.home');
-            }
-        } elseif ($role == "Perusahaan") {
-            // Perusahaan
-            return $this->indexPerusahaan($request);
-        } else {
-            return redirect()->route('auth.home');
-        }
-    }
-
-    // index perusahaan
-    private function indexPerusahaan($request)
-    {
-        // auth
-        $auth = Auth::user();
         $profile = $auth->RelPerusahaan;
 
         // cek filter

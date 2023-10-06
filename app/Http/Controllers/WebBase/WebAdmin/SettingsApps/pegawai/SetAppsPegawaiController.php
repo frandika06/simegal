@@ -71,6 +71,17 @@ class SetAppsPegawaiController extends Controller
             "sub_role" => implode(",", $request->sub_role),
         ];
 
+        // cek sub_role_kasi
+        if (in_array("Kasi", $request->sub_role)) {
+            // validate
+            $request->validate([
+                "sub_role_kasi" => "required|string|max:100",
+            ]);
+            $value_2['sub_sub_role'] = $request->sub_role_kasi;
+        } else {
+            $value_2['sub_sub_role'] = null;
+        }
+
         // foto
         $path = "pegawai/" . $uuid_pegawai;
         if ($request->hasFile('foto')) {

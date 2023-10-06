@@ -163,7 +163,7 @@
                                     </div>
                                     {{-- end::List --}}
                                     {{-- begin::Link --}}
-                                    <a href="{{ route('pdp.apps.home.index') }}" class="btn btn-hover-rise text-gray-900 text-uppercase fs-7 fw-bold" style="background-color: #a6d3ff">Buka Aplikasi</a>
+                                    <a href="{{ route('scd.apps.home.index') }}" class="btn btn-hover-rise text-gray-900 text-uppercase fs-7 fw-bold" style="background-color: #a6d3ff">Buka Aplikasi</a>
                                     {{-- end::Link --}}
                                 </div>
                                 {{-- end::Wrapper --}}
@@ -174,24 +174,6 @@
 
                         {{-- begin::Row --}}
                         <div class="row g-lg-7">
-                            {{-- begin::Col --}}
-                            <div class="col-sm-6">
-                                {{-- begin::Card --}}
-                                <a href="#" class="card border-0 shadow-none min-h-200px mb-7" style="background-color: #2E4374">
-                                    {{-- begin::Card body --}}
-                                    <div class="card-body d-flex flex-column flex-center text-center">
-                                        {{-- begin::Illustrations --}}
-                                        <img class="mw-100 h-150px mb-3 mx-auto" src="{{ asset('assets-apps/media/icon-dashboard/05.svg') }}" />
-                                        {{-- end::Illustrations --}}
-                                        {{-- begin::Heading --}}
-                                        <h4 class="text-white fw-bold text-uppercase">Pengawasan <br /> Metrologi</h4>
-                                        {{-- end::Heading --}}
-                                    </div>
-                                    {{-- end::Card body --}}
-                                </a>
-                                {{-- end::Card --}}
-                            </div>
-                            {{-- end::Col --}}
                             {{-- begin::Col --}}
                             <div class="col-sm-6">
                                 {{-- begin::Card --}}
@@ -210,11 +192,6 @@
                                 {{-- end::Card --}}
                             </div>
                             {{-- end::Col --}}
-                        </div>
-                        {{-- end::Row --}}
-
-                        {{-- begin::Row --}}
-                        <div class="row g-lg-7">
                             {{-- begin::Col --}}
                             <div class="col-sm-6">
                                 {{-- begin::Card --}}
@@ -226,6 +203,29 @@
                                         {{-- end::Illustrations --}}
                                         {{-- begin::Heading --}}
                                         <h4 class="text-white fw-bold text-uppercase">Perhitungan <br /> Perangkat</h4>
+                                        {{-- end::Heading --}}
+                                    </div>
+                                    {{-- end::Card body --}}
+                                </a>
+                                {{-- end::Card --}}
+                            </div>
+                            {{-- end::Col --}}
+                        </div>
+                        {{-- end::Row --}}
+
+                        {{-- begin::Row --}}
+                        <div class="row g-lg-7">
+                            {{-- begin::Col --}}
+                            <div class="col-sm-6">
+                                {{-- begin::Card --}}
+                                <a href="#" class="card border-0 shadow-none min-h-200px mb-7" style="background-color: #2E4374">
+                                    {{-- begin::Card body --}}
+                                    <div class="card-body d-flex flex-column flex-center text-center">
+                                        {{-- begin::Illustrations --}}
+                                        <img class="mw-100 h-150px mb-3 mx-auto" src="{{ asset('assets-apps/media/icon-dashboard/05.svg') }}" />
+                                        {{-- end::Illustrations --}}
+                                        {{-- begin::Heading --}}
+                                        <h4 class="text-white fw-bold text-uppercase">Pengawasan <br /> Metrologi</h4>
                                         {{-- end::Heading --}}
                                     </div>
                                     {{-- end::Card body --}}

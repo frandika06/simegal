@@ -1,15 +1,15 @@
-@extends('layouts.admin.settings')
+@extends('layouts.admin.schedule')
 @push('apps')
     SIMEGAL
 @endpush
 @push('title')
-    Pengaturan Aplikasi | SIMEGAL
+    Penjadwalan & Penugasan | SIMEGAL
 @endpush
 @push('description')
-    Pengaturan Aplikasi | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    Penjadwalan & Penugasan | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    Pengaturan Aplikasi
+    Penjadwalan & Penugasan
 @endpush
 
 {{-- TOOLBOX::BEGIN --}}
@@ -69,7 +69,7 @@
                         <h2 class="fs-2x fw-bold mb-0">{{ \CID::welcomeBack() }}</h2>
                         {{-- end::Title --}}
                         {{-- begin::Description --}}
-                        <p class="text-gray-400 fs-4 fw-semibold py-7">Selamat datang di Pengaturan Aplikasi.
+                        <p class="text-gray-400 fs-4 fw-semibold py-7">Selamat datang di Penjadwalan & Penugasan.
                             <br />Anda bisa memanajemen pengguna dan lain sebagainya.
                         </p>
                         {{-- end::Description --}}
@@ -80,8 +80,7 @@
                     {{-- end::Heading --}}
                     {{-- begin::Illustration --}}
                     <div class="text-center pb-15 px-5">
-                        {{-- <img src="{{ asset('assets-apps/media/illustrations/sigma-1/15.png') }}" alt="" class="mw-100 h-200px h-sm-325px" /> --}}
-                        <img src="{{ asset('assets-apps/media/icon-dashboard/08.svg') }}" alt="" class="mw-100 h-200px h-sm-325px" />
+                        <img src="{{ asset('assets-apps/media/icon-dashboard/04.svg') }}" alt="" class="mw-100 h-200px h-sm-325px" />
                     </div>
                     {{-- end::Illustration --}}
                 </div>
