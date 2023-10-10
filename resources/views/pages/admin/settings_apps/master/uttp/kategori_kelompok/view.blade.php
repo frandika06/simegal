@@ -131,6 +131,17 @@
                     </div>
                     {{-- end::kategori --}}
 
+                    {{-- begin::no_urut --}}
+                    <div class="row form-group mb-5">
+                        <div class="col-lg-3">
+                            <label for="no_urut" class="required">No. Urut</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input type="number" class="form-control" value="{{ old('no_urut', $data->no_urut) }}" readonly />
+                        </div>
+                    </div>
+                    {{-- end::no_urut --}}
+
                     {{-- begin::nama_kategori --}}
                     <div class="row form-group">
                         <div class="col-lg-3">

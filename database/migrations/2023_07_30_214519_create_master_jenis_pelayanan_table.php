@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('master_jenis_pelayanan', function (Blueprint $table) {
             $table->string('uuid', 100)->primary();
+            $table->integer('no_urut')->nullable();
             $table->string('nama_pelayanan', 100)->nullable();
             $table->enum('status', ["0", "1"])->default("1");
             $table->string('uuid_created', 100)->nullable();

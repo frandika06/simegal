@@ -360,7 +360,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -369,7 +369,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });
@@ -401,7 +401,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -410,7 +410,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });
@@ -442,7 +442,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -451,7 +451,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });

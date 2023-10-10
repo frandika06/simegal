@@ -26,11 +26,11 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
             $jp = MasterJenisPelayanan::get();
             foreach ($jp as $item1) {
                 // get kuttp
-                $uuid_jp = $item1->uuid;
+                $uuid_jenis_pelayanan = $item1->uuid;
                 $nama_jp = $item1->nama_pelayanan;
-                $kuttp = MasterKelompokUttp::whereUuidJp($uuid_jp)->get();
+                $kuttp = MasterKelompokUttp::whereUuidJenisPelayanan($uuid_jenis_pelayanan)->get();
                 foreach ($kuttp as $item2) {
-                    $uuid_kelompok_uutp = $item2->uuid;
+                    $uuid_kelompok_uttp = $item2->uuid;
                     $kode_klpk = $item2->kode;
                     if ($nama_jp == "Tera" && $kode_klpk == "MT") {
                         // tera & MT
@@ -48,8 +48,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_1; $i++) {
                             $value_1 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_1[$i],
                                 "kategori" => "0",
                                 "uuid_created" => $user->uuid_profile,
@@ -75,8 +76,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_2; $i++) {
                             $value_2 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_2[$i],
                                 "kategori" => "1",
                                 "uuid_created" => $user->uuid_profile,
@@ -97,8 +99,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_3; $i++) {
                             $value_3 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_3[$i],
                                 "kategori" => "2",
                                 "uuid_created" => $user->uuid_profile,
@@ -119,8 +122,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_1; $i++) {
                             $value_1 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_1[$i],
                                 "kategori" => "0",
                                 "uuid_created" => $user->uuid_profile,
@@ -144,8 +148,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_2; $i++) {
                             $value_2 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_2[$i],
                                 "kategori" => "1",
                                 "uuid_created" => $user->uuid_profile,
@@ -166,8 +171,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_3; $i++) {
                             $value_3 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_3[$i],
                                 "kategori" => "2",
                                 "uuid_created" => $user->uuid_profile,
@@ -190,8 +196,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_1; $i++) {
                             $value_1 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_1[$i],
                                 "kategori" => "0",
                                 "uuid_created" => $user->uuid_profile,
@@ -217,8 +224,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_2; $i++) {
                             $value_2 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_2[$i],
                                 "kategori" => "1",
                                 "uuid_created" => $user->uuid_profile,
@@ -239,8 +247,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_3; $i++) {
                             $value_3 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_3[$i],
                                 "kategori" => "2",
                                 "uuid_created" => $user->uuid_profile,
@@ -261,8 +270,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_1; $i++) {
                             $value_1 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_1[$i],
                                 "kategori" => "0",
                                 "uuid_created" => $user->uuid_profile,
@@ -286,8 +296,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_2; $i++) {
                             $value_2 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_2[$i],
                                 "kategori" => "1",
                                 "uuid_created" => $user->uuid_profile,
@@ -308,8 +319,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_3; $i++) {
                             $value_3 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_3[$i],
                                 "kategori" => "2",
                                 "uuid_created" => $user->uuid_profile,
@@ -327,8 +339,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_1; $i++) {
                             $value_1 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_1[$i],
                                 "kategori" => "0",
                                 "uuid_created" => $user->uuid_profile,
@@ -344,8 +357,9 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                         for ($i = 0; $i < $car_value_2; $i++) {
                             $value_2 = [
                                 "uuid" => Str::uuid(),
-                                "uuid_jp" => $uuid_jp,
-                                "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                                "no_urut" => $i + 1,
                                 "nama_kategori" => $ar_value_2[$i],
                                 "kategori" => "1",
                                 "uuid_created" => $user->uuid_profile,

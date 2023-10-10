@@ -264,52 +264,52 @@
                             </div>
                             {{-- end::Petugas --}}
 
-                            {{-- begin::Kasi --}}
+                            {{-- begin::Ketua Tim --}}
                             <div class="form-check mb-5">
-                                <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Kasi" name="sub_role[]" id="kasi" />
-                                <label class="form-check-label" for="kasi">
-                                    Kasi
+                                <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Ketua Tim" name="sub_role[]" id="ketua_tim" />
+                                <label class="form-check-label" for="ketua_tim">
+                                    Ketua Tim
                                 </label>
                             </div>
-                            {{-- end::Kasi --}}
+                            {{-- end::Ketua Tim --}}
 
                             @error('sub_role')
                                 <div id="sub_roleFeedback" class="text-danger">Hak Akses Wajib Dipilih Minimal 1.</div>
                             @enderror
 
-                            <div class="d-none" id="sub_role_kasi">
+                            <div class="d-none" id="sub_role_ketua_tim">
                                 <div class='separator separator-dashed my-5'></div>
-                                <h4>Hak Akses Kasi</h4>
+                                <h4>Hak Akses Ketua Tim</h4>
                                 <div class="ps-5 pt-3">
-                                    {{-- begin::Kasi UAPV --}}
+                                    {{-- begin::Ketua Tim Pelayanan --}}
                                     <div class="form-check form-check-custom form-check-solid mb-4">
-                                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi UAPV" name="sub_role_kasi" id="UAPV" />
-                                        <label class="form-check-label" for="UAPV">
-                                            Kasi UAPV
+                                        <input class="form-check-input @error('sub_role_ketua_tim') is-invalid @enderror" type="radio" value="Ketua Tim Pelayanan" name="sub_role_ketua_tim" id="Pelayanan" />
+                                        <label class="form-check-label" for="Pelayanan">
+                                            Ketua Tim Pelayanan
                                         </label>
                                     </div>
-                                    {{-- end::Kasi UAPV --}}
+                                    {{-- end::Ketua Tim Pelayanan --}}
 
-                                    {{-- begin::Kasi MASSA --}}
+                                    {{-- begin::Ketua Tim Pengawasan --}}
                                     <div class="form-check form-check-custom form-check-solid mb-4">
-                                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi MASSA" name="sub_role_kasi" id="MASSA" />
-                                        <label class="form-check-label" for="MASSA">
-                                            Kasi MASSA
+                                        <input class="form-check-input @error('sub_role_ketua_tim') is-invalid @enderror" type="radio" value="Ketua Tim Pengawasan" name="sub_role_ketua_tim" id="Pengawasan" />
+                                        <label class="form-check-label" for="Pengawasan">
+                                            Ketua Tim Pengawasan
                                         </label>
                                     </div>
-                                    {{-- end::Kasi MASSA --}}
+                                    {{-- end::Ketua Tim Pengawasan --}}
 
-                                    {{-- begin::Kasi BDKT --}}
+                                    {{-- begin::Ketua Tim Bina SDM --}}
                                     <div class="form-check form-check-custom form-check-solid mb-4">
-                                        <input class="form-check-input @error('sub_role_kasi') is-invalid @enderror" type="radio" value="Kasi BDKT" name="sub_role_kasi" id="BDKT" />
-                                        <label class="form-check-label" for="BDKT">
-                                            Kasi BDKT
+                                        <input class="form-check-input @error('sub_role_ketua_tim') is-invalid @enderror" type="radio" value="Ketua Tim Bina SDM" name="sub_role_ketua_tim" id="SDM" />
+                                        <label class="form-check-label" for="SDM">
+                                            Ketua Tim Bina SDM
                                         </label>
                                     </div>
-                                    {{-- end::Kasi BDKT --}}
+                                    {{-- end::Ketua Tim Bina SDM --}}
 
-                                    @error('sub_role_kasi')
-                                        <div id="sub_role_kasiFeedback" class="text-danger">Hak Akses Kasi Wajib Dipilih Salah Satu.</div>
+                                    @error('sub_role_ketua_tim')
+                                        <div id="sub_role_ketua_timFeedback" class="text-danger">Hak Akses Ketua Tim Wajib Dipilih Salah Satu.</div>
                                     @enderror
                                 </div>
                             </div>
@@ -436,7 +436,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -445,7 +445,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });
@@ -498,25 +498,25 @@
         });
     </script>
 
-    {{-- sub role kasi --}}
-    @error('sub_role_kasi')
-        {{-- sub role kasi --}}
+    {{-- sub role ketua_tim --}}
+    @error('sub_role_ketua_tim')
+        {{-- sub role ketua_tim --}}
         <script>
             $(document).ready(function() {
-                $('#kasi').prop("checked", true);
-                $("#sub_role_kasi").removeClass("d-none");
+                $('#ketua_tim').prop("checked", true);
+                $("#sub_role_ketua_tim").removeClass("d-none");
             });
         </script>
     @enderror
-    {{-- sub role kasi --}}
+    {{-- sub role ketua_tim --}}
     <script>
         $(document).ready(function() {
-            $('#kasi').change(function() {
+            $('#ketua_tim').change(function() {
                 if (this.checked) {
                     $(this).prop("checked", true);
-                    $("#sub_role_kasi").removeClass("d-none");
+                    $("#sub_role_ketua_tim").removeClass("d-none");
                 } else {
-                    $("#sub_role_kasi").addClass("d-none");
+                    $("#sub_role_ketua_tim").addClass("d-none");
                 }
             });
         });

@@ -26,6 +26,6 @@ class MasterKelompokUttp extends Model
 
     public function RelMasterJenisPelayanan()
     {
-        return $this->belongsTo('App\Models\MasterJenisPelayanan', 'uuid_jp', 'uuid')->withTrashed();
+        return $this->belongsTo('App\Models\MasterJenisPelayanan', 'uuid_jenis_pelayanan', 'uuid')->withTrashed();
     }
 }

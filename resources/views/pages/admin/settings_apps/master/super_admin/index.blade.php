@@ -231,9 +231,6 @@
                             @enderror
                         </div>
                         {{-- end::password --}}
-                        @error('sub_role')
-                            <div id="sub_roleFeedback" class="text-danger">Hak Akses Wajib Dipilih Minimal 1.</div>
-                        @enderror
                     </div>
 
                     <div class="modal-footer">
@@ -347,7 +344,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -356,7 +353,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });

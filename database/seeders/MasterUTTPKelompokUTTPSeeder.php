@@ -39,7 +39,8 @@ class MasterUTTPKelompokUTTPSeeder extends Seeder
                         $uuid = Str::uuid();
                         $value_1 = [
                             "uuid" => $uuid,
-                            "uuid_jp" => $item1->uuid,
+                            "uuid_jenis_pelayanan" => $item1->uuid,
+                            "no_urut" => $i + 1,
                             "kode" => $ar_kode[$i],
                             "nama_kelompok" => $ar_value[$i],
                             "uuid_created" => $user->uuid_profile,
@@ -58,7 +59,8 @@ class MasterUTTPKelompokUTTPSeeder extends Seeder
                         $uuid = Str::uuid();
                         $value_1 = [
                             "uuid" => $uuid,
-                            "uuid_jp" => $item1->uuid,
+                            "uuid_jenis_pelayanan" => $item1->uuid,
+                            "no_urut" => $i + 1,
                             "kode" => $ar_kode[$i],
                             "nama_kelompok" => $ar_value[$i],
                             "uuid_created" => $user->uuid_profile,

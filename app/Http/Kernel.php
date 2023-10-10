@@ -72,7 +72,7 @@ class Kernel extends HttpKernel
         'SuperAdmin' => \App\Http\Middleware\SuperAdmin::class,
         'Admin' => \App\Http\Middleware\Admin::class,
         'Verifikator' => \App\Http\Middleware\Verifikator::class,
-        'KepalaTim' => \App\Http\Middleware\KepalaTim::class,
+        'KetuaTim' => \App\Http\Middleware\KetuaTim::class,
         'Petugas' => \App\Http\Middleware\Petugas::class,
         'AdminPortal' => \App\Http\Middleware\AdminPortal::class,
         'Perusahaan' => \App\Http\Middleware\Perusahaan::class,

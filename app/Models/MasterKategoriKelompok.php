@@ -26,11 +26,11 @@ class MasterKategoriKelompok extends Model
 
     public function RelMasterJenisPelayanan()
     {
-        return $this->belongsTo('App\Models\MasterJenisPelayanan', 'uuid_jp', 'uuid')->withTrashed();
+        return $this->belongsTo('App\Models\MasterJenisPelayanan', 'uuid_jenis_pelayanan', 'uuid')->withTrashed();
     }
 
     public function RelMasterKelompokUttp()
     {
-        return $this->belongsTo('App\Models\MasterKelompokUttp', 'uuid_kelompok_uutp', 'uuid')->withTrashed();
+        return $this->belongsTo('App\Models\MasterKelompokUttp', 'uuid_kelompok_uttp', 'uuid')->withTrashed();
     }
 }

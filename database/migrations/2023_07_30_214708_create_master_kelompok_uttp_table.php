@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('master_kelompok_uttp', function (Blueprint $table) {
             $table->string('uuid', 100)->primary();
-            $table->string('uuid_jp', 100)->nullable();
+            $table->string('uuid_jenis_pelayanan', 100)->nullable();
+            $table->integer('no_urut')->nullable();
             $table->string('kode', 100)->nullable();
             $table->string('nama_kelompok', 100)->nullable();
             $table->enum('status', ["0", "1"])->default("1");

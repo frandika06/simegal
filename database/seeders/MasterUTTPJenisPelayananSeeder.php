@@ -30,6 +30,7 @@ class MasterUTTPJenisPelayananSeeder extends Seeder
                 $uuid = Str::uuid();
                 $value_1 = [
                     "uuid" => $uuid,
+                    "no_urut" => $i + 1,
                     "nama_pelayanan" => $ar_value[$i],
                     "uuid_created" => $user->uuid_profile,
                 ];

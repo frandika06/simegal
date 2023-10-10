@@ -102,6 +102,20 @@
                         @csrf
                         @method('put')
 
+                        {{-- begin::no_urut --}}
+                        <div class="row form-group mb-5">
+                            <div class="col-lg-3">
+                                <label for="no_urut" class="required">No. Urut</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <input type="number" class="form-control @error('no_urut') is-invalid @enderror" name="no_urut" id="no_urut" placeholder="No. Urut" autocomplete="off" value="{{ old('no_urut', $data->no_urut) }}" required />
+                                @error('no_urut')
+                                    <div id="no_urutFeedback" class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        {{-- end::no_urut --}}
+
                         {{-- begin::nama_pelayanan --}}
                         <div class="row form-group">
                             <div class="col-lg-3">

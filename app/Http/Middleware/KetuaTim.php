@@ -2,13 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Helpers\CID;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class KepalaTim
+class KetuaTim
 {
     /**
      * Handle an incoming request.
@@ -26,8 +24,8 @@ class KepalaTim
         ];
         if (in_array($role, $ar_role)) {
             if ($role == "Pegawai") {
-                $subRoleKepalaTim = CID::subRoleKepalaTim();
-                if ($subRoleKepalaTim == false) {
+                $subRoleKetuaTim = CID::subRoleKetuaTim();
+                if ($subRoleKetuaTim == false) {
                     alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
                     return \back();
                 }

@@ -80,6 +80,7 @@
                             <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                                 <tr class="text-start text-muted text-uppercase gs-0">
                                     <th>#</th>
+                                    <th>No. Urut</th>
                                     <th>Jenis Pelayanan</th>
                                     <th>Kode</th>
                                     <th>Nama Kelompok</th>
@@ -192,6 +193,10 @@
                     name: 'DT_RowIndex'
                 },
                 {
+                    data: 'no_urut',
+                    name: 'no_urut'
+                },
+                {
                     data: 'nama_pelayanan',
                     name: 'nama_pelayanan'
                 },
@@ -216,15 +221,19 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 5]
+                    targets: [0, 6]
+                },
+                {
+                    className: "text-center w-80px",
+                    targets: [1]
                 },
                 {
                     className: "w-80px",
-                    targets: [2]
+                    targets: [3]
                 },
                 {
                     className: "text-end",
-                    targets: [5]
+                    targets: [6]
                 }
             ],
             "dom": "<'row'" +
@@ -265,7 +274,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -274,7 +283,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });

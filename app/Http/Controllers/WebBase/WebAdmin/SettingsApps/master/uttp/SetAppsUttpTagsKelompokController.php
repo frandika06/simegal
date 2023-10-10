@@ -21,15 +21,11 @@ class SetAppsUttpTagsKelompokController extends Controller
     {
         // get master uttp jenis pelayanan
         $getJP = MasterJenisPelayanan::whereStatus("1")
-            ->orderBy("nama_pelayanan", "ASC")
-            ->get();
-        $getKlpkUttp = MasterKelompokUttp::orderBy("kode", "ASC")
-            ->orderBy("nama_kelompok", "ASC")
+            ->orderBy("no_urut", "ASC")
             ->get();
 
         return view('pages.admin.settings_apps.master.uttp.kategori_kelompok.index', compact(
             'getJP',
-            'getKlpkUttp',
         ));
     }
 
@@ -44,21 +40,33 @@ class SetAppsUttpTagsKelompokController extends Controller
 
         // validate
         $request->validate([
+            "jenis_pelayanan" => "required|string|max:100",
             "nama_kelompok" => "required|string|max:100",
             "kategori" => "required|string|max:100",
             "nama_kategori" => "required|string|max:100",
         ]);
 
         // getKlpkUttp
-        $uuid_kelompok_uutp = $request->nama_kelompok;
-        $getKlpkUttp = MasterKelompokUttp::findOrFail($uuid_kelompok_uutp);
+        $uuid_kelompok_uttp = $request->nama_kelompok;
+        $getKlpkUttp = MasterKelompokUttp::findOrFail($uuid_kelompok_uttp);
+
+        // nomor urut
+        $cekData = MasterKategoriKelompok::first();
+        if ($cekData === null) {
+            $no_urut = 1;
+        } else {
+            $last_nomor = MasterKategoriKelompok::where("uuid_kelompok_uttp", $uuid_kelompok_uttp)
+                ->max('no_urut');
+            $no_urut = $last_nomor + 1;
+        }
 
         // value Pegawai
         $uuid = Str::uuid();
         $value_1 = [
             "uuid" => $uuid,
-            "uuid_jp" => $getKlpkUttp->uuid_jp,
-            "uuid_kelompok_uutp" => $uuid_kelompok_uutp,
+            "uuid_jenis_pelayanan" => $request->jenis_pelayanan,
+            "uuid_kelompok_uttp" => $getKlpkUttp->uuid,
+            "no_urut" => $no_urut,
             "nama_kategori" => $request->nama_kategori,
             "kategori" => $request->kategori,
             "uuid_created" => $uuid_profile,
@@ -139,12 +147,14 @@ class SetAppsUttpTagsKelompokController extends Controller
 
         // validate
         $request->validate([
+            "no_urut" => "required|numeric",
             "kategori" => "required|string|max:100",
             "nama_kategori" => "required|string|max:100",
         ]);
 
         // value Pegawai
         $value_1 = [
+            "no_urut" => $request->no_urut,
             "kategori" => $request->kategori,
             "nama_kategori" => $request->nama_kategori,
             "uuid_updated" => $uuid_profile,
@@ -291,8 +301,13 @@ class SetAppsUttpTagsKelompokController extends Controller
      */
     public function data(Request $request)
     {
-        $data = MasterKategoriKelompok::orderBy("kategori", "ASC")
-            ->orderBy("nama_kategori", "ASC")
+        $data = MasterKategoriKelompok::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kategori_kelompok.uuid_jenis_pelayanan")
+            ->join("master_kelompok_uttp", "master_kelompok_uttp.uuid", "=", "master_kategori_kelompok.uuid_kelompok_uttp")
+            ->select("master_kategori_kelompok.*")
+            ->orderBy("master_jenis_pelayanan.no_urut", "ASC")
+            ->orderBy("master_kelompok_uttp.no_urut", "ASC")
+            ->orderBy("master_kategori_kelompok.kategori", "ASC")
+            ->orderBy("master_kategori_kelompok.no_urut", "ASC")
             ->get();
 
         if ($request->ajax()) {

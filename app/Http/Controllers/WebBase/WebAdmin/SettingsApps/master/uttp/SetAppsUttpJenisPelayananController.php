@@ -34,10 +34,20 @@ class SetAppsUttpJenisPelayananController extends Controller
             "nama_pelayanan" => "required|string|max:100",
         ]);
 
+        // nomor urut
+        $cekData = MasterJenisPelayanan::first();
+        if ($cekData === null) {
+            $no_urut = 1;
+        } else {
+            $last_nomor = MasterJenisPelayanan::max('no_urut');
+            $no_urut = $last_nomor + 1;
+        }
+
         // value Pegawai
         $uuid = Str::uuid();
         $value_1 = [
             "uuid" => $uuid,
+            "no_urut" => $no_urut,
             "nama_pelayanan" => $request->nama_pelayanan,
             "uuid_created" => $uuid_profile,
         ];
@@ -117,11 +127,13 @@ class SetAppsUttpJenisPelayananController extends Controller
 
         // validate
         $request->validate([
+            "no_urut" => "required|numeric",
             "nama_pelayanan" => "required|string|max:100",
         ]);
 
         // value Pegawai
         $value_1 = [
+            "no_urut" => $request->no_urut,
             "nama_pelayanan" => $request->nama_pelayanan,
             "uuid_updated" => $uuid_profile,
         ];
@@ -267,7 +279,7 @@ class SetAppsUttpJenisPelayananController extends Controller
      */
     public function data(Request $request)
     {
-        $data = MasterJenisPelayanan::orderBy("nama_pelayanan", "ASC")->get();
+        $data = MasterJenisPelayanan::orderBy("no_urut", "ASC")->get();
 
         if ($request->ajax()) {
             return Datatables::of($data)

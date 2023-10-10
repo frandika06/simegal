@@ -102,18 +102,18 @@ class AdminSimegalSeeder extends Seeder
                 } elseif ($randSubRole == "2") {
                     $subRole = "Petugas";
                 } elseif ($randSubRole == "3") {
-                    $subRole = "Kasi";
+                    $subRole = "Ketua Tim";
                 } elseif ($randSubRole == "4") {
                     $subRole = "Verifikator";
                 }
 
                 $randSubSubRole = rand(1, 3);
                 if ($randSubSubRole == "1") {
-                    $subSubRole = "Kasi UAPV";
+                    $subSubRole = "Ketua Tim Pelayanan";
                 } elseif ($randSubSubRole == "2") {
-                    $subSubRole = "Kasi MASSA";
+                    $subSubRole = "Ketua Tim Pengawasan";
                 } elseif ($randSubSubRole == "3") {
-                    $subSubRole = "Kasi BDKT";
+                    $subSubRole = "Ketua Tim Bina SDM";
                 }
 
                 if ($item->email == "hfasey1t@home.pl") {
@@ -123,17 +123,17 @@ class AdminSimegalSeeder extends Seeder
                 } elseif ($item->email == "hollet1s@trellian.com") {
                     $subRole = "Verifikator";
                 } elseif ($item->email == "eburras1q@go.com") {
-                    $subRole = "Kasi";
-                    $subSubRole = "Kasi UAPV";
+                    $subRole = "Ketua Tim";
+                    $subSubRole = "Ketua Tim Pelayanan";
                 } elseif ($item->email == "cmasurel1x@baidu.com") {
-                    $subRole = "Kasi";
-                    $subSubRole = "Kasi MASSA";
+                    $subRole = "Ketua Tim";
+                    $subSubRole = "Ketua Tim Pengawasan";
                 } elseif ($item->email == "wfeldon20@netlog.com") {
-                    $subRole = "Kasi";
-                    $subSubRole = "Kasi BDKT";
+                    $subRole = "Ketua Tim";
+                    $subSubRole = "Ketua Tim Bina SDM";
                 }
 
-                if ($subRole == "Kasi") {
+                if ($subRole == "Ketua Tim") {
                     $subSubRole = $subSubRole;
                 } else {
                     $subSubRole = null;
@@ -164,6 +164,54 @@ class AdminSimegalSeeder extends Seeder
                 // create user
                 User::create($value_user_root);
             }
+
+            // 5. Kepala Bidang
+            $uuid_root = Str::uuid();
+            $value_adm_root = [
+                "uuid" => $uuid_root,
+                "nama_lengkap" => "Kepala Bidang",
+                "jabatan" => "Kepala Bidang",
+                "jenis_kelamin" => "L",
+                "email" => "kepalabidang@mail.com",
+                "no_telp" => "081510679515",
+                "uuid_created" => $uuid_root,
+            ];
+            // create pegawai
+            Pegawai::create($value_adm_root);
+            $value_user_root = [
+                "uuid" => Str::uuid(),
+                "uuid_profile" => $uuid_root,
+                "username" => "kepalabidang@mail.com",
+                "password" => \bcrypt('admin1234'),
+                "role" => "Kepala Bidang",
+                "uuid_created" => $uuid_root,
+            ];
+            // create user
+            User::create($value_user_root);
+
+            // 6. Kepala Dinas
+            $uuid_root = Str::uuid();
+            $value_adm_root = [
+                "uuid" => $uuid_root,
+                "nama_lengkap" => "Kepala Dinas",
+                "jabatan" => "Kepala Dinas",
+                "jenis_kelamin" => "L",
+                "email" => "kepaladinas@mail.com",
+                "no_telp" => "081510679515",
+                "uuid_created" => $uuid_root,
+            ];
+            // create pegawai
+            Pegawai::create($value_adm_root);
+            $value_user_root = [
+                "uuid" => Str::uuid(),
+                "uuid_profile" => $uuid_root,
+                "username" => "kepaladinas@mail.com",
+                "password" => \bcrypt('admin1234'),
+                "role" => "Kepala Dinas",
+                "uuid_created" => $uuid_root,
+            ];
+            // create user
+            User::create($value_user_root);
         }
     }
 }

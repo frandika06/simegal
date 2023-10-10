@@ -19,7 +19,7 @@ class SetAppsUttpKelompokController extends Controller
     public function index()
     {
         // get master uttp jenis pelayanan
-        $getJP = MasterJenisPelayanan::whereStatus("1")->orderBy("nama_pelayanan", "ASC")->get();
+        $getJP = MasterJenisPelayanan::whereStatus("1")->orderBy("no_urut", "ASC")->get();
 
         return view('pages.admin.settings_apps.master.uttp.kelompok_uttp.index', compact(
             'getJP'
@@ -42,11 +42,23 @@ class SetAppsUttpKelompokController extends Controller
             "nama_kelompok" => "required|string|max:100",
         ]);
 
+        // nomor urut
+        $jenis_pelayanan = $request->jenis_pelayanan;
+        $cekData = MasterKelompokUttp::first();
+        if ($cekData === null) {
+            $no_urut = 1;
+        } else {
+            $last_nomor = MasterKelompokUttp::whereUuidJenisPelayanan($jenis_pelayanan)
+                ->max('no_urut');
+            $no_urut = $last_nomor + 1;
+        }
+
         // value Pegawai
         $uuid = Str::uuid();
         $value_1 = [
             "uuid" => $uuid,
-            "uuid_jp" => $request->jenis_pelayanan,
+            "uuid_jenis_pelayanan" => $jenis_pelayanan,
+            "no_urut" => $no_urut,
             "kode" => Str::upper($request->kode),
             "nama_kelompok" => $request->nama_kelompok,
             "uuid_created" => $uuid_profile,
@@ -127,12 +139,14 @@ class SetAppsUttpKelompokController extends Controller
 
         // validate
         $request->validate([
+            "no_urut" => "required|numeric",
             "kode" => "required|string|max:100",
             "nama_kelompok" => "required|string|max:100",
         ]);
 
         // value Pegawai
         $value_1 = [
+            "no_urut" => $request->no_urut,
             "kode" => Str::upper($request->kode),
             "nama_kelompok" => $request->nama_kelompok,
             "uuid_updated" => $uuid_profile,
@@ -279,8 +293,10 @@ class SetAppsUttpKelompokController extends Controller
      */
     public function data(Request $request)
     {
-        $data = MasterKelompokUttp::orderBy("kode", "ASC")
-            ->orderBy("nama_kelompok", "ASC")
+        $data = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->orderBy("master_jenis_pelayanan.no_urut", "ASC")
+            ->orderBy("master_kelompok_uttp.no_urut", "ASC")
             ->get();
 
         if ($request->ajax()) {

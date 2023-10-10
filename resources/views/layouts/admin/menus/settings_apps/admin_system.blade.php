@@ -61,9 +61,51 @@
                         {{-- begin:Menu link --}}
                         <span class="menu-link">
                             <span class="menu-icon">
+                                <i class="fa-solid fa-file-circle-question fs-2"></i>
+                            </span>
+                            <span class="menu-title">Master Instrumen UTTP</span>
+                            <span class="menu-arrow"></span>
+                        </span>
+                        {{-- end:Menu link --}}
+                        {{-- begin:Menu sub --}}
+                        <div class="menu-sub menu-sub-accordion">
+                            {{-- begin:Menu item --}}
+                            <div class="menu-item">
+                                {{-- begin:Menu link --}}
+                                <a class="menu-link" href="{{ route('set.apps.mst.ins.uttp.jenis.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Jenis UTTP</span>
+                                </a>
+                                {{-- end:Menu link --}}
+                            </div>
+                            {{-- end:Menu item --}}
+                            {{-- begin:Menu item --}}
+                            <div class="menu-item">
+                                {{-- begin:Menu link --}}
+                                <a class="menu-link" href="{{ route('set.apps.mst.ins.uttp.item.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Daftar Item UTTP</span>
+                                </a>
+                                {{-- end:Menu link --}}
+                            </div>
+                            {{-- end:Menu item --}}
+                        </div>
+                        {{-- end:Menu sub --}}
+                    </div>
+                    {{-- end:Menu item --}}
+
+                    {{-- begin:Menu item --}}
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                        {{-- begin:Menu link --}}
+                        <span class="menu-link">
+                            <span class="menu-icon">
                                 <i class="fa-solid fa-toolbox fs-2"></i>
                             </span>
-                            <span class="menu-title">Master UTTP</span>
+                            <span class="menu-title">Master Jenis & Alat UTTP</span>
                             <span class="menu-arrow"></span>
                         </span>
                         {{-- end:Menu link --}}
@@ -76,7 +118,7 @@
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>
-                                    <span class="menu-title">Jenis Pelayanan</span>
+                                    <span class="menu-title">Jenis UTTP</span>
                                 </a>
                                 {{-- end:Menu link --}}
                             </div>
@@ -198,6 +240,32 @@
                             <i class="fa-solid fa-users fs-2"></i>
                         </span>
                         <span class="menu-title">Pegawai</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('set.apps.kabid.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-user-tag fs-2"></i>
+                        </span>
+                        <span class="menu-title">Kepala Bidang (KABID)</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('set.apps.kadis.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-user-tie fs-2"></i>
+                        </span>
+                        <span class="menu-title">Kepala Dinas (KADIS)</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>

@@ -28,11 +28,11 @@ class MasterJenisPelayanan extends Model
 
     public function RelMasterKelompokUttp()
     {
-        return $this->hasMany('App\Models\MasterKelompokUttp', 'uuid_jp', 'uuid');
+        return $this->hasMany('App\Models\MasterKelompokUttp', 'uuid_jenis_pelayanan', 'uuid');
     }
 
     public function RelMasterKategoriKelompok()
     {
-        return $this->hasMany('App\Models\MasterKategoriKelompok', 'uuid_jp', 'uuid');
+        return $this->hasMany('App\Models\MasterKategoriKelompok', 'uuid_jenis_pelayanan', 'uuid');
     }
 }

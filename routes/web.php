@@ -26,7 +26,11 @@ use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\dashboard\ScdDashboardCon
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdTindakLanjutController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kabid\SetAppsKabidController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kadis\SetAppsKadisController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\SetAppsSuperAdminController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsInsUttpDaftarItemController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsInsUttpJenisController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpJenisPelayananController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpKelompokController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpTagsKelompokController;
@@ -132,13 +136,17 @@ Route::group(['prefix' => 'wil-adm'], function () {
 });
 
 // exdown | Export - Download
-Route::group(['prefix' => 'exdown'], function () {
+Route::group(['prefix' => 'eximdown'], function () {
     // unduhan
     Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
 });
 
 // AJAX
 Route::group(['prefix' => 'ajax'], function () {
+    // settings-apps
+    Route::group(['prefix' => 'settings-apps'], function () {
+        Route::post('/master/get-kelompok-uttp', [AjaxController::class, 'SetGetKelompokUttp'])->name('ajax.set.apps.get.klpk.uttp');
+    });
     // schedule-apps
     Route::group(['prefix' => 'schedule-apps'], function () {
         Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
@@ -382,9 +390,43 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                         Route::get('/data', [SetAppsSuperAdminController::class, 'data'])->name('set.apps.mst.sa.data');
                     });
                 });
-                // uttp
-                // PATH : WebBase/WebAdmin/SettingsApps/master
-                Route::group(['prefix' => 'uttp'], function () {
+
+                // PATH : WebBase/WebAdmin/SettingsApps/master/uttp
+                // instrumen-uttp
+                Route::group(['prefix' => 'instrumen-uttp'], function () {
+                    // jenis-uttp
+                    Route::group(['prefix' => 'jenis-uttp'], function () {
+                        Route::get('/', [SetAppsInsUttpJenisController::class, 'index'])->name('set.apps.mst.ins.uttp.jenis.index');
+                        // middleware : Admin
+                        Route::group(['middleware' => ['Admin']], function () {
+                            Route::post('/create', [SetAppsInsUttpJenisController::class, 'store'])->name('set.apps.mst.ins.uttp.jenis.store');
+                            Route::get('/edit/{uuid}', [SetAppsInsUttpJenisController::class, 'edit'])->name('set.apps.mst.ins.uttp.jenis.edit');
+                            Route::put('/edit/{uuid}', [SetAppsInsUttpJenisController::class, 'update'])->name('set.apps.mst.ins.uttp.jenis.update');
+                            Route::put('/status', [SetAppsInsUttpJenisController::class, 'status'])->name('set.apps.mst.ins.uttp.jenis.status');
+                            Route::delete('/delete', [SetAppsInsUttpJenisController::class, 'destroy'])->name('set.apps.mst.ins.uttp.jenis.destroy');
+                        });
+                        Route::get('/data', [SetAppsInsUttpJenisController::class, 'data'])->name('set.apps.mst.ins.uttp.jenis.data');
+                        Route::get('/show/{uuid}', [SetAppsInsUttpJenisController::class, 'show'])->name('set.apps.mst.ins.uttp.jenis.show');
+                    });
+                    // daftar-item-uttp
+                    Route::group(['prefix' => 'daftar-item-uttp'], function () {
+                        Route::get('/', [SetAppsInsUttpDaftarItemController::class, 'index'])->name('set.apps.mst.ins.uttp.item.index');
+                        // middleware : Admin
+                        Route::group(['middleware' => ['Admin']], function () {
+                            Route::post('/create', [SetAppsInsUttpDaftarItemController::class, 'store'])->name('set.apps.mst.ins.uttp.item.store');
+                            Route::get('/edit/{uuid}', [SetAppsInsUttpDaftarItemController::class, 'edit'])->name('set.apps.mst.ins.uttp.item.edit');
+                            Route::put('/edit/{uuid}', [SetAppsInsUttpDaftarItemController::class, 'update'])->name('set.apps.mst.ins.uttp.item.update');
+                            Route::put('/status', [SetAppsInsUttpDaftarItemController::class, 'status'])->name('set.apps.mst.ins.uttp.item.status');
+                            Route::delete('/delete', [SetAppsInsUttpDaftarItemController::class, 'destroy'])->name('set.apps.mst.ins.uttp.item.destroy');
+                        });
+                        Route::get('/data', [SetAppsInsUttpDaftarItemController::class, 'data'])->name('set.apps.mst.ins.uttp.item.data');
+                        Route::get('/show/{uuid}', [SetAppsInsUttpDaftarItemController::class, 'show'])->name('set.apps.mst.ins.uttp.item.show');
+                    });
+                });
+
+                // PATH : WebBase/WebAdmin/SettingsApps/master/uttp
+                // jenis-uttp
+                Route::group(['prefix' => 'jenis-uttp'], function () {
                     // jenis-pelayanan
                     Route::group(['prefix' => 'jenis-pelayanan'], function () {
                         Route::get('/', [SetAppsUttpJenisPelayananController::class, 'index'])->name('set.apps.mst.uttp.jp.index');
@@ -462,6 +504,36 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 });
                 Route::get('/show/{uuid}', [SetAppsPegawaiController::class, 'show'])->name('set.apps.pegawai.show');
                 Route::get('/data', [SetAppsPegawaiController::class, 'data'])->name('set.apps.pegawai.data');
+            });
+
+            // kepala-bidang
+            Route::group(['prefix' => 'kepala-bidang'], function () {
+                Route::get('/', [SetAppsKabidController::class, 'index'])->name('set.apps.kabid.index');
+                // middleware : Admin
+                Route::group(['middleware' => ['Admin']], function () {
+                    Route::post('/create', [SetAppsKabidController::class, 'store'])->name('set.apps.kabid.store');
+                    Route::get('/edit/{uuid}', [SetAppsKabidController::class, 'edit'])->name('set.apps.kabid.edit');
+                    Route::put('/edit/{uuid}', [SetAppsKabidController::class, 'update'])->name('set.apps.kabid.update');
+                    Route::put('/status', [SetAppsKabidController::class, 'status'])->name('set.apps.kabid.status');
+                    Route::delete('/delete', [SetAppsKabidController::class, 'destroy'])->name('set.apps.kabid.destroy');
+                });
+                Route::get('/show/{uuid}', [SetAppsKabidController::class, 'show'])->name('set.apps.kabid.show');
+                Route::get('/data', [SetAppsKabidController::class, 'data'])->name('set.apps.kabid.data');
+            });
+
+            // kepala-dinas
+            Route::group(['prefix' => 'kepala-dinas'], function () {
+                Route::get('/', [SetAppsKadisController::class, 'index'])->name('set.apps.kadis.index');
+                // middleware : Admin
+                Route::group(['middleware' => ['Admin']], function () {
+                    Route::post('/create', [SetAppsKadisController::class, 'store'])->name('set.apps.kadis.store');
+                    Route::get('/edit/{uuid}', [SetAppsKadisController::class, 'edit'])->name('set.apps.kadis.edit');
+                    Route::put('/edit/{uuid}', [SetAppsKadisController::class, 'update'])->name('set.apps.kadis.update');
+                    Route::put('/status', [SetAppsKadisController::class, 'status'])->name('set.apps.kadis.status');
+                    Route::delete('/delete', [SetAppsKadisController::class, 'destroy'])->name('set.apps.kadis.destroy');
+                });
+                Route::get('/show/{uuid}', [SetAppsKadisController::class, 'show'])->name('set.apps.kadis.show');
+                Route::get('/data', [SetAppsKadisController::class, 'data'])->name('set.apps.kadis.data');
             });
         });
     });

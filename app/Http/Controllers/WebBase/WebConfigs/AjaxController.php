@@ -3,11 +3,29 @@
 namespace App\Http\Controllers\WebBase\WebConfigs;
 
 use App\Http\Controllers\Controller;
+use App\Models\MasterKelompokUttp;
 use App\Models\PermohonanPeneraan;
 use Illuminate\Http\Request;
 
 class AjaxController extends Controller
 {
+    // SetGetKelompokUttp
+    public function SetGetKelompokUttp(Request $request)
+    {
+        // uuid jenis pelayanan
+        $uuid_jenis_pelayanan = $request->uuid;
+        $data = MasterKelompokUttp::whereUuidJenisPelayanan($uuid_jenis_pelayanan)
+            ->orderBy("no_urut", "ASC")
+            ->get();
+
+        // response
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
     // ScdStatistikPermohonan
     public function ScdStatistikPermohonan(Request $request)
     {

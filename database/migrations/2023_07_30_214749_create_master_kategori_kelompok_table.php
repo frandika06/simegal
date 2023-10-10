@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('master_kategori_kelompok', function (Blueprint $table) {
             $table->string('uuid', 100)->primary();
-            $table->string('uuid_jp', 100)->nullable();
-            $table->string('uuid_kelompok_uutp', 100)->nullable();
+            $table->string('uuid_jenis_pelayanan', 100)->nullable();
+            $table->string('uuid_kelompok_uttp', 100)->nullable();
+            $table->integer('no_urut')->nullable();
             $table->string('nama_kategori', 100)->nullable();
             $table->enum('kategori', ["0", "1", "2"])->default("1");
             $table->enum('status', ["0", "1"])->default("1");

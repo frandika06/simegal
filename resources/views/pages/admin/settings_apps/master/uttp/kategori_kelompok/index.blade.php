@@ -80,6 +80,7 @@
                             <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                                 <tr class="text-start text-muted text-uppercase gs-0">
                                     <th>#</th>
+                                    <th>No. Urut</th>
                                     <th>Jenis Pelayanan</th>
                                     <th>Kode</th>
                                     <th>Kategori</th>
@@ -123,13 +124,25 @@
                     </div>
 
                     <div class="modal-body">
+                        {{-- begin::jenis_pelayanan --}}
+                        <div class="form-floating mb-5">
+                            <select class="form-control @error('jenis_pelayanan') is-invalid @enderror" name="jenis_pelayanan" id="jenis_pelayanan" required>
+                                <option value="" selected disabled>-Pilih Jenis Pelayanan</option>
+                                @foreach ($getJP as $item)
+                                    <option value="{{ $item->uuid }}" @if (old('jenis_pelayanan') == $item->uuid) selected @endif>{{ $item->nama_pelayanan }}</option>
+                                @endforeach
+                            </select>
+                            <label for="jenis_pelayanan">Jenis Pelayanan</label>
+                            @error('jenis_pelayanan')
+                                <div id="jenis_pelayananFeedback" class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        {{-- end::jenis_pelayanan --}}
+
                         {{-- begin::nama_kelompok --}}
                         <div class="form-floating mb-5">
                             <select class="form-control @error('nama_kelompok') is-invalid @enderror" name="nama_kelompok" id="nama_kelompok" required>
                                 <option value="" selected disabled>-Pilih Nama Kelompok</option>
-                                @foreach ($getKlpkUttp as $item)
-                                    <option value="{{ $item->uuid }}" @if (old('nama_kelompok') == $item->uuid) selected @endif>[{{ $item->RelMasterJenisPelayanan->nama_pelayanan }}] - {{ $item->nama_kelompok }}</option>
-                                @endforeach
                             </select>
                             <label for="nama_kelompok">Nama Kelompok</label>
                             @error('nama_kelompok')
@@ -178,6 +191,25 @@
 
 @push('scripts')
     {{-- JS CUSTOM --}}
+    {{-- get data kelompok --}}
+    <script>
+        $('select[name="jenis_pelayanan"]').change(function() {
+            var jenis_pelayanan = $(this).val();
+            var urlKelompokUttp = "{!! route('ajax.set.apps.get.klpk.uttp') !!}";
+            $.post(urlKelompokUttp, {
+                    uuid: jenis_pelayanan,
+                    _token: "{{ csrf_token() }}"
+                })
+                .done(function(res) {
+                    $('select[name="nama_kelompok"]').empty();
+                    $.each(res.data, function(key, value) {
+                        $('select[name="nama_kelompok"]').append('<option value="' + value.uuid + '">' + value.nama_kelompok + '</option>');
+                    });
+                });
+        });
+    </script>
+
+    {{-- datatable --}}
     <script>
         var table = $('#datatable').DataTable({
             "select": false,
@@ -196,6 +228,10 @@
             "columns": [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
+                },
+                {
+                    data: 'no_urut',
+                    name: 'no_urut'
                 },
                 {
                     data: 'nama_pelayanan',
@@ -226,15 +262,19 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 6]
+                    targets: [0, 7]
+                },
+                {
+                    className: "text-center w-80px",
+                    targets: [1]
                 },
                 {
                     className: "w-80px",
-                    targets: [2, 5]
+                    targets: [3, 6]
                 },
                 {
                     className: "text-end",
-                    targets: [6]
+                    targets: [7]
                 }
             ],
             "dom": "<'row'" +
@@ -275,7 +315,7 @@
                                 text: res.message,
                                 icon: "success",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         },
                         error: function(xhr) {
@@ -284,7 +324,7 @@
                                 text: xhr.responseJSON.message,
                                 icon: "error",
                             }).then((result) => {
-                                location.reload();
+                                $('#datatable').DataTable().ajax.reload();
                             });
                         }
                     });

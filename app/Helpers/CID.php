@@ -767,7 +767,7 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Verifikator', 'Kepala Tim', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Verifikator', 'Ketua Tim', 'Petugas'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -845,7 +845,7 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Kepala Tim'];
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -884,8 +884,8 @@ class CID
             return false;
         }
     }
-    // Hak Akses subSubRoleKepalaTim
-    public static function subSubRoleKepalaTim()
+    // Hak Akses subSubRoleKetuaTim
+    public static function subSubRoleKetuaTim()
     {
         $auth = Auth::user();
         $role = $auth->role;
@@ -897,10 +897,10 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Kepala Tim'];
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
-                $ar_sub_sub_role = ['Kepala Tim Pelayanan', 'Kepala Tim Pengawasan', 'Kepala Tim Bina SDM'];
+                $ar_sub_sub_role = ['Ketua Tim Pelayanan', 'Ketua Tim Pengawasan', 'Ketua Tim Bina SDM'];
                 if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
                     // izinkan
                     return true;

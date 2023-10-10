@@ -71,13 +71,13 @@ class SetAppsPegawaiController extends Controller
             "sub_role" => implode(",", $request->sub_role),
         ];
 
-        // cek sub_role_kasi
-        if (in_array("Kasi", $request->sub_role)) {
+        // cek sub_role_ketua_tim
+        if (in_array("Ketua Tim", $request->sub_role)) {
             // validate
             $request->validate([
-                "sub_role_kasi" => "required|string|max:100",
+                "sub_role_ketua_tim" => "required|string|max:100",
             ]);
-            $value_2['sub_sub_role'] = $request->sub_role_kasi;
+            $value_2['sub_sub_role'] = $request->sub_role_ketua_tim;
         } else {
             $value_2['sub_sub_role'] = null;
         }
@@ -310,26 +310,38 @@ class SetAppsPegawaiController extends Controller
         $uuid_profile = $auth->uuid_profile;
         $data = Pegawai::findOrFail($uuid_pegawai);
 
-        // validate
-        $request->validate([
-            "sub_role" => "required|array|max:100",
-        ]);
-
-        // value_1
-        $value_1 = [
-            "sub_role" => implode(",", $request->sub_role),
-            "uuid_updated" => $uuid_profile,
-        ];
-
-        // cek sub_role_kasi
-        if (in_array("Kasi", $request->sub_role)) {
+        // cek sub_role
+        if (isset($request->sub_role)) {
+            // ada sub role
             // validate
             $request->validate([
-                "sub_role_kasi" => "required|string|max:100",
+                "sub_role" => "required|array|max:100",
             ]);
-            $value_1['sub_sub_role'] = $request->sub_role_kasi;
+
+            // value_1
+            $value_1 = [
+                "sub_role" => implode(",", $request->sub_role),
+                "uuid_updated" => $uuid_profile,
+            ];
+
+            // cek sub_role_ketua_tim
+            if (in_array("Ketua Tim", $request->sub_role)) {
+                // validate
+                $request->validate([
+                    "sub_role_ketua_tim" => "required|string|max:100",
+                ]);
+                $value_1['sub_sub_role'] = $request->sub_role_ketua_tim;
+            } else {
+                $value_1['sub_sub_role'] = null;
+            }
         } else {
-            $value_1['sub_sub_role'] = null;
+            // tidak ada sub role
+            // value_1
+            $value_1 = [
+                "sub_role" => null,
+                "sub_sub_role" => null,
+                "uuid_updated" => $uuid_profile,
+            ];
         }
 
         // save
