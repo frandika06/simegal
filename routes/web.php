@@ -23,11 +23,13 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAStatistikController
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\dashboard\ScdDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdInputDataPdpController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdTindakLanjutController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kabid\SetAppsKabidController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kadis\SetAppsKadisController;
+use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\SetAppsFiturController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\SetAppsSuperAdminController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsInsUttpDaftarItemController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsInsUttpJenisController;
@@ -135,10 +137,17 @@ Route::group(['prefix' => 'wil-adm'], function () {
 
 });
 
-// exdown | Export - Download
+// eximdown | Export - Import - Download
 Route::group(['prefix' => 'eximdown'], function () {
     // unduhan
     Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
+    // settings-apps
+    Route::group(['prefix' => 'settings-apps'], function () {
+        // exxport
+        Route::get('/master/ex-format-master-item-uttp', [ExDownController::class, 'SetExFormatMasterItemUttp'])->name('exdown.set.mst.item.uttp');
+        // exxport
+        Route::post('/master/im-format-master-item-uttp', [ExDownController::class, 'SetImFormatMasterItemUttp'])->name('eximp.set.mst.item.uttp');
+    });
 });
 
 // AJAX
@@ -150,7 +159,7 @@ Route::group(['prefix' => 'ajax'], function () {
     // schedule-apps
     Route::group(['prefix' => 'schedule-apps'], function () {
         Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
-        Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.tl');
+        Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
     });
 });
 
@@ -343,7 +352,16 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             Route::group(['prefix' => 'permohonan/{tags}'], function () {
                 Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('scd.apps.pp.index');
                 Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
+                Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('scd.apps.pp.pindahjp');
                 Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('scd.apps.pp.data');
+            });
+            // input-data
+            Route::group(['prefix' => 'input-data'], function () {
+                Route::get('/', [ScdInputDataPdpController::class, 'index'])->name('scd.apps.input.pdp.index');
+                Route::get('/create/{uuid}', [ScdInputDataPdpController::class, 'create'])->name('scd.apps.input.pdp.create');
+                Route::post('/create/{uuid}', [ScdInputDataPdpController::class, 'store'])->name('scd.apps.input.pdp.store');
+                Route::put('/update/{uuid}', [ScdInputDataPdpController::class, 'update'])->name('scd.apps.input.pdp.update');
+                Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('scd.apps.input.pdp.data');
             });
             // tindak-lanjut
             Route::group(['prefix' => 'input-penjadwalan-penugasan'], function () {
@@ -470,6 +488,14 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                         Route::get('/show/{uuid}', [SetAppsUttpTagsKelompokController::class, 'show'])->name('set.apps.mst.uttp.tags.klpk.show');
                     });
                 });
+
+                // PATH : WebBase/WebAdmin/SettingsApps/master
+                // fitur
+                Route::group(['prefix' => 'fitur'], function () {
+                    Route::get('/', [SetAppsFiturController::class, 'index'])->name('set.apps.mst.fitur.index');
+                    Route::put('/status', [SetAppsFiturController::class, 'status'])->name('set.apps.mst.fitur.status');
+                    Route::get('/data', [SetAppsFiturController::class, 'data'])->name('set.apps.mst.fitur.data');
+                });
             });
 
             // perusahaan
@@ -494,8 +520,8 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             // pegawai
             Route::group(['prefix' => 'pegawai'], function () {
                 Route::get('/', [SetAppsPegawaiController::class, 'index'])->name('set.apps.pegawai.index');
-                // middleware : Admin
-                Route::group(['middleware' => ['Admin']], function () {
+                // middleware : SuperAdmin
+                Route::group(['middleware' => ['SuperAdmin']], function () {
                     Route::post('/create', [SetAppsPegawaiController::class, 'store'])->name('set.apps.pegawai.store');
                     Route::get('/edit/{uuid}', [SetAppsPegawaiController::class, 'edit'])->name('set.apps.pegawai.edit');
                     Route::put('/edit/{uuid}', [SetAppsPegawaiController::class, 'update'])->name('set.apps.pegawai.update');

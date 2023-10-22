@@ -24,10 +24,12 @@ class AdminSimegalSeeder extends Seeder
             $value_adm_root = [
                 "uuid" => $uuid_root,
                 "nama_lengkap" => "Admin System",
+                "nip" => "0",
                 "jabatan" => "Admin System",
                 "jenis_kelamin" => "L",
                 "email" => "admin@mail.com",
                 "no_telp" => "081510679515",
+                "status_pegawai" => "Non ASN",
                 "uuid_created" => $uuid_root,
             ];
             // create pegawai
@@ -48,10 +50,12 @@ class AdminSimegalSeeder extends Seeder
             $value_adm_root = [
                 "uuid" => $uuid_root,
                 "nama_lengkap" => "Super Admin",
+                "nip" => "0",
                 "jabatan" => "Super Admin",
                 "jenis_kelamin" => "L",
                 "email" => "sa@mail.com",
                 "no_telp" => "081510679515",
+                "status_pegawai" => "Non ASN",
                 "uuid_created" => $uuid_root,
             ];
             // create pegawai
@@ -72,10 +76,12 @@ class AdminSimegalSeeder extends Seeder
             $value_adm_root = [
                 "uuid" => $uuid_root,
                 "nama_lengkap" => "Admin Portal",
+                "nip" => "0",
                 "jabatan" => "Admin Portal",
                 "jenis_kelamin" => "L",
                 "email" => "adminportal@mail.com",
                 "no_telp" => "081510679515",
+                "status_pegawai" => "Non ASN",
                 "uuid_created" => $uuid_root,
             ];
             // create pegawai
@@ -93,19 +99,19 @@ class AdminSimegalSeeder extends Seeder
             User::create($value_user_root);
 
             // 4. Pegawai
-            $response = Http::get('https://dummyjson.com/users?limit=30&skip=60');
+            $response = Http::get('https://dummyjson.com/users?limit=150&skip=60');
             $dataApi = $response->object();
             foreach ($dataApi->users as $item) {
-                $randSubRole = rand(1, 4);
-                if ($randSubRole == "1") {
-                    $subRole = "Admin Aplikasi";
-                } elseif ($randSubRole == "2") {
-                    $subRole = "Petugas";
-                } elseif ($randSubRole == "3") {
-                    $subRole = "Ketua Tim";
-                } elseif ($randSubRole == "4") {
-                    $subRole = "Verifikator";
-                }
+                // $randSubRole = rand(1, 4);
+                // if ($randSubRole == "1") {
+                //     $subRole = "Admin Aplikasi";
+                // } elseif ($randSubRole == "2") {
+                //     $subRole = "Petugas";
+                // } elseif ($randSubRole == "3") {
+                //     $subRole = "Ketua Tim";
+                // } elseif ($randSubRole == "4") {
+                //     $subRole = "Verifikator";
+                // }
 
                 $randSubSubRole = rand(1, 3);
                 if ($randSubSubRole == "1") {
@@ -118,6 +124,8 @@ class AdminSimegalSeeder extends Seeder
 
                 if ($item->email == "hfasey1t@home.pl") {
                     $subRole = "Admin Aplikasi";
+                } elseif ($item->email == "hyaknov2i@hhs.gov") {
+                    $subRole = "Admin Pengawasan";
                 } elseif ($item->email == "gbarhams1u@cnet.com") {
                     $subRole = "Petugas";
                 } elseif ($item->email == "hollet1s@trellian.com") {
@@ -131,22 +139,38 @@ class AdminSimegalSeeder extends Seeder
                 } elseif ($item->email == "wfeldon20@netlog.com") {
                     $subRole = "Ketua Tim";
                     $subSubRole = "Ketua Tim Bina SDM";
+                } else {
+                    $subRole = "Petugas";
+                }
+
+                $randStatusPegawai = rand(1, 2);
+                if ($randStatusPegawai == "1") {
+                    $status_pegawai = "ASN";
+                    $nip = rand(100000000000, 999999999999);
+                } elseif ($randStatusPegawai == "2") {
+                    $status_pegawai = "Non ASN";
+                    $nip = "0";
                 }
 
                 if ($subRole == "Ketua Tim") {
                     $subSubRole = $subSubRole;
+                    $status_pegawai = "ASN";
+                    $nip = rand(100000000000, 999999999999);
                 } else {
                     $subSubRole = null;
                 }
+
                 // value
                 $uuid_root = Str::uuid();
                 $value_adm_root = [
                     "uuid" => $uuid_root,
                     "nama_lengkap" => $item->firstName . " " . $item->lastName,
+                    "nip" => $nip,
                     "jabatan" => $subRole,
                     "jenis_kelamin" => "L",
                     "email" => $item->email,
                     "no_telp" => $item->phone,
+                    "status_pegawai" => $status_pegawai,
                     "uuid_created" => $uuid_root,
                 ];
                 // create pegawai
@@ -170,10 +194,12 @@ class AdminSimegalSeeder extends Seeder
             $value_adm_root = [
                 "uuid" => $uuid_root,
                 "nama_lengkap" => "Kepala Bidang",
+                "nip" => rand(100000000000, 999999999999),
                 "jabatan" => "Kepala Bidang",
                 "jenis_kelamin" => "L",
                 "email" => "kepalabidang@mail.com",
                 "no_telp" => "081510679515",
+                "status_pegawai" => "ASN",
                 "uuid_created" => $uuid_root,
             ];
             // create pegawai
@@ -194,10 +220,12 @@ class AdminSimegalSeeder extends Seeder
             $value_adm_root = [
                 "uuid" => $uuid_root,
                 "nama_lengkap" => "Kepala Dinas",
+                "nip" => rand(100000000000, 999999999999),
                 "jabatan" => "Kepala Dinas",
                 "jenis_kelamin" => "L",
                 "email" => "kepaladinas@mail.com",
                 "no_telp" => "081510679515",
+                "status_pegawai" => "ASN",
                 "uuid_created" => $uuid_root,
             ];
             // create pegawai

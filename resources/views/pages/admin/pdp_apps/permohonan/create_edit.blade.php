@@ -93,7 +93,9 @@
                                         <option></option>
                                         <option @if (old('jenis_pengujian', isset($data) ? $data->jenis_pengujian : '') == 'Tera') selected @endif value="Tera">Tera</option>
                                         <option @if (old('jenis_pengujian', isset($data) ? $data->jenis_pengujian : '') == 'Tera Ulang') selected @endif value="Tera Ulang">Tera Ulang</option>
-                                        <option @if (old('jenis_pengujian', isset($data) ? $data->jenis_pengujian : '') == 'Pengujian BDKT') selected @endif value="Pengujian BDKT">Pengujian BDKT</option>
+                                        @if (\CID::getMasterFitur('Pengujian BDKT')->status == '1')
+                                            <option @if (old('jenis_pengujian', isset($data) ? $data->jenis_pengujian : '') == 'Pengujian BDKT') selected @endif value="Pengujian BDKT">Pengujian BDKT</option>
+                                        @endif
                                     </select>
                                     @error('jenis_pengujian')
                                         <div id="jenis_pengujianFeedback" class="invalid-feedback">{{ $message }}</div>
@@ -186,8 +188,8 @@
                             <div class="col-xl-9 fv-row">
                                 <select class="form-control" name="lokasi_peneraan" id="lokasi_peneraan" data-control="select2" data-placeholder="Pilih Lokasi Pengujian" data-allow-clear="true" required>
                                     <option></option>
-                                    <option @if (old('lokasi_peneraan', isset($data) ? $data->lokasi_peneraan : '') == 'Dalam Kantor') selected @endif value="Dalam Kantor">Dalam Kantor</option>
-                                    <option @if (old('lokasi_peneraan', isset($data) ? $data->lokasi_peneraan : '') == 'Luar Kantor') selected @endif value="Luar Kantor">Luar Kantor</option>
+                                    <option @if (old('lokasi_peneraan', isset($data) ? $data->lokasi_peneraan : '') == 'Dalam Kantor Metrologi') selected @endif value="Dalam Kantor Metrologi">Dalam Kantor Metrologi</option>
+                                    <option @if (old('lokasi_peneraan', isset($data) ? $data->lokasi_peneraan : '') == 'Luar Kantor Metrologi') selected @endif value="Luar Kantor Metrologi">Luar Kantor Metrologi</option>
                                 </select>
                                 @error('lokasi_peneraan')
                                     <div id="lokasi_peneraanFeedback" class="invalid-feedback">{{ $message }}</div>
@@ -210,12 +212,10 @@
                                     @foreach ($alamatPerusahaan as $item)
                                         <option @if (old('uuid_alamat', isset($data) ? $data->uuid_alamat : '') == $item->uuid) selected @endif value="{{ $item->uuid }}">
                                             <div class="d-flex flex-column">
-                                                {{ $item->alamat }}, RT. {{ $item->rt }}, RW. {{ $item->rw }},
+                                                [{{ $item->label_alamat }}] - {{ $item->alamat }}, {{ isset($item->rt) ? 'RT. ' . $item->rt . ', ' : '' }}
+                                                {{ isset($item->rw) ? 'RW. ' . $item->rw . ', ' : '' }}
                                                 {{ \Str::title($item->Desa->name) }}, {{ \Str::title($item->Kecamatan->name) }},
-                                                {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }},
-                                                @if ($item->kode_pos != '')
-                                                    {{ $item->kode_pos }}.<br />
-                                                @endif
+                                                {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }}{{ isset($item->kode_pos) ? ', ' . $item->kode_pos . '.' : '.' }}
                                             </div>
                                         </option>
                                     @endforeach
@@ -250,7 +250,7 @@
     <script>
         $('[name="lokasi_peneraan"]').change(function() {
             var lokasi_peneraan = $(this).val();
-            if (lokasi_peneraan == "Luar Kantor") {
+            if (lokasi_peneraan == "Luar Kantor Metrologi") {
                 $("#divAlamat").removeClass("d-none");
                 $("#uuid_alamat").prop("required", true);
             } else {
@@ -262,7 +262,7 @@
     @if (isset($data))
         <script>
             var lokasi_peneraan = "{{ $data->lokasi_peneraan }}";
-            if (lokasi_peneraan == "Luar Kantor") {
+            if (lokasi_peneraan == "Luar Kantor Metrologi") {
                 $("#divAlamat").removeClass("d-none");
                 $("#uuid_alamat").prop("required", true);
             } else {

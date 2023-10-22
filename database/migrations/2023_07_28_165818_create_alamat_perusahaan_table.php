@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('alamat_perusahaan', function (Blueprint $table) {
             $table->string('uuid', 100)->primary();
             $table->string('uuid_perusahaan', 100)->nullable();
+            $table->string('label_alamat', 100)->nullable();
             $table->string('province_id', 100)->nullable();
             $table->string('regency_id', 100)->nullable();
             $table->string('district_id', 100)->nullable();

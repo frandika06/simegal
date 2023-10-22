@@ -54,7 +54,7 @@
                 {{-- begin::Actions --}}
                 <div class="d-flex align-items-center py-2 py-md-1">
                     <a href="javascript:void(0);" class="btn btn-success fw-bold me-2" data-bs-toggle="modal" data-bs-target="#import" data-mode="import"><i class="fa-solid fa-arrow-up-from-bracket"></i>Import</a>
-                    <a href="javascript:void(0);" class="btn btn-info fw-bold" data-bs-toggle="modal" data-bs-target="#add_jenis_uttp" data-mode="add"><i class="fa-solid fa-plus"></i>Tambah Daftar Item UTTP</a>
+                    <a href="javascript:void(0);" class="btn btn-info fw-bold" data-bs-toggle="modal" data-bs-target="#add_jenis_uttp" data-mode="add"><i class="fa-solid fa-plus"></i>Tambah Item UTTP</a>
                 </div>
                 {{-- end::Actions --}}
             @endif
@@ -82,8 +82,7 @@
                                 <tr class="text-start text-muted text-uppercase gs-0">
                                     <th>#</th>
                                     <th>No. Urut</th>
-                                    <th>Daftar Item UTTP</th>
-                                    <th>Volume</th>
+                                    <th>Instrumen</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -110,7 +109,7 @@
     <div class="modal fade import" tabindex="-1" id="import">
         <div class="modal-dialog min-w-550px">
             <div class="modal-content">
-                <form action="{{ route('set.apps.mst.ins.uttp.item.store') }}" method="POST" id="formSuperAdmin" enctype="multipart/form-data">
+                <form action="{{ route('eximp.set.mst.item.uttp') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-header">
@@ -135,7 +134,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-light-success btn-xs me-auto"><i class="fa-solid fa-file-arrow-down"></i> Format</a>
+                        <a href="{{ route('exdown.set.mst.item.uttp') }}" class="btn btn-light-success btn-xs me-auto"><i class="fa-solid fa-file-arrow-down"></i> Format</a>
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class="fa-solid fa-times"></i>Batal</button>
                         <button type="submit" class="btn btn-info"><i class="fa-solid fa-save"></i>Simpan</button>
                     </div>
@@ -148,7 +147,7 @@
     {{-- begin::modal-add --}}
     <div class="modal fade add" tabindex="-1" id="add_jenis_uttp">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content min-w-600px">
                 <form action="{{ route('set.apps.mst.ins.uttp.item.store') }}" method="POST" id="formSuperAdmin" enctype="multipart/form-data">
                     @csrf
 
@@ -162,38 +161,151 @@
                     </div>
 
                     <div class="modal-body">
-                        {{-- begin::nama_jenis_uttp --}}
-                        <div class="form-floating mb-5">
-                            <input type="text" class="form-control @error('nama_jenis_uttp') is-invalid @enderror" name="nama_jenis_uttp" id="nama_jenis_uttp2" placeholder="Nama Daftar Item UTTP" autocomplete="off" maxlength="100" value="{{ old('nama_jenis_uttp') }}" required />
-                            <label for="nama_jenis_uttp">Nama Daftar Item UTTP</label>
-                            @error('nama_jenis_uttp')
-                                <div id="nama_jenis_uttpFeedback" class="invalid-feedback">{{ $message }}</div>
+                        {{-- begin::jenis_uttp --}}
+                        <div class="form-group mb-5">
+                            <select class="form-select @error('jenis_uttp') is-invalid @enderror" name="jenis_uttp" id="jenis_uttp" required data-control="select2" data-placeholder="Pilih Jenis UTTP" data-dropdown-parent="#add_jenis_uttp">
+                                <option value="" selected disabled></option>
+                                @foreach ($getMstJenisUttp as $item)
+                                    <option value="{{ $item->uuid }}" @if (old('jenis_uttp') == $item->uuid) selected @endif>{{ $item->nama_jenis_uttp }}</option>
+                                @endforeach
+                            </select>
+                            {{-- <label for="jenis_uttp">Jenis UTTP</label> --}}
+                            @error('jenis_uttp')
+                                <div id="jenis_uttpFeedback" class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        {{-- end::nama_jenis_uttp --}}
+                        {{-- end::jenis_uttp --}}
+                        {{-- begin::nama_instrumen --}}
+                        <div class="form-floating mb-5">
+                            <input type="text" class="form-control @error('nama_instrumen') is-invalid @enderror" name="nama_instrumen" id="nama_instrumen2" placeholder="Nama Instrumen" autocomplete="off" maxlength="100" value="{{ old('nama_instrumen') }}" required />
+                            <label for="nama_instrumen">Nama Instrumen</label>
+                            @error('nama_instrumen')
+                                <div id="nama_instrumenFeedback" class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        {{-- end::nama_instrumen --}}
 
-                        {{-- begin::status_volume --}}
-                        <div class="form-group mb-5">
-                            <label class="required mb-3">Status Volume</label>
-                            <div class="ps-2">
-                                <div class="form-check form-check-custom form-check-solid mb-3">
-                                    <input class="form-check-input @error('status_volume') is-invalid @enderror" type="radio" value="1" name="status_volume" id="volume" @if (old('status_volume') == '1') checked @endif />
-                                    <label class="form-check-label" for="volume">
-                                        Volume
-                                    </label>
+                        {{-- begin:: Detail Volume --}}
+                        <div class="mt-2">
+                            <label for="">Detail Volume</label>
+                            <div class="row p-2">
+                                <div class="col">
+                                    {{-- begin::volume_from --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('volume_from') is-invalid @enderror" name="volume_from" id="volume_from2" placeholder="Volume From" autocomplete="off" maxlength="100" value="{{ old('volume_from') }}" />
+                                        <label for="volume_from">Volume From</label>
+                                        @error('volume_from')
+                                            <div id="volume_fromFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::volume_from --}}
                                 </div>
-                                <div class="form-check form-check-custom form-check-solid mb-3">
-                                    <input class="form-check-input @error('status_volume') is-invalid @enderror" type="radio" value="0" name="status_volume" id="non_volume" @if (old('status_volume') == '0') checked @endif />
-                                    <label class="form-check-label" for="non_volume">
-                                        Non Volume
-                                    </label>
+                                <div class="col">
+                                    {{-- begin::volume_to --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('volume_to') is-invalid @enderror" name="volume_to" id="volume_to2" placeholder="Volume To" autocomplete="off" maxlength="100" value="{{ old('volume_to') }}" />
+                                        <label for="volume_to">Volume To</label>
+                                        @error('volume_to')
+                                            <div id="volume_toFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::volume_to --}}
+                                </div>
+                                <div class="col">
+                                    {{-- begin::volume_per --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('volume_per') is-invalid @enderror" name="volume_per" id="volume_per2" placeholder="Volume Per" autocomplete="off" maxlength="100" value="{{ old('volume_per') }}" />
+                                        <label for="volume_per">Volume Per</label>
+                                        @error('volume_per')
+                                            <div id="volume_perFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::volume_per --}}
+                                </div>
+                                <div class="col">
+                                    {{-- begin::satuan --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="text" class="form-control @error('satuan') is-invalid @enderror" name="satuan" id="satuan2" placeholder="Satuan" autocomplete="off" maxlength="100" value="{{ old('satuan') }}" />
+                                        <label for="satuan">Satuan</label>
+                                        @error('satuan')
+                                            <div id="satuanFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::satuan --}}
                                 </div>
                             </div>
-                            @error('status_volume')
-                                <div id="status_volumeFeedback" class="text-danger">{{ $message }}</div>
+                        </div>
+                        {{-- end:: Detail Volume --}}
+
+                        {{-- begin:: Tera Baru --}}
+                        <div class="mt-2">
+                            <label for="">Tera Baru</label>
+                            <div class="row p-2">
+                                <div class="col">
+                                    {{-- begin::tera_baru_pengujian --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('tera_baru_pengujian') is-invalid @enderror" name="tera_baru_pengujian" id="tera_baru_pengujian2" placeholder="Pengujian" value="{{ old('tera_baru_pengujian') }}" min="0" required />
+                                        <label for="tera_baru_pengujian">Pengujian</label>
+                                        @error('tera_baru_pengujian')
+                                            <div id="tera_baru_pengujianFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::tera_baru_pengujian --}}
+                                </div>
+                                <div class="col">
+                                    {{-- begin::tera_baru_pejustiran --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('tera_baru_pejustiran') is-invalid @enderror" name="tera_baru_pejustiran" id="tera_baru_pejustiran2" placeholder="Pejustiran" value="{{ old('tera_baru_pejustiran') }}" min="0" required />
+                                        <label for="tera_baru_pejustiran">Pejustiran</label>
+                                        @error('tera_baru_pejustiran')
+                                            <div id="tera_baru_pejustiranFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::tera_baru_pejustiran --}}
+                                </div>
+                            </div>
+                        </div>
+                        {{-- end:: Tera Baru --}}
+
+                        {{-- begin:: Tera Ulang --}}
+                        <div class="mt-2">
+                            <label for="">Tera Ulang</label>
+                            <div class="row p-2">
+                                <div class="col">
+                                    {{-- begin::tera_ulang_pengujian --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('tera_ulang_pengujian') is-invalid @enderror" name="tera_ulang_pengujian" id="tera_ulang_pengujian2" placeholder="Pengujian" value="{{ old('tera_ulang_pengujian') }}" min="0" required />
+                                        <label for="tera_ulang_pengujian">Pengujian</label>
+                                        @error('tera_ulang_pengujian')
+                                            <div id="tera_ulang_pengujianFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::tera_ulang_pengujian --}}
+                                </div>
+                                <div class="col">
+                                    {{-- begin::tera_ulang_pejustiran --}}
+                                    <div class="form-floating mb-5">
+                                        <input type="number" class="form-control @error('tera_ulang_pejustiran') is-invalid @enderror" name="tera_ulang_pejustiran" id="tera_ulang_pejustiran2" placeholder="Pejustiran" value="{{ old('tera_ulang_pejustiran') }}" min="0" required />
+                                        <label for="tera_ulang_pejustiran">Pejustiran</label>
+                                        @error('tera_ulang_pejustiran')
+                                            <div id="tera_ulang_pejustiranFeedback" class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- end::tera_ulang_pejustiran --}}
+                                </div>
+                            </div>
+                        </div>
+                        {{-- end:: Tera Ulang --}}
+
+                        {{-- begin::tarif_per_jam --}}
+                        <div class="form-floating mb-5">
+                            <input type="number" class="form-control @error('tarif_per_jam') is-invalid @enderror" name="tarif_per_jam" id="tarif_per_jam2" placeholder="Tarif Per Jam" value="{{ old('tarif_per_jam') }}" min="0" required />
+                            <label for="tarif_per_jam">Tarif Per Jam</label>
+                            @error('tarif_per_jam')
+                                <div id="tarif_per_jamFeedback" class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        {{-- end::status_volume --}}
+                        {{-- end::tarif_per_jam --}}
                     </div>
 
                     <div class="modal-footer">
@@ -210,6 +322,7 @@
 
 @push('scripts')
     {{-- JS CUSTOM --}}
+    {{-- datatable --}}
     <script>
         var table = $('#datatable').DataTable({
             "select": false,
@@ -234,12 +347,8 @@
                     name: 'no_urut'
                 },
                 {
-                    data: 'nama_jenis_uttp',
-                    name: 'nama_jenis_uttp'
-                },
-                {
-                    data: 'status_volume',
-                    name: 'status_volume'
+                    data: 'nama_instrumen',
+                    name: 'nama_instrumen'
                 },
                 {
                     data: 'status',
@@ -254,7 +363,7 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 4]
+                    targets: [0, 3]
                 },
                 {
                     className: "text-center w-80px",
@@ -266,7 +375,7 @@
                 },
                 {
                     className: "text-end",
-                    targets: [5]
+                    targets: [4]
                 }
             ],
             "dom": "<'row'" +
@@ -363,8 +472,8 @@
         $('a[data-bs-target^="#add_jenis_uttp"]').click(function() {
             var mode = $(this).data("mode");
             if (mode == "add") {
-                $("#modal_title").html("Form Tambah Daftar Item UTTP");
-                $("#formSuperAdmin").trigger("reset");
+                $("#modal_title").html("Form Tambah Item UTTP");
+                $("#formTagsKelompok").trigger("reset");
             }
         });
     </script>

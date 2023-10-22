@@ -177,12 +177,13 @@ class PDPProfileController extends Controller
 
         // validate
         $request->validate([
+            "label_alamat" => "required|string|max:100",
             "district_id" => "required|string|max:10",
             "village_id" => "required|string|max:10",
             "alamat" => "required|string|max:300",
-            "rt" => "required|string|max:3",
-            "rw" => "required|string|max:3",
-            "kode_pos" => "required|string|max:5",
+            "rt" => "sometimes|nullable|string|max:3",
+            "rw" => "sometimes|nullable|string|max:3",
+            "kode_pos" => "sometimes|nullable|string|max:5",
             "lat" => "sometimes|nullable|string|max:100",
             "long" => "sometimes|nullable|string|max:100",
             "google_maps" => "sometimes|nullable|string|max:300",
@@ -194,6 +195,7 @@ class PDPProfileController extends Controller
             $uuid = CID::decode($request->uuid_form);
             $data = AlamatPerusahaan::findOrFail($uuid);
             $value_1 = [
+                "label_alamat" => $request->label_alamat,
                 "district_id" => $request->district_id,
                 "village_id" => $request->village_id,
                 "alamat" => $request->alamat,
@@ -246,6 +248,7 @@ class PDPProfileController extends Controller
                 "uuid_perusahaan" => $uuid_profile,
                 "province_id" => "36",
                 "regency_id" => "3603",
+                "label_alamat" => $request->label_alamat,
                 "district_id" => $request->district_id,
                 "village_id" => $request->village_id,
                 "alamat" => $request->alamat,
@@ -284,7 +287,7 @@ class PDPProfileController extends Controller
             }
         }
     }
-    // update alamat
+    // update keamanan
     private function updateKeamanan($request)
     {
         // auth

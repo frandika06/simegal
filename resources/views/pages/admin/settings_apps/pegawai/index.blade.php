@@ -73,8 +73,7 @@
                                 <tr class="text-start text-muted text-uppercase gs-0">
                                     <th>#</th>
                                     <th>Nama</th>
-                                    <th>Jabatan</th>
-                                    <th>Kontak</th>
+                                    <th>Detail</th>
                                     <th>Hak Akses</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -246,6 +245,15 @@
                             </div>
                             {{-- end::Admin Aplikasi --}}
 
+                            {{-- begin::Admin Pengawasan --}}
+                            <div class="form-check mb-5">
+                                <input class="form-check-input @error('sub_role') is-invalid @enderror"" type="checkbox" value="Admin Pengawasan" name="sub_role[]" id="admin_pengawasan" />
+                                <label class="form-check-label" for="admin_pengawasan">
+                                    Admin Pengawasan
+                                </label>
+                            </div>
+                            {{-- end::Admin Pengawasan --}}
+
                             {{-- begin::Verifikator --}}
                             <div class="form-check mb-5">
                                 <input class="form-check-input @error('sub_role') is-invalid @enderror"" type="checkbox" value="Verifikator" name="sub_role[]" id="verifikator" />
@@ -355,12 +363,8 @@
                     name: 'nama_lengkap'
                 },
                 {
-                    data: 'jabatan',
-                    name: 'jabatan'
-                },
-                {
-                    data: 'kontak',
-                    name: 'kontak'
+                    data: 'detail',
+                    name: 'detail'
                 },
                 {
                     data: 'hak_akses',
@@ -379,7 +383,7 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 5]
+                    targets: [0, 4]
                 },
                 {
                     className: "min-w-80px",
@@ -387,15 +391,15 @@
                 },
                 {
                     className: "min-w-200px",
-                    targets: [3]
+                    targets: [2]
                 },
                 {
                     className: "min-w-120px",
-                    targets: [4]
+                    targets: [3]
                 },
                 {
                     className: "text-end",
-                    targets: [6]
+                    targets: [5]
                 }
             ],
             "dom": "<'row'" +

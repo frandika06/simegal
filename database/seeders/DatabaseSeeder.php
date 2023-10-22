@@ -55,5 +55,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MasterUTTPKategoriKelompokSeeder::class);
         // generate Instrumen UTTP - jenis uttp
         $this->call(MasterInstrumenJenisUttpSeeder::class);
+        // generate Master Fitur
+        $this->call(MasterFiturSeeder::class);
     }
 }

@@ -26,6 +26,7 @@ class MasterInstrumenJenisUttpSeeder extends Seeder
                 "TANGKI UKUR MOBIL",
                 "BEJANA UKUR",
                 "POMPA UKUR",
+                "METER AIR",
                 "METER LISTRIK (KWH)",
                 "TIMBANGAN",
                 "PENGUJIAN KWANTA BDKT",

@@ -22,7 +22,6 @@
                             <th>#</th>
                             <th>Detail Permohonan</th>
                             <th>Detail Pemohon</th>
-                            <th>Detail Pengujian</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -84,10 +83,6 @@
                     name: 'detail_pemohon'
                 },
                 {
-                    data: 'detail_pengujian',
-                    name: 'detail_pengujian'
-                },
-                {
                     data: 'aksi',
                     name: 'aksi',
                     orderable: false,
@@ -96,19 +91,11 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 4]
-                },
-                {
-                    className: "min-w-200px",
-                    targets: [1]
-                },
-                {
-                    className: "min-w-300px",
-                    targets: [2]
+                    targets: [0, 3]
                 },
                 {
                     className: "text-end",
-                    targets: [4]
+                    targets: [3]
                 }
             ],
             "dom": "<'row'" +

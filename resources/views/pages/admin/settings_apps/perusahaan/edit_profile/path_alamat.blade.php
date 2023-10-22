@@ -33,18 +33,16 @@
                                     <div class="form-check form-check-custom form-check-solid">
                                         <input class="form-check-default" type="radio" value="{{ $item->uuid }}" name="default" @if ($item->default == '1') checked @endif>
                                         <div class="form-check-label fw-bold">
-                                            <strong>{{ $item->Kecamatan->name }}</strong>
+                                            <strong>{{ $item->label_alamat }} - {{ \Str::title($item->Kecamatan->name) }}</strong>
                                         </div>
                                     </div>
                                 </label>
                             </span>
                             <div class="text-gray-600">
-                                {{ $item->alamat }}, RT. {{ $item->rt }}, RW. {{ $item->rw }},
+                                {{ $item->alamat }}, {{ isset($item->rt) ? 'RT. ' . $item->rt . ', ' : '' }}
+                                {{ isset($item->rw) ? 'RW. ' . $item->rw . ', ' : '' }}
                                 {{ \Str::title($item->Desa->name) }}, {{ \Str::title($item->Kecamatan->name) }},
-                                {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }}
-                                @if ($item->kode_pos != '')
-                                    , {{ $item->kode_pos }}.<br />
-                                @endif
+                                {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }}{{ isset($item->kode_pos) ? ', ' . $item->kode_pos . '.' : '.' }}
                             </div>
                         </div>
                         {{-- end::Content --}}
@@ -124,6 +122,17 @@
 
                     <div class="modal-body">
 
+                        {{-- begin::label_alamat --}}
+                        <div class="mb-5">
+                            <label for="" class="form-label required">Label Alamat</label>
+                            <input type="text" class="form-control @error('label_alamat') is-invalid @enderror" name="label_alamat" id="label_alamat" placeholder="Label Alamat" autocomplete="off" maxlength="300" value="{{ old('label_alamat') }}" required />
+                            <div class="form-text"><strong>Ket. Label Alamat:</strong> Label Alamat seperti <strong>Kantor Utama/Pusat</strong>, <strong>Kantor Cabang</strong>, dll.</div>
+                            @error('label_alamat')
+                                <div id="label_alamatFeedback" class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        {{-- end::label_alamat --}}
+
                         {{-- begin::district_id --}}
                         <div class="mb-5">
                             <label for="" class="form-label required">Kecamatan</label>
@@ -160,8 +169,8 @@
                         <div class="row g-9 mb-5">
                             {{-- begin::Col --}}
                             <div class="col-md-4 fv-row">
-                                <label for="" class="form-label required">RT</label>
-                                <input type="text" class="form-control @error('rt') is-invalid @enderror" name="rt" id="rt" onkeyup="this.value=this.value.replace(/[^\d]/,'')" placeholder="RT" autocomplete="off" maxlength="3" value="{{ old('rt') }}" required />
+                                <label for="" class="form-label">RT</label>
+                                <input type="text" class="form-control @error('rt') is-invalid @enderror" name="rt" id="rt" onkeyup="this.value=this.value.replace(/[^\d]/,'')" placeholder="RT" autocomplete="off" maxlength="3" value="{{ old('rt') }}" />
                                 @error('rt')
                                     <div id="rtFeedback" class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -169,8 +178,8 @@
                             {{-- end::Col --}}
                             {{-- begin::Col --}}
                             <div class="col-md-4 fv-row">
-                                <label for="" class="form-label required">RW</label>
-                                <input type="text" class="form-control @error('rw') is-invalid @enderror" name="rw" id="rw" onkeyup="this.value=this.value.replace(/[^\d]/,'')" placeholder="RW" autocomplete="off" maxlength="3" value="{{ old('rw') }}" required />
+                                <label for="" class="form-label">RW</label>
+                                <input type="text" class="form-control @error('rw') is-invalid @enderror" name="rw" id="rw" onkeyup="this.value=this.value.replace(/[^\d]/,'')" placeholder="RW" autocomplete="off" maxlength="3" value="{{ old('rw') }}" />
                                 @error('rw')
                                     <div id="rwFeedback" class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -298,6 +307,7 @@
                             });
                         });
 
+                        $("#label_alamat").val(res.data.label_alamat);
                         $("#alamat").val(res.data.alamat);
                         $("#rt").val(res.data.rt);
                         $("#rw").val(res.data.rw);

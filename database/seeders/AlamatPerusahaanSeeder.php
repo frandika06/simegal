@@ -63,14 +63,17 @@ class AlamatPerusahaanSeeder extends Seeder
                         $cekAlamatDefault = AlamatPerusahaan::whereUuidPerusahaan($uuid_perusahaan)->first();
                         if ($cekAlamatDefault === null) {
                             $default = "1";
+                            $label_alamat = "Kantor Utama";
                         } else {
                             $default = "0";
+                            $label_alamat = "Kantor Cabang";
                         }
 
                         $uuid = Str::uuid();
                         $value_1 = [
                             "uuid" => $uuid,
                             "uuid_perusahaan" => $uuid_perusahaan,
+                            "label_alamat" => $label_alamat,
                             "province_id" => "36",
                             "regency_id" => "3603",
                             "district_id" => $district_id[$i],

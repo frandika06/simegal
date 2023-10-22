@@ -22,7 +22,7 @@
                             <th>#</th>
                             <th>Detail Permohonan</th>
                             <th>Detail Pemohon</th>
-                            <th>Detail Pengujian</th>
+                            <th>Tinjut</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -84,8 +84,8 @@
                     name: 'detail_pemohon'
                 },
                 {
-                    data: 'detail_pengujian',
-                    name: 'detail_pengujian'
+                    data: 'tinjut',
+                    name: 'tinjut'
                 },
                 {
                     data: 'aksi',

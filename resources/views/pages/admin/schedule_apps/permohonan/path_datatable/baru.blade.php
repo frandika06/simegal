@@ -22,7 +22,6 @@
                             <th>#</th>
                             <th>Detail Permohonan</th>
                             <th>Detail Pemohon</th>
-                            <th>Detail Pengujian</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -88,10 +87,6 @@
                     name: 'detail_pemohon'
                 },
                 {
-                    data: 'detail_pengujian',
-                    name: 'detail_pengujian'
-                },
-                {
                     data: 'aksi',
                     name: 'aksi',
                     orderable: false,
@@ -100,19 +95,11 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 4]
-                },
-                {
-                    className: "min-w-200px",
-                    targets: [1]
-                },
-                {
-                    className: "min-w-300px",
-                    targets: [2]
+                    targets: [0, 3]
                 },
                 {
                     className: "text-end",
-                    targets: [4]
+                    targets: [3]
                 }
             ],
             "dom": "<'row'" +
@@ -194,6 +181,58 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         url: "{!! route('scd.apps.pp.status', [$enc_tags]) !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                $('#datatableBaru').DataTable().ajax.reload();
+                                $('#datatableDiproses').DataTable().ajax.reload();
+                                $('#datatableSelesai').DataTable().ajax.reload();
+                                $('#datatableDitolak').DataTable().ajax.reload();
+                                getStatistikPermohonan();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                $('#datatableBaru').DataTable().ajax.reload();
+                                $('#datatableDiproses').DataTable().ajax.reload();
+                                $('#datatableSelesai').DataTable().ajax.reload();
+                                $('#datatableDitolak').DataTable().ajax.reload();
+                                getStatistikPermohonan();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', "[data-pindah-jp]", function() {
+            let uuid = $(this).attr('data-pindah-jp');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Pindahkan Permohonan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya, Pindahkan Permohonan!",
+                cancelButtonText: 'Tidak, Batalkan!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.pp.pindahjp', [$enc_tags]) !!}",
                         type: 'POST',
                         data: {
                             uuid: uuid,

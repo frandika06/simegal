@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WebBase\WebConfigs;
 
 use App\Http\Controllers\Controller;
 use App\Models\MasterKelompokUttp;
+use App\Models\PdpPenjadwalan;
 use App\Models\PermohonanPeneraan;
 use Illuminate\Http\Request;
 
@@ -103,7 +104,7 @@ class AjaxController extends Controller
             ->where("permohonan_peneraan.status", "Diproses")
             ->where("perusahaan.status", "=", "1")
             ->orderBy("permohonan_peneraan.created_at", "DESC")
-            ->count();
+            ->get();
         $teraUlang = PermohonanPeneraan::join("perusahaan", "perusahaan.uuid", "=", "permohonan_peneraan.uuid_perusahaan")
             ->select("permohonan_peneraan.*")
             ->where("perusahaan.file_npwp", "!=", null)
@@ -113,7 +114,7 @@ class AjaxController extends Controller
             ->where("permohonan_peneraan.status", "Diproses")
             ->where("perusahaan.status", "=", "1")
             ->orderBy("permohonan_peneraan.created_at", "DESC")
-            ->count();
+            ->get();
         $bdkt = PermohonanPeneraan::join("perusahaan", "perusahaan.uuid", "=", "permohonan_peneraan.uuid_perusahaan")
             ->select("permohonan_peneraan.*")
             ->where("perusahaan.file_npwp", "!=", null)
@@ -123,12 +124,36 @@ class AjaxController extends Controller
             ->where("permohonan_peneraan.status", "Diproses")
             ->where("perusahaan.status", "=", "1")
             ->orderBy("permohonan_peneraan.created_at", "DESC")
-            ->count();
+            ->get();
+        // cek data tera
+        foreach ($tera as $item) {
+            $uuid_permohonan = $item->uuid;
+            $pdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
+            if ($pdp === null) {
+                $dataTera[] = $item;
+            }
+        }
+        // cek data tera ulang
+        foreach ($teraUlang as $item) {
+            $uuid_permohonan = $item->uuid;
+            $pdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
+            if ($pdp === null) {
+                $dataTeraUlang[] = $item;
+            }
+        }
+        // cek data bdkt
+        foreach ($bdkt as $item) {
+            $uuid_permohonan = $item->uuid;
+            $pdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
+            if ($pdp === null) {
+                $dataBdkt[] = $item;
+            }
+        }
         // data
         $data = [
-            "jml_tera" => $tera,
-            "jml_tera_ulang" => $teraUlang,
-            "jml_bdkt" => $bdkt,
+            "jml_tera" => count($dataTera),
+            "jml_tera_ulang" => count($dataTeraUlang),
+            "jml_bdkt" => count($dataBdkt),
         ];
 
         $response = [

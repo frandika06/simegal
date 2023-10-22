@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
+use App\Models\MasterInstrumenDaftarItemUttp;
 use App\Models\MasterInstrumenJenisUttp;
 use DataTables;
 use Illuminate\Http\Request;
@@ -17,7 +18,10 @@ class SetAppsInsUttpDaftarItemController extends Controller
      */
     public function index()
     {
-        return view('pages.admin.settings_apps.master.uttp.instrumen.daftar_item_uttp.index');
+        $getMstJenisUttp = MasterInstrumenJenisUttp::whereStatus("1")->orderBy("no_urut", "ASC")->get();
+        return view('pages.admin.settings_apps.master.uttp.instrumen.daftar_item_uttp.index', compact(
+            'getMstJenisUttp'
+        ));
     }
 
     /**
@@ -31,51 +35,83 @@ class SetAppsInsUttpDaftarItemController extends Controller
 
         // validate
         $request->validate([
-            "nama_jenis_uttp" => "required|string|max:100",
-            "status_volume" => "required|numeric|max:1",
+            "jenis_uttp" => "required|string|max:100",
+            "nama_instrumen" => "required|string|max:100",
+            "volume_from" => "sometimes|nullable|numeric|min:0",
+            "volume_to" => "sometimes|nullable|numeric|min:0",
+            "volume_per" => "sometimes|nullable|numeric|min:0",
+            "satuan" => "sometimes|nullable|string|max:5",
+            "tera_baru_pengujian" => "required|numeric|min:0",
+            "tera_baru_pejustiran" => "required|numeric|min:0",
+            "tera_ulang_pengujian" => "required|numeric|min:0",
+            "tera_ulang_pejustiran" => "required|numeric|min:0",
+            "tarif_per_jam" => "required|numeric|min:0",
         ]);
 
+        // get jenis utto
+        $uuid_instrumen_jenis_uttp = $request->jenis_uttp;
+        $cekJenisUttp = MasterInstrumenJenisUttp::findOrFail($uuid_instrumen_jenis_uttp);
+        if ($cekJenisUttp->status_volume == "1") {
+            // volume wajib
+            // validate
+            $request->validate([
+                "volume_from" => "required|numeric|min:0",
+                "volume_to" => "required|numeric|min:0",
+                "volume_per" => "required|numeric|min:0",
+                "satuan" => "required|string|max:5",
+            ]);
+        }
+
         // nomor urut
-        $cekData = MasterInstrumenJenisUttp::first();
+        $cekData = MasterInstrumenDaftarItemUttp::where("uuid_instrumen_jenis_uttp", $uuid_instrumen_jenis_uttp)->first();
         if ($cekData === null) {
             $no_urut = 1;
         } else {
-            $last_nomor = MasterInstrumenJenisUttp::max('no_urut');
+            $last_nomor = MasterInstrumenDaftarItemUttp::where("uuid_instrumen_jenis_uttp", $uuid_instrumen_jenis_uttp)->max('no_urut');
             $no_urut = $last_nomor + 1;
         }
 
-        // value Pegawai
+        // value
         $uuid = Str::uuid();
         $value_1 = [
             "uuid" => $uuid,
+            "uuid_instrumen_jenis_uttp" => $uuid_instrumen_jenis_uttp,
             "no_urut" => $no_urut,
-            "nama_jenis_uttp" => $request->nama_jenis_uttp,
-            "status_volume" => $request->status_volume,
+            "nama_instrumen" => $request->nama_instrumen,
+            "volume_from" => $request->volume_from,
+            "volume_to" => $request->volume_to,
+            "volume_per" => $request->volume_per,
+            "satuan" => $request->satuan,
+            "tera_baru_pengujian" => $request->tera_baru_pengujian,
+            "tera_baru_pejustiran" => $request->tera_baru_pejustiran,
+            "tera_ulang_pengujian" => $request->tera_ulang_pengujian,
+            "tera_ulang_pejustiran" => $request->tera_ulang_pejustiran,
+            "tarif_per_jam" => $request->tarif_per_jam,
             "uuid_created" => $uuid_profile,
         ];
 
         // save
-        $save_1 = MasterInstrumenJenisUttp::create($value_1);
+        $save_1 = MasterInstrumenDaftarItemUttp::create($value_1);
         if ($save_1) {
             // create log
             $aktifitas = [
-                "tabel" => array("master_instrumen_jenis_uttp"),
+                "tabel" => array("master_instrumen_daftar_item_uttp"),
                 "uuid" => array($uuid),
                 "value" => array($value_1),
             ];
             $log = [
                 "apps" => "Settings Apps",
-                "subjek" => "Menambahkan Master Instrumen UTTP - Jenis UTTP: " . $request->nama_jenis_uttp . " - " . $uuid,
+                "subjek" => "Menambahkan Master Instrumen UTTP - Daftar Item UTTP: " . $request->nama_instrumen . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
                 "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', "Berhasil Menambahkan Master Instrumen UTTP - Jenis UTTP: " . $request->nama_jenis_uttp);
+            alert()->success('Berhasil!', "Berhasil Menambahkan Master Instrumen UTTP - Daftar Item UTTP: " . $request->nama_instrumen);
             return back();
         } else {
-            alert()->error('Gagal!', "Gagal Menambahkan Master Instrumen UTTP - Jenis UTTP: " . $request->nama_jenis_uttp);
+            alert()->error('Gagal!', "Gagal Menambahkan Master Instrumen UTTP - Daftar Item UTTP: " . $request->nama_instrumen);
             return back()->withInput($request->all());
         }
     }
@@ -86,9 +122,9 @@ class SetAppsInsUttpDaftarItemController extends Controller
     public function show($enc_uuid)
     {
         $uuid = CID::decode($enc_uuid);
-        $data = MasterInstrumenJenisUttp::findOrFail($uuid);
+        $data = MasterInstrumenDaftarItemUttp::findOrFail($uuid);
 
-        $title = "Detail Jenis UTTP";
+        $title = "Detail Daftar Item UTTP";
         return view('pages.admin.settings_apps.master.uttp.instrumen.daftar_item_uttp.view', compact(
             'enc_uuid',
             'title',
@@ -102,9 +138,9 @@ class SetAppsInsUttpDaftarItemController extends Controller
     public function edit($enc_uuid)
     {
         $uuid = CID::decode($enc_uuid);
-        $data = MasterInstrumenJenisUttp::findOrFail($uuid);
+        $data = MasterInstrumenDaftarItemUttp::findOrFail($uuid);
 
-        $title = "Edit Jenis UTTP";
+        $title = "Edit Daftar Item UTTP";
         $submit = "Simpan";
         return view('pages.admin.settings_apps.master.uttp.instrumen.daftar_item_uttp.create_edit', compact(
             'enc_uuid',
@@ -125,20 +161,50 @@ class SetAppsInsUttpDaftarItemController extends Controller
 
         // uuid
         $uuid = CID::decode($enc_uuid);
-        $data = MasterInstrumenJenisUttp::findOrFail($uuid);
+        $data = MasterInstrumenDaftarItemUttp::findOrFail($uuid);
 
         // validate
         $request->validate([
-            "no_urut" => "required|numeric",
-            "nama_jenis_uttp" => "required|string|max:100",
-            "status_volume" => "required|numeric|max:1",
+            "no_urut" => "required|numeric|min:1",
+            "nama_instrumen" => "required|string|max:100",
+            "volume_from" => "sometimes|nullable|numeric|min:0",
+            "volume_to" => "sometimes|nullable|numeric|min:0",
+            "volume_per" => "sometimes|nullable|numeric|min:0",
+            "satuan" => "sometimes|nullable|string|max:5",
+            "tera_baru_pengujian" => "required|numeric|min:0",
+            "tera_baru_pejustiran" => "required|numeric|min:0",
+            "tera_ulang_pengujian" => "required|numeric|min:0",
+            "tera_ulang_pejustiran" => "required|numeric|min:0",
+            "tarif_per_jam" => "required|numeric|min:0",
         ]);
 
-        // value Pegawai
+        // get jenis utto
+        $uuid_instrumen_jenis_uttp = $data->uuid_instrumen_jenis_uttp;
+        $cekJenisUttp = MasterInstrumenJenisUttp::findOrFail($uuid_instrumen_jenis_uttp);
+        if ($cekJenisUttp->status_volume == "1") {
+            // volume wajib
+            // validate
+            $request->validate([
+                "volume_from" => "required|numeric|min:0",
+                "volume_to" => "required|numeric|min:0",
+                "volume_per" => "required|numeric|min:0",
+                "satuan" => "required|string|max:5",
+            ]);
+        }
+
+        // value
         $value_1 = [
             "no_urut" => $request->no_urut,
-            "nama_jenis_uttp" => $request->nama_jenis_uttp,
-            "status_volume" => $request->status_volume,
+            "nama_instrumen" => $request->nama_instrumen,
+            "volume_from" => $request->volume_from,
+            "volume_to" => $request->volume_to,
+            "volume_per" => $request->volume_per,
+            "satuan" => $request->satuan,
+            "tera_baru_pengujian" => $request->tera_baru_pengujian,
+            "tera_baru_pejustiran" => $request->tera_baru_pejustiran,
+            "tera_ulang_pengujian" => $request->tera_ulang_pengujian,
+            "tera_ulang_pejustiran" => $request->tera_ulang_pejustiran,
+            "tarif_per_jam" => $request->tarif_per_jam,
             "uuid_updated" => $uuid_profile,
         ];
 
@@ -147,23 +213,23 @@ class SetAppsInsUttpDaftarItemController extends Controller
         if ($save_1) {
             // create log
             $aktifitas = [
-                "tabel" => array("master_instrumen_jenis_uttp"),
+                "tabel" => array("master_instrumen_daftar_item_uttp"),
                 "uuid" => array($uuid),
                 "value" => array($value_1),
             ];
             $log = [
                 "apps" => "Settings Apps",
-                "subjek" => "Mengubah Master Instrumen UTTP - Jenis UTTP: " . $request->nama_jenis_uttp . " - " . $uuid,
+                "subjek" => "Mengubah Master Instrumen UTTP - Daftar Item UTTP: " . $request->nama_instrumen . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
                 "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', "Berhasil Mengubah Master Instrumen UTTP - Jenis UTTP: " . $request->nama_jenis_uttp);
+            alert()->success('Berhasil!', "Berhasil Mengubah Master Instrumen UTTP - Daftar Item UTTP: " . $request->nama_instrumen);
             return back();
         } else {
-            alert()->error('Gagal!', "Gagal Mengubah Master Instrumen UTTP - Jenis UTTP: " . $request->nama_jenis_uttp);
+            alert()->error('Gagal!', "Gagal Mengubah Master Instrumen UTTP - Daftar Item UTTP: " . $request->nama_instrumen);
             return back()->withInput($request->all());
         }
     }
@@ -180,20 +246,20 @@ class SetAppsInsUttpDaftarItemController extends Controller
         $uuid = CID::decode($request->uuid);
 
         // data
-        $data = MasterInstrumenJenisUttp::findOrFail($uuid);
+        $data = MasterInstrumenDaftarItemUttp::findOrFail($uuid);
 
         // save
         $save_1 = $data->delete();
         if ($save_1) {
             // create log
             $aktifitas = [
-                "tabel" => array("master_instrumen_jenis_uttp"),
+                "tabel" => array("master_instrumen_daftar_item_uttp"),
                 "uuid" => array($uuid),
                 "value" => array($data),
             ];
             $log = [
                 "apps" => "Settings Apps",
-                "subjek" => "Berhasil Menghapus Master Instrumen UTTP - Jenis UTTP: " . $data->nama_jenis_uttp . " - " . $uuid,
+                "subjek" => "Berhasil Menghapus Master Instrumen UTTP - Daftar Item UTTP: " . $data->nama_jenis_uttp . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
                 "dashboard" => "1",
@@ -235,7 +301,7 @@ class SetAppsInsUttpDaftarItemController extends Controller
         }
 
         // data
-        $data = MasterInstrumenJenisUttp::findOrFail($uuid);
+        $data = MasterInstrumenDaftarItemUttp::findOrFail($uuid);
 
         // value
         $value_1 = [
@@ -248,13 +314,13 @@ class SetAppsInsUttpDaftarItemController extends Controller
         if ($save_1) {
             // create log
             $aktifitas = [
-                "tabel" => array("master_instrumen_jenis_uttp"),
+                "tabel" => array("master_instrumen_daftar_item_uttp"),
                 "uuid" => array($uuid),
                 "value" => array($data),
             ];
             $log = [
                 "apps" => "Settings Apps",
-                "subjek" => "Mengubah Status Master Instrumen UTTP - Jenis UTTP: " . $data->nama_jenis_uttp . " - " . $uuid,
+                "subjek" => "Mengubah Status Master Instrumen UTTP - Daftar Item UTTP: " . $data->nama_jenis_uttp . " - " . $uuid,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
                 "dashboard" => "1",
@@ -283,19 +349,27 @@ class SetAppsInsUttpDaftarItemController extends Controller
      */
     public function data(Request $request)
     {
-        $data = MasterInstrumenJenisUttp::orderBy("no_urut", "ASC")->get();
+        $data = MasterInstrumenDaftarItemUttp::join("master_instrumen_jenis_uttp", "master_instrumen_jenis_uttp.uuid", "=", "master_instrumen_daftar_item_uttp.uuid_instrumen_jenis_uttp")
+            ->select("master_instrumen_daftar_item_uttp.*")
+            ->orderBy("master_instrumen_jenis_uttp.no_urut", "ASC")
+            ->orderBy("master_instrumen_daftar_item_uttp.no_urut", "ASC")
+            ->get();
 
         if ($request->ajax()) {
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->setRowId('uuid')
-                ->addColumn('status_volume', function ($data) {
-                    if ($data->status_volume == "1") {
-                        $status_volume = '<span class="badge badge-info">Volume</span>';
-                    } else {
-                        $status_volume = '<span class="badge badge-secondary">Non Volume</span>';
-                    }
-                    return $status_volume;
+                ->addColumn('nama_jenis_uttp', function ($data) {
+                    $nama_jenis_uttp = $data->RelMasterInstrumenJenisUttp->nama_jenis_uttp;
+                    return $nama_jenis_uttp;
+                })
+                ->addColumn('nama_instrumen', function ($data) {
+                    $nama_jenis_uttp = $data->RelMasterInstrumenJenisUttp->nama_jenis_uttp;
+                    $nama_instrumen = '
+                    <p class="p-0 m-0"><strong>' . $nama_jenis_uttp . '</strong></p>
+                    <p class="p-0 m-0"><i class="fa-solid fa-chevron-right me-2"></i>' . $data->nama_instrumen . '</p>
+                    ';
+                    return $nama_instrumen;
                 })
                 ->addColumn('status', function ($data) {
                     $uuid = CID::encode($data->uuid);
@@ -322,8 +396,8 @@ class SetAppsInsUttpDaftarItemController extends Controller
                 ->addColumn('aksi', function ($data) {
                     $enc_uuid = CID::encode($data->uuid);
                     $subRoleAdmin = CID::subRoleAdmin();
-                    $edit = route('set.apps.mst.ins.uttp.jenis.edit', [$enc_uuid]);
-                    $show = route('set.apps.mst.ins.uttp.jenis.show', [$enc_uuid]);
+                    $edit = route('set.apps.mst.ins.uttp.item.edit', [$enc_uuid]);
+                    $show = route('set.apps.mst.ins.uttp.item.show', [$enc_uuid]);
                     if ($subRoleAdmin == true) {
                         $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

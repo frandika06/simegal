@@ -43,10 +43,10 @@ class PermohonanPeneraanSeeder extends Seeder
                     // rand lokasi_peneraan
                     $randLokasi = rand(1, 2);
                     if ($randLokasi == "1") {
-                        $lokasi_peneraan = "Dalam Kantor";
+                        $lokasi_peneraan = "Dalam Kantor Metrologi";
                         $uuid_alamat = null;
                     } elseif ($randLokasi == "2") {
-                        $lokasi_peneraan = "Luar Kantor";
+                        $lokasi_peneraan = "Luar Kantor Metrologi";
                         $uuid_alamat = $item->uuid;
                     }
 

@@ -35,28 +35,28 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                     if ($nama_jp == "Tera" && $kode_klpk == "MT") {
                         // tera & MT
                         // Kategori 0 : Jenis UTTP
-                        $ar_value_1 = [
-                            "Timbangan Bobot Ingsut",
-                            "Timbangan Sentisimal",
-                            "Timbangan Pegas",
-                            "Timbangan Meja",
-                            "Timbangan Dacin",
-                            "Neraca",
-                            "Timbangan Elektronik",
-                        ];
-                        $car_value_1 = count($ar_value_1);
-                        for ($i = 0; $i < $car_value_1; $i++) {
-                            $value_1 = [
-                                "uuid" => Str::uuid(),
-                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
-                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
-                                "no_urut" => $i + 1,
-                                "nama_kategori" => $ar_value_1[$i],
-                                "kategori" => "0",
-                                "uuid_created" => $user->uuid_profile,
-                            ];
-                            MasterKategoriKelompok::create($value_1);
-                        }
+                        // $ar_value_1 = [
+                        //     "Timbangan Bobot Ingsut",
+                        //     "Timbangan Sentisimal",
+                        //     "Timbangan Pegas",
+                        //     "Timbangan Meja",
+                        //     "Timbangan Dacin",
+                        //     "Neraca",
+                        //     "Timbangan Elektronik",
+                        // ];
+                        // $car_value_1 = count($ar_value_1);
+                        // for ($i = 0; $i < $car_value_1; $i++) {
+                        //     $value_1 = [
+                        //         "uuid" => Str::uuid(),
+                        //         "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                        //         "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                        //         "no_urut" => $i + 1,
+                        //         "nama_kategori" => $ar_value_1[$i],
+                        //         "kategori" => "0",
+                        //         "uuid_created" => $user->uuid_profile,
+                        //     ];
+                        //     MasterKategoriKelompok::create($value_1);
+                        // }
 
                         // Kategori 1 : Alat Standar & Perlengkapannya
                         $ar_value_2 = [
@@ -111,26 +111,26 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                     } elseif ($nama_jp == "Tera" && $kode_klpk == "UAPV") {
                         // tera & UAPV
                         // Kategori 0 : Jenis UTTP
-                        $ar_value_1 = [
-                            "Bejana",
-                            "Pompa Ukur BBM",
-                            "Meter Air",
-                            "Meter Kwh",
-                            "Tangki Ukur Mobil",
-                        ];
-                        $car_value_1 = count($ar_value_1);
-                        for ($i = 0; $i < $car_value_1; $i++) {
-                            $value_1 = [
-                                "uuid" => Str::uuid(),
-                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
-                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
-                                "no_urut" => $i + 1,
-                                "nama_kategori" => $ar_value_1[$i],
-                                "kategori" => "0",
-                                "uuid_created" => $user->uuid_profile,
-                            ];
-                            MasterKategoriKelompok::create($value_1);
-                        }
+                        // $ar_value_1 = [
+                        //     "Bejana",
+                        //     "Pompa Ukur BBM",
+                        //     "Meter Air",
+                        //     "Meter Kwh",
+                        //     "Tangki Ukur Mobil",
+                        // ];
+                        // $car_value_1 = count($ar_value_1);
+                        // for ($i = 0; $i < $car_value_1; $i++) {
+                        //     $value_1 = [
+                        //         "uuid" => Str::uuid(),
+                        //         "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                        //         "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                        //         "no_urut" => $i + 1,
+                        //         "nama_kategori" => $ar_value_1[$i],
+                        //         "kategori" => "0",
+                        //         "uuid_created" => $user->uuid_profile,
+                        //     ];
+                        //     MasterKategoriKelompok::create($value_1);
+                        // }
 
                         // Kategori 1 : Alat Standar & Perlengkapannya
                         $ar_value_2 = [
@@ -183,28 +183,28 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                     } elseif ($nama_jp == "Tera Ulang" && $kode_klpk == "MT") {
                         // tera ulang & MT
                         // Kategori 0 : Jenis UTTP
-                        $ar_value_1 = [
-                            "Timbangan Bobot Ingsut",
-                            "Timbangan Sentisimal",
-                            "Timbangan Pegas",
-                            "Timbangan Meja",
-                            "Timbangan Dacin",
-                            "Neraca",
-                            "Timbangan Elektronik",
-                        ];
-                        $car_value_1 = count($ar_value_1);
-                        for ($i = 0; $i < $car_value_1; $i++) {
-                            $value_1 = [
-                                "uuid" => Str::uuid(),
-                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
-                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
-                                "no_urut" => $i + 1,
-                                "nama_kategori" => $ar_value_1[$i],
-                                "kategori" => "0",
-                                "uuid_created" => $user->uuid_profile,
-                            ];
-                            MasterKategoriKelompok::create($value_1);
-                        }
+                        // $ar_value_1 = [
+                        //     "Timbangan Bobot Ingsut",
+                        //     "Timbangan Sentisimal",
+                        //     "Timbangan Pegas",
+                        //     "Timbangan Meja",
+                        //     "Timbangan Dacin",
+                        //     "Neraca",
+                        //     "Timbangan Elektronik",
+                        // ];
+                        // $car_value_1 = count($ar_value_1);
+                        // for ($i = 0; $i < $car_value_1; $i++) {
+                        //     $value_1 = [
+                        //         "uuid" => Str::uuid(),
+                        //         "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                        //         "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                        //         "no_urut" => $i + 1,
+                        //         "nama_kategori" => $ar_value_1[$i],
+                        //         "kategori" => "0",
+                        //         "uuid_created" => $user->uuid_profile,
+                        //     ];
+                        //     MasterKategoriKelompok::create($value_1);
+                        // }
 
                         // Kategori 1 : Alat Standar & Perlengkapannya
                         $ar_value_2 = [
@@ -259,26 +259,26 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                     } elseif ($nama_jp == "Tera Ulang" && $kode_klpk == "UAPV") {
                         // tera ulang & UAPV
                         // Kategori 0 : Jenis UTTP
-                        $ar_value_1 = [
-                            "Bejana",
-                            "Pompa Ukur BBM",
-                            "Meter Air",
-                            "Meter Kwh",
-                            "Tangki Ukur Mobil",
-                        ];
-                        $car_value_1 = count($ar_value_1);
-                        for ($i = 0; $i < $car_value_1; $i++) {
-                            $value_1 = [
-                                "uuid" => Str::uuid(),
-                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
-                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
-                                "no_urut" => $i + 1,
-                                "nama_kategori" => $ar_value_1[$i],
-                                "kategori" => "0",
-                                "uuid_created" => $user->uuid_profile,
-                            ];
-                            MasterKategoriKelompok::create($value_1);
-                        }
+                        // $ar_value_1 = [
+                        //     "Bejana",
+                        //     "Pompa Ukur BBM",
+                        //     "Meter Air",
+                        //     "Meter Kwh",
+                        //     "Tangki Ukur Mobil",
+                        // ];
+                        // $car_value_1 = count($ar_value_1);
+                        // for ($i = 0; $i < $car_value_1; $i++) {
+                        //     $value_1 = [
+                        //         "uuid" => Str::uuid(),
+                        //         "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                        //         "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                        //         "no_urut" => $i + 1,
+                        //         "nama_kategori" => $ar_value_1[$i],
+                        //         "kategori" => "0",
+                        //         "uuid_created" => $user->uuid_profile,
+                        //     ];
+                        //     MasterKategoriKelompok::create($value_1);
+                        // }
 
                         // Kategori 1 : Alat Standar & Perlengkapannya
                         $ar_value_2 = [
@@ -331,23 +331,23 @@ class MasterUTTPKategoriKelompokSeeder extends Seeder
                     } elseif ($nama_jp == "Pengujian BDKT" && $kode_klpk == "BDKT") {
                         // Pengujian BDKT & BDKT
                         // Kategori 0 : Jenis UTTP
-                        $ar_value_1 = [
-                            "BDKT Satuan Massa",
-                            "BDKT Satuan Volume",
-                        ];
-                        $car_value_1 = count($ar_value_1);
-                        for ($i = 0; $i < $car_value_1; $i++) {
-                            $value_1 = [
-                                "uuid" => Str::uuid(),
-                                "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
-                                "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
-                                "no_urut" => $i + 1,
-                                "nama_kategori" => $ar_value_1[$i],
-                                "kategori" => "0",
-                                "uuid_created" => $user->uuid_profile,
-                            ];
-                            MasterKategoriKelompok::create($value_1);
-                        }
+                        // $ar_value_1 = [
+                        //     "BDKT Satuan Massa",
+                        //     "BDKT Satuan Volume",
+                        // ];
+                        // $car_value_1 = count($ar_value_1);
+                        // for ($i = 0; $i < $car_value_1; $i++) {
+                        //     $value_1 = [
+                        //         "uuid" => Str::uuid(),
+                        //         "uuid_jenis_pelayanan" => $uuid_jenis_pelayanan,
+                        //         "uuid_kelompok_uttp" => $uuid_kelompok_uttp,
+                        //         "no_urut" => $i + 1,
+                        //         "nama_kategori" => $ar_value_1[$i],
+                        //         "kategori" => "0",
+                        //         "uuid_created" => $user->uuid_profile,
+                        //     ];
+                        //     MasterKategoriKelompok::create($value_1);
+                        // }
 
                         // Kategori 1 : Alat Standar & Perlengkapannya
                         $ar_value_2 = [

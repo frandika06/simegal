@@ -151,6 +151,15 @@
                         {{-- end:Menu sub --}}
                     </div>
                     {{-- end:Menu item --}}
+
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('set.apps.mst.fitur.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-toggle-on fs-2"></i>
+                        </span>
+                        <span class="menu-title">Master Fitur</span>
+                    </a>
+                    {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
                 {{-- end::Master Data --}}

@@ -22,7 +22,6 @@
                             <th>#</th>
                             <th>Detail Permohonan</th>
                             <th>Detail Pemohon</th>
-                            <th>Detail Pengujian</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -67,7 +66,7 @@
                 "lengthMenu": "Show _MENU_",
             },
             "ajax": {
-                url: "{!! route('scd.apps.tl.data') !!}",
+                url: "{!! route('scd.apps.input.pdp.data') !!}",
                 type: 'GET',
                 data: function(data) {
                     data.filter = {
@@ -89,10 +88,6 @@
                     name: 'detail_pemohon'
                 },
                 {
-                    data: 'detail_pengujian',
-                    name: 'detail_pengujian'
-                },
-                {
                     data: 'aksi',
                     name: 'aksi',
                     orderable: false,
@@ -101,19 +96,15 @@
             ],
             "columnDefs": [{
                     className: "min_id text-center",
-                    targets: [0, 4]
+                    targets: [0, 3]
                 },
                 {
                     className: "min-w-200px",
                     targets: [1]
                 },
                 {
-                    className: "min-w-300px",
-                    targets: [2]
-                },
-                {
                     className: "text-end",
-                    targets: [4]
+                    targets: [3]
                 }
             ],
             "dom": "<'row'" +
@@ -131,7 +122,7 @@
 
         function getStatistikPenugasan() {
             $.ajax({
-                url: "{!! route('ajax.scd.apps.sts.tl') !!}",
+                url: "{!! route('ajax.scd.apps.sts.input.pdp') !!}",
                 type: 'POST',
                 data: {
                     tahun: $('[name="q_tahun"]').val(),

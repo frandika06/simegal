@@ -3,13 +3,13 @@
     SIMEGAL
 @endpush
 @push('title')
-    Penjadwalan & Penugasan | Penjadwalan & Penugasan | SIMEGAL
+    Input Data | Penjadwalan & Penugasan | SIMEGAL
 @endpush
 @push('description')
-    Penjadwalan & Penugasan | Penjadwalan & Penugasan | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    Input Data | Penjadwalan & Penugasan | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    Penjadwalan & Penugasan | Penjadwalan & Penugasan
+    Input Data | Penjadwalan & Penugasan
 @endpush
 
 {{-- TOOLBOX::BEGIN --}}

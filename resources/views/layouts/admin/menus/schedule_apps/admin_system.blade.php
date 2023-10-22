@@ -99,7 +99,7 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('scd.apps.tl.index') }}">
+                    <a class="menu-link" href="{{ route('scd.apps.input.pdp.index') }}">
                         <span class="menu-icon">
                             <i class="fa-solid fa-calendar-days fs-2"></i>
                         </span>
@@ -110,12 +110,12 @@
                 {{-- end:Menu item --}}
                 {{-- end::Penjadwalan --}}
 
-                {{-- begin::Tindak Lanjut Kasi --}}
+                {{-- begin::Tindak Lanjut --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Tindak Lanjut Kasi</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Tindak Lanjut</span>
                     </div>
                     {{-- end:Menu content --}}
                 </div>
@@ -159,44 +159,46 @@
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
-                {{-- end::Tindak Lanjut Kasi --}}
+                {{-- end::Tindak Lanjut --}}
 
                 {{-- begin::Pembayaran Retribusi --}}
-                {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
-                    <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Pembayaran Retribusi</span>
+                @if (\CID::getMasterFitur('Retribusi')->status == '1')
+                    {{-- begin:Menu item --}}
+                    <div class="menu-item pt-5">
+                        {{-- begin:Menu content --}}
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Pembayaran Retribusi</span>
+                        </div>
+                        {{-- end:Menu content --}}
                     </div>
-                    {{-- end:Menu content --}}
-                </div>
-                {{-- end:Menu item --}}
+                    {{-- end:Menu item --}}
 
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
-                        <span class="menu-icon">
-                            <i class="fa-regular fa-square fs-2"></i>
-                        </span>
-                        <span class="menu-title text-danger">Belum Terverifikasi</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
+                    {{-- begin:Menu item --}}
+                    <div class="menu-item">
+                        {{-- begin:Menu link --}}
+                        <a class="menu-link" href="#">
+                            <span class="menu-icon">
+                                <i class="fa-regular fa-square fs-2"></i>
+                            </span>
+                            <span class="menu-title text-danger">Belum Terverifikasi</span>
+                        </a>
+                        {{-- end:Menu link --}}
+                    </div>
+                    {{-- end:Menu item --}}
 
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
-                        <span class="menu-icon">
-                            <i class="fa-regular fa-square-check fs-2"></i>
-                        </span>
-                        <span class="menu-title text-success">Sudah Terverifikasi</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
+                    {{-- begin:Menu item --}}
+                    <div class="menu-item">
+                        {{-- begin:Menu link --}}
+                        <a class="menu-link" href="#">
+                            <span class="menu-icon">
+                                <i class="fa-regular fa-square-check fs-2"></i>
+                            </span>
+                            <span class="menu-title text-success">Sudah Terverifikasi</span>
+                        </a>
+                        {{-- end:Menu link --}}
+                    </div>
+                    {{-- end:Menu item --}}
+                @endif
                 {{-- end::Pembayaran Retribusi --}}
 
                 {{-- begin::Report --}}

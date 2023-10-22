@@ -137,7 +137,7 @@
                     </div>
                     {{-- end::Row --}}
 
-                    @if ($data->lokasi_peneraan == 'Luar Kantor')
+                    @if ($data->lokasi_peneraan == 'Luar Kantor Metrologi')
                         {{-- begin::Row --}}
                         <div class="row mb-8">
                             {{-- begin::Col --}}
@@ -150,14 +150,12 @@
                                 <div class="d-flex flex-stack">
                                     {{-- begin::Content --}}
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold">{{ $data->RelAlamatPerusahaan->Kecamatan->name }}</span>
+                                        <span class="fw-bold">{{ $data->RelAlamatPerusahaan->label_alamat }} - {{ \Str::title($data->RelAlamatPerusahaan->Kecamatan->name) }}</span>
                                         <div class="text-gray-600">
-                                            {{ $data->RelAlamatPerusahaan->alamat }}, RT. {{ $data->RelAlamatPerusahaan->rt }}, RW. {{ $data->RelAlamatPerusahaan->rw }},
+                                            {{ $data->RelAlamatPerusahaan->alamat }}, {{ isset($data->RelAlamatPerusahaan->rt) ? 'RT. ' . $data->RelAlamatPerusahaan->rt . ', ' : '' }}
+                                            {{ isset($data->RelAlamatPerusahaan->rw) ? 'RW. ' . $data->RelAlamatPerusahaan->rw . ', ' : '' }}
                                             {{ \Str::title($data->RelAlamatPerusahaan->Desa->name) }}, {{ \Str::title($data->RelAlamatPerusahaan->Kecamatan->name) }},
-                                            {{ \Str::title($data->RelAlamatPerusahaan->Kabupaten->name) }}, {{ \Str::title($data->RelAlamatPerusahaan->Provinsi->name) }}
-                                            @if ($data->RelAlamatPerusahaan->kode_pos != '')
-                                                , {{ $data->RelAlamatPerusahaan->kode_pos }}.<br />
-                                            @endif
+                                            {{ \Str::title($data->RelAlamatPerusahaan->Kabupaten->name) }}, {{ \Str::title($data->RelAlamatPerusahaan->Provinsi->name) }}{{ isset($data->RelAlamatPerusahaan->kode_pos) ? ', ' . $data->RelAlamatPerusahaan->kode_pos . '.' : '.' }}
                                         </div>
                                     </div>
                                     {{-- end::Content --}}
@@ -186,20 +184,6 @@
                         </div>
                         {{-- end::Row --}}
                     @endif
-
-                    {{-- begin::Row --}}
-                    <div class="row mb-8">
-                        {{-- begin::Col --}}
-                        <div class="col-xl-3">
-                            <div class="fs-6 fw-semibold mt-2 mb-3">Pesan Penolakan dari Admin</div>
-                        </div>
-                        {{-- end::Col --}}
-                        {{-- begin::Col --}}
-                        <div class="col-xl-9 fv-row">
-                            <textarea class="form-control" rows="5" disabled>{{ $data->pesan_penolakan }}</textarea>
-                        </div>
-                    </div>
-                    {{-- end::Row --}}
 
                     {{-- begin::Row --}}
                     <div class="row mb-8">

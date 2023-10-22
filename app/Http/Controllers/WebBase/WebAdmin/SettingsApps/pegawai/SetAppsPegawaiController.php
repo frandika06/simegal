@@ -48,15 +48,22 @@ class SetAppsPegawaiController extends Controller
 
         // value Pegawai
         $uuid_pegawai = Str::uuid();
+        $nip = $request->nip;
+        if ($nip == "0") {
+            $status_pegawai = "Non ASN";
+        } else {
+            $status_pegawai = "ASN";
+        }
         $value_1 = [
             "uuid" => $uuid_pegawai,
             "nama_lengkap" => $request->nama_lengkap,
-            "nip" => $request->nip,
+            "nip" => $nip,
             "pangkat_golongan" => $request->pangkat_golongan,
             "jabatan" => $request->jabatan,
             "jenis_kelamin" => $request->jenis_kelamin,
             "email" => Str::lower($request->email),
             "no_telp" => $request->no_telp,
+            "status_pegawai" => $status_pegawai,
             "uuid_created" => $uuid_profile,
         ];
 
@@ -197,14 +204,21 @@ class SetAppsPegawaiController extends Controller
         }
 
         // value Pegawai
+        $nip = $request->nip;
+        if ($nip == "0") {
+            $status_pegawai = "Non ASN";
+        } else {
+            $status_pegawai = "ASN";
+        }
         $value_1 = [
             "nama_lengkap" => $request->nama_lengkap,
-            "nip" => $request->nip,
+            "nip" => $nip,
             "pangkat_golongan" => $request->pangkat_golongan,
             "jabatan" => $request->jabatan,
             "jenis_kelamin" => $request->jenis_kelamin,
             "email" => Str::lower($email),
             "no_telp" => $request->no_telp,
+            "status_pegawai" => $status_pegawai,
             "uuid_updated" => $uuid_profile,
         ];
 
@@ -524,10 +538,13 @@ class SetAppsPegawaiController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->setRowId('uuid')
-                ->addColumn('kontak', function ($data) {
-                    $kontak = '<p class="p-0 m-0"><strong>No. Telp/HP:</strong> ' . $data->no_telp . '</p>';
-                    $kontak .= '<p class="p-0 m-0"><strong>Email:</strong> ' . $data->email . '</p>';
-                    return $kontak;
+                ->addColumn('detail', function ($data) {
+                    $detail = '<p class="p-0 m-0"><strong>Status:</strong> ' . $data->status_pegawai . '</p>';
+                    $detail .= '<p class="p-0 m-0"><strong>NIP:</strong> ' . $data->nip . '</p>';
+                    $detail .= '<p class="p-0 m-0"><strong>Jabatan:</strong> ' . $data->jabatan . '</p>';
+                    $detail .= '<p class="p-0 m-0"><strong>No. Telp/HP:</strong> ' . $data->no_telp . '</p>';
+                    $detail .= '<p class="p-0 m-0"><strong>Email:</strong> ' . $data->email . '</p>';
+                    return $detail;
                 })
                 ->addColumn('hak_akses', function ($data) {
                     $hak_akses = [];
@@ -541,7 +558,7 @@ class SetAppsPegawaiController extends Controller
                 })
                 ->addColumn('status', function ($data) {
                     $uuid = CID::encode($data->uuid_user);
-                    $subRoleAdmin = CID::subRoleAdmin();
+                    $subRoleSuperAdmin = CID::subRoleSuperAdmin();
                     if ($data->status == "1") {
                         $toogle = "checked";
                         $text = "Aktif";
@@ -549,7 +566,7 @@ class SetAppsPegawaiController extends Controller
                         $toogle = "";
                         $text = "Tidak Aktif";
                     }
-                    if ($subRoleAdmin == true) {
+                    if ($subRoleSuperAdmin == true) {
                         $status = '
                             <div class="form-check form-switch form-switch-custom form-switch-primary mb-3">
                                 <input class="form-check-input" type="checkbox" role="switch" id="status" data-onclick="ubah-status" data-status="' . $uuid . '" data-status-value="' . $data->status . '" ' . $toogle . '>
@@ -563,10 +580,10 @@ class SetAppsPegawaiController extends Controller
                 })
                 ->addColumn('aksi', function ($data) {
                     $enc_uuid = CID::encode($data->uuid);
-                    $subRoleAdmin = CID::subRoleAdmin();
+                    $subRoleSuperAdmin = CID::subRoleSuperAdmin();
                     $edit = route('set.apps.pegawai.edit', [$enc_uuid]);
                     $show = route('set.apps.pegawai.show', [$enc_uuid]);
-                    if ($subRoleAdmin == true) {
+                    if ($subRoleSuperAdmin == true) {
                         $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi

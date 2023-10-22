@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\MasterFitur;
+use App\Models\PdpPenjadwalan;
 use App\Models\PermohonanPeneraan;
 use App\Models\Perusahaan;
 use App\Models\PortalKategori;
@@ -635,7 +637,7 @@ class CID
     public static function UpImgPdf($request, $field, $path)
     {
         $ext = strtolower($request->file($field)->extension());
-        $ext_array = array('jpg', 'jpeg', 'png', 'pdf');
+        $ext_array = array('jpg', 'jpeg', 'png', 'pdf', 'JPG', 'JPEG', 'PNG', 'PDF');
         if (in_array($ext, $ext_array)) {
             $file = $request->file($field);
             $filename = $file->getClientOriginalName();
@@ -753,6 +755,20 @@ class CID
             $tags = "package";
         }
         return $tags;
+    }
+    // Hak Akses subRoleSuperAdmin
+    public static function subRoleSuperAdmin()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } else {
+            // blokir
+            return false;
+        }
     }
     // Hak Akses subRolePegawai
     public static function subRolePegawai()
@@ -1033,8 +1049,9 @@ class CID
             $jumlahPermohonan = "1";
         } else {
             $data = [];
-            $PermohonanPeneraan = PermohonanPeneraan::select(\DB::raw("substr(kode_permohonan, 11) as kode"))
+            $PermohonanPeneraan = PermohonanPeneraan::select(\DB::raw("SUBSTRING_INDEX(kode_permohonan, '-', -1) as kode"))
                 ->whereMonth("created_at", date('m'))
+                ->withTrashed()
                 ->get();
             foreach ($PermohonanPeneraan as $item) {
                 $convert_kode = (int) $item->kode;
@@ -1066,6 +1083,50 @@ class CID
             $jumlahPermohonan = $exkode[1] + 1;
             $kode = $exkode[0];
             $kode .= "-" . Self::genzero(4, $jumlahPermohonan);
+        }
+        return $kode;
+    }
+    // Generate Nomor Order
+    public static function genNomorOrder($kodeUttp)
+    {
+        $PdpPenjadwalan = PdpPenjadwalan::select(\DB::raw("SUBSTRING_INDEX(nomor_order, '/', 1) as kode"))
+            ->where(\DB::raw("substr(SUBSTRING_INDEX(nomor_order, '/', 2), 6, 4)"), $kodeUttp)
+            ->whereMonth("created_at", date('m'))
+            ->withTrashed()
+            ->orderBy(\DB::raw("SUBSTRING_INDEX(nomor_order, '/', 1)"), "DESC")
+            ->first();
+        if ($PdpPenjadwalan === null) {
+            $jumlahOrder = "1";
+        } else {
+            $currentKode = PdpPenjadwalan::select(\DB::raw("SUBSTRING_INDEX(nomor_order, '/', 1) as kode"))
+                ->where(\DB::raw("substr(SUBSTRING_INDEX(nomor_order, '/', 2), 6, 4)"), $kodeUttp)
+                ->whereMonth("created_at", date('m'))
+                ->withTrashed()
+                ->orderBy(\DB::raw("SUBSTRING_INDEX(nomor_order, '/', 1)"), "DESC")
+                ->get();
+            foreach ($currentKode as $item) {
+                $convert_kode = (int) $item->kode;
+                $item->kode = $convert_kode;
+                $data[] = $item;
+            }
+            $current_kode = max($data);
+            $jumlahOrder = $current_kode->kode + 1;
+        }
+
+        // gen kode
+        $kode = Self::genzero(4, $jumlahOrder);
+        $kode .= "/" . $kodeUttp . "/";
+        $kode .= Self::bln2Romawi(date('n')) . "/" . date('Y');
+
+        // cek kode
+        $cekKode = PdpPenjadwalan::where("nomor_order", $kode)->withTrashed()->first();
+        if ($cekKode !== null) {
+            // ada duplikat
+            $exkode = explode("/", $kode);
+            $jumlahOrder = $exkode[0] + 1;
+            $kode = Self::genzero(4, $jumlahOrder);
+            $kode .= "/" . $kodeUttp . "/";
+            $kode .= Self::bln2Romawi(date('n')) . "/" . date('Y');
         }
         return $kode;
     }
@@ -1126,5 +1187,11 @@ class CID
             $kategori = "CTT";
         }
         return $kategori;
+    }
+    // cek kategori master fitur
+    public static function getMasterFitur($nama_fitur)
+    {
+        $mstFitur = MasterFitur::where("nama_fitur", $nama_fitur)->first();
+        return $mstFitur;
     }
 }

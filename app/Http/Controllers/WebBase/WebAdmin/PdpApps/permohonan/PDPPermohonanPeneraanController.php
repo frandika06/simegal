@@ -99,7 +99,7 @@ class PDPPermohonanPeneraanController extends Controller
         $lokasi_peneraan = $request->lokasi_peneraan;
         $kode_permohonan = CID::genKodePermohonan($jp);
 
-        if ($lokasi_peneraan == "Luar Kantor") {
+        if ($lokasi_peneraan == "Luar Kantor Metrologi") {
             $uuid_alamat = $request->uuid_alamat;
         } else {
             $uuid_alamat = null;
@@ -242,7 +242,7 @@ class PDPPermohonanPeneraanController extends Controller
         // value
         $lokasi_peneraan = $request->lokasi_peneraan;
         $kode_permohonan = $data->kode_permohonan;
-        if ($lokasi_peneraan == "Luar Kantor") {
+        if ($lokasi_peneraan == "Luar Kantor Metrologi") {
             $uuid_alamat = $request->uuid_alamat;
         } else {
             $uuid_alamat = null;

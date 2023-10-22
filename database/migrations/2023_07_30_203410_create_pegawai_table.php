@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email', 100)->nullable();
             $table->string('no_telp', 100)->nullable();
             $table->text('foto')->nullable();
+            $table->string('status_pegawai', 100)->nullable();
             $table->enum('status', ["0", "1"])->default("0");
             $table->string('uuid_created', 100)->nullable();
             $table->string('uuid_updated', 100)->nullable();

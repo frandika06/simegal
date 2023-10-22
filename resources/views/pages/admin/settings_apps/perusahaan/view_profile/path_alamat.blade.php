@@ -26,18 +26,16 @@
                                     <div class="form-check form-check-custom form-check-solid">
                                         <input class="form-check-default" type="radio" value="{{ $item->uuid }}" name="default" @if ($item->default == '1') checked @endif disabled>
                                         <div class="form-check-label fw-bold">
-                                            <strong>{{ $item->Kecamatan->name }}</strong>
+                                            <strong>{{ $item->label_alamat }} - {{ \Str::title($item->Kecamatan->name) }}</strong>
                                         </div>
                                     </div>
                                 </label>
                             </span>
                             <div class="text-gray-600">
-                                {{ $item->alamat }}, RT. {{ $item->rt }}, RW. {{ $item->rw }},
+                                {{ $item->alamat }}, {{ isset($item->rt) ? 'RT. ' . $item->rt . ', ' : '' }}
+                                {{ isset($item->rw) ? 'RW. ' . $item->rw . ', ' : '' }}
                                 {{ \Str::title($item->Desa->name) }}, {{ \Str::title($item->Kecamatan->name) }},
-                                {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }}
-                                @if ($item->kode_pos != '')
-                                    , {{ $item->kode_pos }}.<br />
-                                @endif
+                                {{ \Str::title($item->Kabupaten->name) }}, {{ \Str::title($item->Provinsi->name) }}{{ isset($item->kode_pos) ? ', ' . $item->kode_pos . '.' : '.' }}
                             </div>
                         </div>
                         {{-- end::Content --}}

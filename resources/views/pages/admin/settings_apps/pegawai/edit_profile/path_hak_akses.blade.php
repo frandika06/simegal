@@ -45,6 +45,15 @@
                 </div>
                 {{-- end::Admin Aplikasi --}}
 
+                {{-- begin::Admin Pengawasan --}}
+                <div class="form-check mb-5">
+                    <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Admin Pengawasan" name="sub_role[]" id="admin_pengawasan" @if (in_array('Admin Pengawasan', $exsub_role)) checked @endif />
+                    <label class="form-check-label" for="admin_pengawasan">
+                        Admin Pengawasan
+                    </label>
+                </div>
+                {{-- end::Admin Pengawasan --}}
+
                 {{-- begin::Verifikator --}}
                 <div class="form-check mb-5">
                     <input class="form-check-input @error('sub_role') is-invalid @enderror" type="checkbox" value="Verifikator" name="sub_role[]" id="verifikator" @if (in_array('Verifikator', $exsub_role)) checked @endif />
