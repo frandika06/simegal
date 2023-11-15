@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pdp_penjadwalan', function (Blueprint $table) {
             $table->string('uuid', 100)->primary();
             $table->string('uuid_permohonan', 100)->nullable();
-            $table->string('uuid_kelompok_uutp', 100)->nullable();
+            $table->string('uuid_kelompok_uttp', 100)->nullable();
             $table->string('nomor_order', 100)->unique();
             $table->date('tanggal_peneraan')->nullable();
             $table->time('jam_peneraan')->nullable();

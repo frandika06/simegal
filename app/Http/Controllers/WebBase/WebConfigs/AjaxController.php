@@ -126,6 +126,7 @@ class AjaxController extends Controller
             ->orderBy("permohonan_peneraan.created_at", "DESC")
             ->get();
         // cek data tera
+        $dataTera = [];
         foreach ($tera as $item) {
             $uuid_permohonan = $item->uuid;
             $pdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
@@ -134,6 +135,7 @@ class AjaxController extends Controller
             }
         }
         // cek data tera ulang
+        $dataTeraUlang = [];
         foreach ($teraUlang as $item) {
             $uuid_permohonan = $item->uuid;
             $pdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
@@ -142,6 +144,7 @@ class AjaxController extends Controller
             }
         }
         // cek data bdkt
+        $dataBdkt = [];
         foreach ($bdkt as $item) {
             $uuid_permohonan = $item->uuid;
             $pdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
@@ -154,6 +157,47 @@ class AjaxController extends Controller
             "jml_tera" => count($dataTera),
             "jml_tera_ulang" => count($dataTeraUlang),
             "jml_bdkt" => count($dataBdkt),
+        ];
+
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // ScdStatistikPenera
+    public function ScdStatistikPenera(Request $request)
+    {
+        // request
+        $tahun = $request->tahun;
+        $status = $request->status;
+        $tera = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->select("pdp_penjadwalan.*")
+            ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+            ->where("pdp_penjadwalan.status_peneraan", $status)
+            ->where("permohonan_peneraan.jenis_pengujian", 'Tera')
+            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "DESC")
+            ->count();
+        $teraUlang = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->select("pdp_penjadwalan.*")
+            ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+            ->where("pdp_penjadwalan.status_peneraan", $status)
+            ->where("permohonan_peneraan.jenis_pengujian", 'Tera Ulang')
+            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "DESC")
+            ->count();
+        $bdkt = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->select("pdp_penjadwalan.*")
+            ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+            ->where("pdp_penjadwalan.status_peneraan", $status)
+            ->where("permohonan_peneraan.jenis_pengujian", 'Pengujian BDKT')
+            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "DESC")
+            ->count();
+        // data
+        $data = [
+            "jml_tera" => $tera,
+            "jml_tera_ulang" => $teraUlang,
+            "jml_bdkt" => $bdkt,
         ];
 
         $response = [

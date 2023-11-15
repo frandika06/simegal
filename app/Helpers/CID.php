@@ -3,6 +3,9 @@
 namespace App\Helpers;
 
 use App\Models\MasterFitur;
+use App\Models\MasterInstrumenDaftarItemUttp;
+use App\Models\MasterKategoriKelompok;
+use App\Models\PdpDataPetugas;
 use App\Models\PdpPenjadwalan;
 use App\Models\PermohonanPeneraan;
 use App\Models\Perusahaan;
@@ -933,6 +936,29 @@ class CID
             return false;
         }
     }
+    // Hak Akses subRoleOnlyPetugas
+    public static function subRoleOnlyPetugas()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Petugas'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -1193,5 +1219,50 @@ class CID
     {
         $mstFitur = MasterFitur::where("nama_fitur", $nama_fitur)->first();
         return $mstFitur;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGATURAN APPS
+    |--------------------------------------------------------------------------
+     */
+    // get data petugas Tenaga Ahli Penera (tap)
+    public static function getPetugasTAP($uuid_pdp)
+    {
+        $mstFitur = PdpDataPetugas::where("uuid_penjadwalan", $uuid_pdp)->where("jabatan_petugas", "Tenaga Ahli Penera")->get();
+        return $mstFitur;
+    }
+    // get data petugas Pendamping Teknis (PT)
+    public static function getPetugasPT($uuid_pdp)
+    {
+        $mstFitur = PdpDataPetugas::where("uuid_penjadwalan", $uuid_pdp)->where("jabatan_petugas", "Pendamping Teknis")->get();
+        return $mstFitur;
+    }
+    // get dd list instrumen
+    public static function getListInstrumen()
+    {
+        $data = MasterInstrumenDaftarItemUttp::join("master_instrumen_jenis_uttp", "master_instrumen_jenis_uttp.uuid", "=", "master_instrumen_daftar_item_uttp.uuid_instrumen_jenis_uttp")
+            ->select("master_instrumen_daftar_item_uttp.*")
+            ->orderBy("master_instrumen_jenis_uttp.no_urut", "ASC")
+            ->orderBy("master_instrumen_daftar_item_uttp.no_urut", "ASC")
+            ->get();
+        return $data;
+    }
+    // get dd list alat
+    public static function getListAlat($jp, $tagsUttp)
+    {
+        $jenisPengujian = $jp;
+        $uuid_kelompok_uttp = $tagsUttp;
+        $data = MasterKategoriKelompok::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kategori_kelompok.uuid_jenis_pelayanan")
+            ->join("master_kelompok_uttp", "master_kelompok_uttp.uuid", "=", "master_kategori_kelompok.uuid_kelompok_uttp")
+            ->select("master_kategori_kelompok.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", $jenisPengujian)
+            ->where("master_kategori_kelompok.uuid_kelompok_uttp", $uuid_kelompok_uttp)
+            ->orderBy("master_jenis_pelayanan.no_urut", "ASC")
+            ->orderBy("master_kelompok_uttp.no_urut", "ASC")
+            ->orderBy("master_kategori_kelompok.kategori", "ASC")
+            ->orderBy("master_kategori_kelompok.no_urut", "ASC")
+            ->get();
+        return $data;
     }
 }

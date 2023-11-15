@@ -157,13 +157,28 @@
                         </div>
                         {{-- end::no_urut --}}
 
+                        {{-- begin::group_instrumen --}}
+                        <div class="row form-group mb-5">
+                            <div class="col-lg-3">
+                                <label for="group_instrumen">Group Instrumen</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control @error('group_instrumen') is-invalid @enderror" name="group_instrumen" id="group_instrumen" placeholder="Group Instrumen" autocomplete="off" maxlength="100" value="{{ old('group_instrumen', $data->group_instrumen) }}" />
+                                @error('group_instrumen')
+                                    <div id="group_instrumenFeedback" class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        {{-- end::group_instrumen --}}
+
                         {{-- begin::nama_instrumen --}}
                         <div class="row form-group mb-5">
                             <div class="col-lg-3">
                                 <label for="nama_instrumen" class="required">Nama Instrumen</label>
                             </div>
                             <div class="col-lg-9">
-                                <input type="text" class="form-control @error('nama_instrumen') is-invalid @enderror" name="nama_instrumen" id="nama_instrumen" placeholder="Nama Instrumen" autocomplete="off" maxlength="100" value="{{ old('nama_instrumen', $data->nama_instrumen) }}" required />
+                                <input type="text" class="form-control @error('nama_instrumen') is-invalid @enderror" name="nama_instrumen" id="nama_instrumen" placeholder="Nama Instrumen" autocomplete="off" maxlength="100" value="{{ old('nama_instrumen', $data->nama_instrumen) }}"
+                                    required />
                                 @error('nama_instrumen')
                                     <div id="nama_instrumenFeedback" class="invalid-feedback">{{ $message }}</div>
                                 @enderror

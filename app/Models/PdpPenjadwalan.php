@@ -31,6 +31,11 @@ class PdpPenjadwalan extends Model
         return $this->belongsTo('App\Models\PermohonanPeneraan', 'uuid_permohonan', 'uuid')->withTrashed();
     }
 
+    public function RelMasterKelompokUttp()
+    {
+        return $this->belongsTo('App\Models\MasterKelompokUttp', 'uuid_kelompok_uttp', 'uuid')->withTrashed();
+    }
+
     public function RelPdpDataPetugas()
     {
         return $this->hasMany('App\Models\PdpDataPetugas', 'uuid_penjadwalan', 'uuid');

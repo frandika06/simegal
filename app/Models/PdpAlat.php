@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PdpDataPetugas extends Model
+class PdpAlat extends Model
 {
     use HasFactory, SoftDeletes;
     public $incrementing = false;
-    protected $table = "pdp_data_petugas";
+    protected $table = "pdp_alat";
     protected $primaryKey = "uuid";
     protected $keyType = 'string';
     protected $guarded = [];
@@ -28,8 +28,8 @@ class PdpDataPetugas extends Model
         return $this->belongsTo('App\Models\PdpPenjadwalan', 'uuid_penjadwalan', 'uuid')->withTrashed();
     }
 
-    public function RelPegawai()
+    public function RelMasterKategoriKelompok()
     {
-        return $this->belongsTo('App\Models\Pegawai', 'uuid_pegawai', 'uuid')->withTrashed();
+        return $this->belongsTo('App\Models\MasterKategoriKelompok', 'uuid_alat', 'uuid')->withTrashed();
     }
 }

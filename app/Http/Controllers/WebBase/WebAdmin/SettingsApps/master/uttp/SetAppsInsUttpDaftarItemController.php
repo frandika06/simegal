@@ -36,6 +36,7 @@ class SetAppsInsUttpDaftarItemController extends Controller
         // validate
         $request->validate([
             "jenis_uttp" => "required|string|max:100",
+            "group_instrumen" => "sometimes|nullable|string|max:100",
             "nama_instrumen" => "required|string|max:100",
             "volume_from" => "sometimes|nullable|numeric|min:0",
             "volume_to" => "sometimes|nullable|numeric|min:0",
@@ -77,6 +78,7 @@ class SetAppsInsUttpDaftarItemController extends Controller
             "uuid" => $uuid,
             "uuid_instrumen_jenis_uttp" => $uuid_instrumen_jenis_uttp,
             "no_urut" => $no_urut,
+            "group_instrumen" => $request->group_instrumen,
             "nama_instrumen" => $request->nama_instrumen,
             "volume_from" => $request->volume_from,
             "volume_to" => $request->volume_to,
@@ -166,6 +168,7 @@ class SetAppsInsUttpDaftarItemController extends Controller
         // validate
         $request->validate([
             "no_urut" => "required|numeric|min:1",
+            "group_instrumen" => "sometimes|nullable|string|max:100",
             "nama_instrumen" => "required|string|max:100",
             "volume_from" => "sometimes|nullable|numeric|min:0",
             "volume_to" => "sometimes|nullable|numeric|min:0",
@@ -195,6 +198,7 @@ class SetAppsInsUttpDaftarItemController extends Controller
         // value
         $value_1 = [
             "no_urut" => $request->no_urut,
+            "group_instrumen" => $request->group_instrumen,
             "nama_instrumen" => $request->nama_instrumen,
             "volume_from" => $request->volume_from,
             "volume_to" => $request->volume_to,
@@ -365,9 +369,14 @@ class SetAppsInsUttpDaftarItemController extends Controller
                 })
                 ->addColumn('nama_instrumen', function ($data) {
                     $nama_jenis_uttp = $data->RelMasterInstrumenJenisUttp->nama_jenis_uttp;
+                    if ($data->group_instrumen === null) {
+                        $group = '';
+                    } else {
+                        $group = $data->group_instrumen . '<i class="fa-solid fa-chevron-right m-2"></i>';
+                    }
                     $nama_instrumen = '
                     <p class="p-0 m-0"><strong>' . $nama_jenis_uttp . '</strong></p>
-                    <p class="p-0 m-0"><i class="fa-solid fa-chevron-right me-2"></i>' . $data->nama_instrumen . '</p>
+                    <p class="p-0 m-0"><i class="fa-solid fa-chevron-right me-2"></i>' . $group . $data->nama_instrumen . '</p>
                     ';
                     return $nama_instrumen;
                 })

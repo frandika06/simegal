@@ -23,6 +23,7 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAStatistikController
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\dashboard\ScdDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdInputDataPeneraController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdInputDataPdpController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdTindakLanjutController;
@@ -160,6 +161,7 @@ Route::group(['prefix' => 'ajax'], function () {
     Route::group(['prefix' => 'schedule-apps'], function () {
         Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
         Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
+        Route::post('/statistik/penera', [AjaxController::class, 'ScdStatistikPenera'])->name('ajax.scd.apps.sts.penera');
     });
 });
 
@@ -362,6 +364,17 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::post('/create/{uuid}', [ScdInputDataPdpController::class, 'store'])->name('scd.apps.input.pdp.store');
                 Route::put('/update/{uuid}', [ScdInputDataPdpController::class, 'update'])->name('scd.apps.input.pdp.update');
                 Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('scd.apps.input.pdp.data');
+            });
+            // manajemen-peneraan
+            Route::group(['prefix' => 'manajemen-peneraan'], function () {
+                Route::get('/', [ScdInputDataPeneraController::class, 'index'])->name('scd.apps.mnj.penera.index');
+                Route::get('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'create'])->name('scd.apps.mnj.penera.create');
+                Route::post('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'store'])->name('scd.apps.mnj.penera.store');
+                Route::get('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'edit'])->name('scd.apps.mnj.penera.edit');
+                Route::put('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'update'])->name('scd.apps.mnj.penera.update');
+                Route::get('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'editPdp'])->name('scd.apps.mnj.penera.edit.pdp');
+                Route::put('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'updatePdp'])->name('scd.apps.mnj.penera.update.pdp');
+                Route::get('/data', [ScdInputDataPeneraController::class, 'data'])->name('scd.apps.mnj.penera.data');
             });
             // tindak-lanjut
             Route::group(['prefix' => 'input-penjadwalan-penugasan'], function () {

@@ -69,7 +69,7 @@ class BaseAppsController extends Controller
             $dataLogs[] = $item;
         }
 
-        return view('pages.admin.list_apps.list_apps', compact(
+        return view('pages.admin.list_apps.list_apps_tiga', compact(
             'dataLogs',
             'pageBg'
         ));

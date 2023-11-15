@@ -3,13 +3,13 @@
     SIMEGAL
 @endpush
 @push('title')
-    {{ $title }} | Penjadwalan & Penugasan | SIMEGAL
+    {{ $title }} | Manajemen Peneraan | SIMEGAL
 @endpush
 @push('description')
-    {{ $title }} | Penjadwalan & Penugasan | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    {{ $title }} | Manajemen Peneraan | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    {{ $title }} | Penjadwalan & Penugasan
+    {{ $title }} | Manajemen Peneraan
 @endpush
 
 {{-- TOOLBOX::BEGIN --}}
@@ -21,7 +21,7 @@
             {{-- begin::Page title --}}
             <div class="page-title d-flex flex-column me-3">
                 {{-- begin::Title --}}
-                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Penjadwalan & Penugasan</h1>
+                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Manajemen Peneraan</h1>
                 {{-- end::Title --}}
                 {{-- begin::Breadcrumb --}}
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 pt-1">
@@ -37,7 +37,7 @@
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
                     <li class="breadcrumb-item text-muted">
-                        <a href="{{ route('scd.apps.input.pdp.index') }}" class="text-muted text-hover-primary">Penjadwalan & Penugasan</a>
+                        <a href="{{ route('scd.apps.mnj.penera.index') }}" class="text-muted text-hover-primary">Manajemen Peneraan</a>
                     </li>
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
@@ -55,7 +55,7 @@
             {{-- begin::Actions --}}
             <div class="d-flex align-items-center py-2 py-md-1">
                 {{-- begin::Button --}}
-                <a href="{{ route('scd.apps.input.pdp.index') }}" class="btn btn-dark btn-sm btn-icon"><i class="fa-solid fa-chevron-left"></i></a>
+                <a href="{{ route('scd.apps.mnj.penera.index') }}" class="btn btn-dark btn-sm btn-icon"><i class="fa-solid fa-chevron-left"></i></a>
                 {{-- end::Button --}}
             </div>
             {{-- end::Actions --}}
@@ -228,8 +228,8 @@
                         <div class="card-header border-0">
                             {{-- begin::Card title --}}
                             <div class="card-title flex-column">
-                                <h2>Form Penjadwalan & Penugasan</h2>
-                                <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk menginput data penjadwalan & penugasan dari permohonan dengan Kode Permohonan: <strong>{{ $permohonan->kode_permohonan }}</strong>.</div>
+                                <h2>Form Edit Penjadwalan & Penugasan</h2>
+                                <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk mengedit data penjadwalan & penugasan dari permohonan dengan Kode Permohonan: <strong>{{ $permohonan->kode_permohonan }}</strong>.</div>
                             </div>
                             {{-- end::Card title --}}
                         </div>
@@ -237,7 +237,7 @@
                         {{-- begin::Card body --}}
                         <div class="card-body">
                             {{-- begin::Form --}}
-                            <form action="{{ isset($data) ? route('scd.apps.input.pdp.update', [$enc_uuid]) : route('scd.apps.input.pdp.store', [$enc_uuid]) }}" class="form" enctype="multipart/form-data" method="POST">
+                            <form action="{{ route('scd.apps.mnj.penera.update.pdp', [$enc_uuid]) }}" class="form" enctype="multipart/form-data" method="POST">
                                 @csrf
                                 @isset($data)
                                     @method('put')
@@ -303,7 +303,16 @@
                                                         @if (old('tenaga_ahli_penera'))
                                                             <option value="{{ $item->uuid }}" @if (in_array($item->uuid, old('tenaga_ahli_penera'))) selected @endif>NIP. {{ $item->nip }} | {{ $item->nama_lengkap }}</option>
                                                         @else
-                                                            <option value="{{ $item->uuid }}">NIP. {{ $item->nip }} | {{ $item->nama_lengkap }}</option>
+                                                            @isset($data)
+                                                                @php
+                                                                    $RelPdpDataPetugas = \CID::getPetugasTAP($data->uuid);
+                                                                    $uuid_tap = [];
+                                                                    foreach ($RelPdpDataPetugas as $itemTAP) {
+                                                                        $uuid_tap[] = $itemTAP->uuid_pegawai;
+                                                                    }
+                                                                @endphp
+                                                                <option value="{{ $item->uuid }}" @if (in_array($item->uuid, $uuid_tap)) selected @endif>NIP. {{ $item->nip }} | {{ $item->nama_lengkap }}</option>
+                                                            @endisset
                                                         @endif
                                                     @endforeach
                                                 </select>
@@ -330,7 +339,16 @@
                                                         @if (old('tenaga_ahli_penera'))
                                                             <option value="{{ $item->uuid }}" @if (in_array($item->uuid, old('pendamping_teknis'))) selected @endif>{{ $item->nama_lengkap }}</option>
                                                         @else
-                                                            <option value="{{ $item->uuid }}">{{ $item->nama_lengkap }}</option>
+                                                            @isset($data)
+                                                                @php
+                                                                    $RelPdpDataPetugas = \CID::getPetugasPT($data->uuid);
+                                                                    $uuid_pt = [];
+                                                                    foreach ($RelPdpDataPetugas as $itemPT) {
+                                                                        $uuid_pt[] = $itemPT->uuid_pegawai;
+                                                                    }
+                                                                @endphp
+                                                                <option value="{{ $item->uuid }}" @if (in_array($item->uuid, $uuid_pt)) selected @endif>{{ $item->nama_lengkap }}</option>
+                                                            @endisset
                                                         @endif
                                                     @endforeach
                                                 </select>

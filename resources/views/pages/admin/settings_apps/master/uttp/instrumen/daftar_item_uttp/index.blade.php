@@ -175,6 +175,15 @@
                             @enderror
                         </div>
                         {{-- end::jenis_uttp --}}
+                        {{-- begin::group_instrumen --}}
+                        <div class="form-floating mb-5">
+                            <input type="text" class="form-control @error('group_instrumen') is-invalid @enderror" name="group_instrumen" id="group_instrumen2" placeholder="Group Instrumen" autocomplete="off" maxlength="100" value="{{ old('group_instrumen') }}" />
+                            <label for="group_instrumen">Group Instrumen</label>
+                            @error('group_instrumen')
+                                <div id="group_instrumenFeedback" class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        {{-- end::group_instrumen --}}
                         {{-- begin::nama_instrumen --}}
                         <div class="form-floating mb-5">
                             <input type="text" class="form-control @error('nama_instrumen') is-invalid @enderror" name="nama_instrumen" id="nama_instrumen2" placeholder="Nama Instrumen" autocomplete="off" maxlength="100" value="{{ old('nama_instrumen') }}" required />

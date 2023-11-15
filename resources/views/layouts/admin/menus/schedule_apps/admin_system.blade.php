@@ -110,6 +110,31 @@
                 {{-- end:Menu item --}}
                 {{-- end::Penjadwalan --}}
 
+                {{-- begin::Manajemen Peneraan --}}
+                {{-- begin:Menu item --}}
+                <div class="menu-item pt-5">
+                    {{-- begin:Menu content --}}
+                    <div class="menu-content">
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Manajemen Peneraan</span>
+                    </div>
+                    {{-- end:Menu content --}}
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    {{-- begin:Menu link --}}
+                    <a class="menu-link" href="{{ route('scd.apps.mnj.penera.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-screwdriver-wrench fs-2"></i>
+                        </span>
+                        <span class="menu-title">Manajemen Peneraan</span>
+                    </a>
+                    {{-- end:Menu link --}}
+                </div>
+                {{-- end:Menu item --}}
+                {{-- end::Manajemen Peneraan --}}
+
                 {{-- begin::Tindak Lanjut --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">

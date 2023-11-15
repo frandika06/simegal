@@ -189,7 +189,7 @@ class ScdInputDataPdpController extends Controller
         $value_1 = [
             "uuid" => $uuid_penjadwalan,
             "uuid_permohonan" => $uuid_permohonan,
-            "uuid_kelompok_uutp" => $request->kelompok_uttp,
+            "uuid_kelompok_uttp" => $request->kelompok_uttp,
             "nomor_order" => $nomor_order,
             "tanggal_peneraan" => $tanggal_peneraan,
             "jam_peneraan" => $jam_peneraan,

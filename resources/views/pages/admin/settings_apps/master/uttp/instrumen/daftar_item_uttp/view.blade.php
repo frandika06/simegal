@@ -150,6 +150,17 @@
                     </div>
                     {{-- end::no_urut --}}
 
+                    {{-- begin::group_instrumen --}}
+                    <div class="row form-group mb-5">
+                        <div class="col-lg-3">
+                            <label for="group_instrumen">Group Instrumen</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" value="{{ old('group_instrumen', $data->group_instrumen) }}" readonly />
+                        </div>
+                    </div>
+                    {{-- end::group_instrumen --}}
+
                     {{-- begin::nama_instrumen --}}
                     <div class="row form-group mb-5">
                         <div class="col-lg-3">

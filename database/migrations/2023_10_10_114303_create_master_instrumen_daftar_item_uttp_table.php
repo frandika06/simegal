@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('uuid', 100)->primary();
             $table->string('uuid_instrumen_jenis_uttp', 100)->nullable();
             $table->integer('no_urut')->nullable();
+            $table->string('group_instrumen', 100)->nullable();
             $table->string('nama_instrumen', 100)->nullable();
             $table->integer('volume_from')->nullable();
             $table->integer('volume_to')->nullable();
