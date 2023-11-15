@@ -157,13 +157,23 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(res) {
-                    Swal.fire({
-                        title: "Success",
-                        text: res.message,
-                        icon: "success",
-                    }).then((result) => {
-                        $('#datatable').DataTable().ajax.reload();
-                    });
+                    if (res.status == true) {
+                        Swal.fire({
+                            title: "Success",
+                            text: res.message,
+                            icon: "success",
+                        }).then((result) => {
+                            $('#datatable').DataTable().ajax.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Status Gagal Diubah!",
+                            icon: "error",
+                        }).then((result) => {
+                            $('#datatable').DataTable().ajax.reload();
+                        });
+                    }
                 },
                 error: function(xhr) {
                     Swal.fire({

@@ -283,17 +283,14 @@
 
                 {{-- begin::Bantuan --}}
                 {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
+                {{-- <div class="menu-item pt-5">
                     <div class="menu-content">
                         <span class="menu-heading fw-bold text-uppercase fs-7">Bantuan</span>
                     </div>
-                    {{-- end:Menu content --}}
-                </div>
+                </div> --}}
                 {{-- end:Menu item --}}
                 {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
+                {{-- <div class="menu-item">
                     <a class="menu-link" href="#">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-abstract-26 fs-2">
@@ -303,8 +300,7 @@
                         </span>
                         <span class="menu-title">Panduan</span>
                     </a>
-                    {{-- end:Menu link --}}
-                </div>
+                </div> --}}
                 {{-- end:Menu item --}}
                 {{-- end::Bantuan --}}
 

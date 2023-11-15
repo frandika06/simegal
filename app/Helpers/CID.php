@@ -786,7 +786,7 @@ class CID
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Verifikator', 'Ketua Tim', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan', 'Verifikator', 'Ketua Tim', 'Petugas'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -794,6 +794,9 @@ class CID
                 // blokir
                 return false;
             }
+        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
+            // izinkan
+            return true;
         } else {
             // blokir
             return false;
@@ -825,6 +828,58 @@ class CID
             return false;
         }
     }
+    // Hak Akses subRoleAdminPortal
+    public static function subRoleAdminPortal()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Portal'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subRoleAdminPengawasan
+    public static function subRoleAdminPengawasan()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
     // Hak Akses subRoleVerifikator
     public static function subRoleVerifikator()
     {
@@ -839,32 +894,6 @@ class CID
         } elseif ($role == "Pegawai") {
             // PEGAWAI
             $ar_sub_role = ['Admin Aplikasi', 'Verifikator'];
-            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
-                // izinkan
-                return true;
-            } else {
-                // blokir
-                return false;
-            }
-        } else {
-            // blokir
-            return false;
-        }
-    }
-    // Hak Akses subRoleKepalaTim
-    public static function subRoleKepalaTim()
-    {
-        $auth = Auth::user();
-        $role = $auth->role;
-        $sub_role = \explode(',', $auth->sub_role);
-        $sub_sub_role = \explode(',', $auth->sub_sub_role);
-
-        if ($role == "Admin System" || $role == "Super Admin") {
-            // izinkan
-            return true;
-        } elseif ($role == "Pegawai") {
-            // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -924,8 +953,107 @@ class CID
                     // izinkan
                     return true;
                 } else {
-                    // blokir
-                    return false;
+                    // kembali ke admin
+                    return Self::subRoleAdmin();
+                }
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subSubRoleKetuaTimPelayanan
+    public static function subSubRoleKetuaTimPelayanan()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                $ar_sub_sub_role = ['Ketua Tim Pelayanan'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return true;
+                } else {
+                    // kembali ke admin
+                    return Self::subRoleAdmin();
+                }
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subSubRoleKetuaTimPengawasan
+    public static function subSubRoleKetuaTimPengawasan()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan', 'Ketua Tim'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                $ar_sub_sub_role = ['Ketua Tim Pengawasan'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return true;
+                } else {
+                    // kembali ke admin
+                    return Self::subRoleAdminPengawasan();
+                }
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subSubRoleKetuaTimBinaSdm
+    public static function subSubRoleKetuaTimBinaSdm()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                $ar_sub_sub_role = ['Ketua Tim Bina SDM'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return true;
+                } else {
+                    // kembali ke admin
+                    return Self::subRoleAdmin();
                 }
             } else {
                 // blokir

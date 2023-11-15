@@ -23,10 +23,10 @@ use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAStatistikController
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAUnduhanController;
 use App\Http\Controllers\WebBase\WebAdmin\PortalApps\posts\PAVideoController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\dashboard\ScdDashboardController;
-use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdInputDataPeneraController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdDataPdpController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdInstrumenAlatController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdInputDataPdpController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
-use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdTindakLanjutController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kabid\SetAppsKabidController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kadis\SetAppsKadisController;
@@ -161,7 +161,7 @@ Route::group(['prefix' => 'ajax'], function () {
     Route::group(['prefix' => 'schedule-apps'], function () {
         Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
         Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
-        Route::post('/statistik/penera', [AjaxController::class, 'ScdStatistikPenera'])->name('ajax.scd.apps.sts.penera');
+        Route::post('/statistik/penugasan', [AjaxController::class, 'ScdStatistikPenugasan'])->name('ajax.scd.apps.sts.penugasan');
     });
 });
 
@@ -366,22 +366,31 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('scd.apps.input.pdp.data');
             });
             // manajemen-peneraan
-            Route::group(['prefix' => 'manajemen-peneraan'], function () {
-                Route::get('/', [ScdInputDataPeneraController::class, 'index'])->name('scd.apps.mnj.penera.index');
-                Route::get('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'create'])->name('scd.apps.mnj.penera.create');
-                Route::post('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'store'])->name('scd.apps.mnj.penera.store');
-                Route::get('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'edit'])->name('scd.apps.mnj.penera.edit');
-                Route::put('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'update'])->name('scd.apps.mnj.penera.update');
-                Route::get('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'editPdp'])->name('scd.apps.mnj.penera.edit.pdp');
-                Route::put('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'updatePdp'])->name('scd.apps.mnj.penera.update.pdp');
-                Route::get('/data', [ScdInputDataPeneraController::class, 'data'])->name('scd.apps.mnj.penera.data');
+            // Route::group(['prefix' => 'manajemen-peneraan'], function () {
+            //     Route::get('/', [ScdInputDataPeneraController::class, 'index'])->name('scd.apps.mnj.penera.index');
+            //     Route::get('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'create'])->name('scd.apps.mnj.penera.create');
+            //     Route::post('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'store'])->name('scd.apps.mnj.penera.store');
+            //     Route::get('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'edit'])->name('scd.apps.mnj.penera.edit');
+            //     Route::put('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'update'])->name('scd.apps.mnj.penera.update');
+            //     Route::get('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'editPdp'])->name('scd.apps.mnj.penera.edit.pdp');
+            //     Route::put('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'updatePdp'])->name('scd.apps.mnj.penera.update.pdp');
+            //     Route::get('/data', [ScdInputDataPeneraController::class, 'data'])->name('scd.apps.mnj.penera.data');
+            // });
+            // jadwal-penugasan
+            Route::group(['prefix' => 'jadwal-penugasan'], function () {
+                Route::get('/', [ScdDataPdpController::class, 'index'])->name('scd.apps.data.pdp.index');
+                Route::get('/show/{uuid}', [ScdDataPdpController::class, 'show'])->name('scd.apps.data.pdp.show');
+                Route::get('/edit/{uuid}', [ScdDataPdpController::class, 'edit'])->name('scd.apps.data.pdp.edit');
+                Route::put('/edit/{uuid}', [ScdDataPdpController::class, 'update'])->name('scd.apps.data.pdp.update');
+                Route::get('/data', [ScdDataPdpController::class, 'data'])->name('scd.apps.data.pdp.data');
             });
-            // tindak-lanjut
-            Route::group(['prefix' => 'input-penjadwalan-penugasan'], function () {
-                Route::get('/', [ScdTindakLanjutController::class, 'index'])->name('scd.apps.tl.index');
-                Route::get('/create', [ScdTindakLanjutController::class, 'create'])->name('scd.apps.tl.create');
-                Route::post('/create', [ScdTindakLanjutController::class, 'store'])->name('scd.apps.tl.store');
-                Route::get('/data', [ScdTindakLanjutController::class, 'data'])->name('scd.apps.tl.data');
+            // instrumen-alat
+            Route::group(['prefix' => 'instrumen-alat'], function () {
+                Route::get('/', [ScdInstrumenAlatController::class, 'index'])->name('scd.apps.insalat.index');
+                Route::get('/show/{uuid}', [ScdInstrumenAlatController::class, 'show'])->name('scd.apps.insalat.show');
+                Route::get('/edit/{uuid}', [ScdInstrumenAlatController::class, 'edit'])->name('scd.apps.insalat.edit');
+                Route::put('/edit/{uuid}', [ScdInstrumenAlatController::class, 'update'])->name('scd.apps.insalat.update');
+                Route::get('/data', [ScdInstrumenAlatController::class, 'data'])->name('scd.apps.insalat.data');
             });
         });
     });
@@ -506,7 +515,10 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 // fitur
                 Route::group(['prefix' => 'fitur'], function () {
                     Route::get('/', [SetAppsFiturController::class, 'index'])->name('set.apps.mst.fitur.index');
-                    Route::put('/status', [SetAppsFiturController::class, 'status'])->name('set.apps.mst.fitur.status');
+                    // middleware : Admin
+                    Route::group(['middleware' => ['Admin']], function () {
+                        Route::put('/status', [SetAppsFiturController::class, 'status'])->name('set.apps.mst.fitur.status');
+                    });
                     Route::get('/data', [SetAppsFiturController::class, 'data'])->name('set.apps.mst.fitur.data');
                 });
             });
@@ -548,8 +560,8 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             // kepala-bidang
             Route::group(['prefix' => 'kepala-bidang'], function () {
                 Route::get('/', [SetAppsKabidController::class, 'index'])->name('set.apps.kabid.index');
-                // middleware : Admin
-                Route::group(['middleware' => ['Admin']], function () {
+                // middleware : SuperAdmin
+                Route::group(['middleware' => ['SuperAdmin']], function () {
                     Route::post('/create', [SetAppsKabidController::class, 'store'])->name('set.apps.kabid.store');
                     Route::get('/edit/{uuid}', [SetAppsKabidController::class, 'edit'])->name('set.apps.kabid.edit');
                     Route::put('/edit/{uuid}', [SetAppsKabidController::class, 'update'])->name('set.apps.kabid.update');
@@ -563,8 +575,8 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             // kepala-dinas
             Route::group(['prefix' => 'kepala-dinas'], function () {
                 Route::get('/', [SetAppsKadisController::class, 'index'])->name('set.apps.kadis.index');
-                // middleware : Admin
-                Route::group(['middleware' => ['Admin']], function () {
+                // middleware : SuperAdmin
+                Route::group(['middleware' => ['SuperAdmin']], function () {
                     Route::post('/create', [SetAppsKadisController::class, 'store'])->name('set.apps.kadis.store');
                     Route::get('/edit/{uuid}', [SetAppsKadisController::class, 'edit'])->name('set.apps.kadis.edit');
                     Route::put('/edit/{uuid}', [SetAppsKadisController::class, 'update'])->name('set.apps.kadis.update');

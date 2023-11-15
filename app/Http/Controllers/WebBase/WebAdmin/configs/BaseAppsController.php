@@ -36,15 +36,28 @@ class BaseAppsController extends Controller
             // PEGAWAI
             $subRolePegawai = CID::subRolePegawai();
             if ($subRolePegawai == false) {
-                return redirect()->route('prt.apps.home.index');
+                // cek admin portal
+                $subRoleAdminPortal = CID::subRoleAdminPortal();
+                if ($subRoleAdminPortal == true) {
+                    return redirect()->route('prt.apps.home.index');
+                } else {
+                    Auth::logout();
+                    alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
+                    return \redirect()->route('prt.lgn.index');
+                }
             } else {
                 return $this->listApps($request, $pageBg);
             }
         } elseif ($role == "Perusahaan") {
             // Perusahaan
             return redirect()->route('pdp.apps.home.index');
+        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
+            // Kepala Dinas || Kepala Bidang
+            return $this->listAppsKepala($request, $pageBg);
         } else {
-            return abort(404);
+            Auth::logout();
+            alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
+            return \redirect()->route('prt.lgn.index');
         }
     }
 
@@ -70,6 +83,33 @@ class BaseAppsController extends Controller
         }
 
         return view('pages.admin.list_apps.list_apps_tiga', compact(
+            'dataLogs',
+            'pageBg'
+        ));
+    }
+
+    // listAppsKepala
+    private function listAppsKepala($request, $pageBg)
+    {
+        $dataLogs = [];
+        $logAktifitas = SysLogAktifitas::where("dashboard", "1")
+            ->orderBy("created_at", "DESC")
+            ->limit(50)
+            ->get();
+        foreach ($logAktifitas as $item) {
+            $item->tipe = "logs";
+            $dataLogs[] = $item;
+        }
+
+        $loginLogs = SysLogin::orderBy("created_at", "DESC")
+            ->limit(50)
+            ->get();
+        foreach ($loginLogs as $item) {
+            $item->tipe = "login";
+            $dataLogs[] = $item;
+        }
+
+        return view('pages.admin.list_apps.list_apps_kepala', compact(
             'dataLogs',
             'pageBg'
         ));

@@ -122,15 +122,35 @@
                 {{-- end:Menu item --}}
 
                 {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
+                {{-- <div class="menu-item">
                     <a class="menu-link" href="{{ route('scd.apps.mnj.penera.index') }}">
                         <span class="menu-icon">
                             <i class="fa-solid fa-screwdriver-wrench fs-2"></i>
                         </span>
                         <span class="menu-title">Manajemen Peneraan</span>
                     </a>
-                    {{-- end:Menu link --}}
+                </div> --}}
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    <a class="menu-link" href="{{ route('scd.apps.data.pdp.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-user-check fs-2"></i>
+                        </span>
+                        <span class="menu-title">Jadwal & Penugasan</span>
+                    </a>
+                </div>
+                {{-- end:Menu item --}}
+
+                {{-- begin:Menu item --}}
+                <div class="menu-item">
+                    <a class="menu-link" href="{{ route('scd.apps.insalat.index') }}">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-scale-balanced fs-2"></i>
+                        </span>
+                        <span class="menu-title">Instrumen & Alat</span>
+                    </a>
                 </div>
                 {{-- end:Menu item --}}
                 {{-- end::Manajemen Peneraan --}}

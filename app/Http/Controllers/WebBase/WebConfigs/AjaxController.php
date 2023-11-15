@@ -166,8 +166,8 @@ class AjaxController extends Controller
         return response()->json($response, 200);
     }
 
-    // ScdStatistikPenera
-    public function ScdStatistikPenera(Request $request)
+    // ScdStatistikPenugasan
+    public function ScdStatistikPenugasan(Request $request)
     {
         // request
         $tahun = $request->tahun;

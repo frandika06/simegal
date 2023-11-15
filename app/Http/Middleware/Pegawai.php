@@ -22,6 +22,8 @@ class Pegawai
         $ar_role = [
             "Admin System",
             "Super Admin",
+            "Kepala Dinas",
+            "Kepala Bidang",
             "Pegawai",
         ];
         if (in_array($role, $ar_role)) {
