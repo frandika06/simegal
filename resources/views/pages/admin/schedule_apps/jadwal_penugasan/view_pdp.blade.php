@@ -213,6 +213,37 @@
                                 </div>
                             </div>
                             {{-- end::Details content --}}
+
+                            {{-- begin::Details toggle --}}
+                            @if ($data->status_peneraan != 'Menunggu')
+                                <div class="d-flex flex-stack fs-4 py-3">
+                                    <div class="fw-bold rotate" data-bs-toggle="collapse" href="#kt_pdp_proses" role="button" aria-expanded="false" aria-controls="kt_pdp_proses">Detail Pemrosesan
+                                        <span class="ms-2 rotate-180">
+                                            <i class="ki-duotone ki-down fs-3"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                {{-- end::Details toggle --}}
+                                <div class="separator"></div>
+                                {{-- begin::Details content --}}
+                                <div id="kt_pdp_proses" class="collapse">
+                                    <div class="pb-5 fs-6">
+                                        {{-- begin::Details item --}}
+                                        <div class="fw-bold mt-5">Diproses Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_diproses) ? $data->RelDiproses->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Ditunda Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_ditunda) ? $data->RelDitunda->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Dibatalkan Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_dibatalkan) ? $data->RelDibatalkan->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Diselesaikan Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_selesai) ? $data->RelSelesai->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Terakhir Diupdate:</div>
+                                        <div class="text-gray-600">{{ \CID::TglJam($data->updated_at) }}</div>
+                                        {{-- begin::Details item --}}
+                                    </div>
+                                </div>
+                            @endif
+                            {{-- end::Details content --}}
                         </div>
                         {{-- end::Card body --}}
                     </div>

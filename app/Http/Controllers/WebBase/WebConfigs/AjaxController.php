@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\WebBase\WebConfigs;
 
+use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\MasterKelompokUttp;
 use App\Models\PdpPenjadwalan;
 use App\Models\PermohonanPeneraan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AjaxController extends Controller
 {
@@ -169,30 +171,45 @@ class AjaxController extends Controller
     // ScdStatistikPenugasan
     public function ScdStatistikPenugasan(Request $request)
     {
+        // auth
+        $auth = Auth::user();
+
         // request
         $tahun = $request->tahun;
         $status = $request->status;
         $tera = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
             ->select("pdp_penjadwalan.*")
             ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
             ->where("pdp_penjadwalan.status_peneraan", $status)
-            ->where("permohonan_peneraan.jenis_pengujian", 'Tera')
-            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "DESC")
-            ->count();
+            ->where("permohonan_peneraan.jenis_pengujian", 'Tera');
         $teraUlang = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
             ->select("pdp_penjadwalan.*")
             ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
             ->where("pdp_penjadwalan.status_peneraan", $status)
-            ->where("permohonan_peneraan.jenis_pengujian", 'Tera Ulang')
-            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "DESC")
-            ->count();
+            ->where("permohonan_peneraan.jenis_pengujian", 'Tera Ulang');
         $bdkt = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
             ->select("pdp_penjadwalan.*")
             ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
             ->where("pdp_penjadwalan.status_peneraan", $status)
-            ->where("permohonan_peneraan.jenis_pengujian", 'Pengujian BDKT')
-            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "DESC")
-            ->count();
+            ->where("permohonan_peneraan.jenis_pengujian", 'Pengujian BDKT');
+
+        // hak akses
+        $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+        if ($subRoleOnlyPetugas == true) {
+            // hanya petugas
+            $uuid_profile = $auth->uuid_profile;
+            $tera = $tera->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
+            $teraUlang = $teraUlang->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
+            $bdkt = $bdkt->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
+        } else {
+            $tera = $tera->count();
+            $teraUlang = $teraUlang->count();
+            $bdkt = $bdkt->count();
+        }
+
         // data
         $data = [
             "jml_tera" => $tera,

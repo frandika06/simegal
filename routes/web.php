@@ -350,20 +350,26 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
         Route::group(['middleware' => ['Pegawai']], function () {
             // dashboard
             Route::get('/', [ScdDashboardController::class, 'index'])->name('scd.apps.home.index');
-            // permohonan
-            Route::group(['prefix' => 'permohonan/{tags}'], function () {
-                Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('scd.apps.pp.index');
-                Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
-                Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('scd.apps.pp.pindahjp');
-                Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('scd.apps.pp.data');
+            // middleware : Verifikator
+            Route::group(['middleware' => ['Verifikator']], function () {
+                // permohonan
+                Route::group(['prefix' => 'permohonan/{tags}'], function () {
+                    Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('scd.apps.pp.index');
+                    Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
+                    Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('scd.apps.pp.pindahjp');
+                    Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('scd.apps.pp.data');
+                });
             });
-            // input-data
-            Route::group(['prefix' => 'input-data'], function () {
-                Route::get('/', [ScdInputDataPdpController::class, 'index'])->name('scd.apps.input.pdp.index');
-                Route::get('/create/{uuid}', [ScdInputDataPdpController::class, 'create'])->name('scd.apps.input.pdp.create');
-                Route::post('/create/{uuid}', [ScdInputDataPdpController::class, 'store'])->name('scd.apps.input.pdp.store');
-                Route::put('/update/{uuid}', [ScdInputDataPdpController::class, 'update'])->name('scd.apps.input.pdp.update');
-                Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('scd.apps.input.pdp.data');
+            // middleware : Admin
+            Route::group(['middleware' => ['Admin']], function () {
+                // input-data
+                Route::group(['prefix' => 'input-data'], function () {
+                    Route::get('/', [ScdInputDataPdpController::class, 'index'])->name('scd.apps.input.pdp.index');
+                    Route::get('/create/{uuid}', [ScdInputDataPdpController::class, 'create'])->name('scd.apps.input.pdp.create');
+                    Route::post('/create/{uuid}', [ScdInputDataPdpController::class, 'store'])->name('scd.apps.input.pdp.store');
+                    Route::put('/update/{uuid}', [ScdInputDataPdpController::class, 'update'])->name('scd.apps.input.pdp.update');
+                    Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('scd.apps.input.pdp.data');
+                });
             });
             // manajemen-peneraan
             // Route::group(['prefix' => 'manajemen-peneraan'], function () {
@@ -382,6 +388,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::get('/show/{uuid}', [ScdDataPdpController::class, 'show'])->name('scd.apps.data.pdp.show');
                 Route::get('/edit/{uuid}', [ScdDataPdpController::class, 'edit'])->name('scd.apps.data.pdp.edit');
                 Route::put('/edit/{uuid}', [ScdDataPdpController::class, 'update'])->name('scd.apps.data.pdp.update');
+                Route::put('/status', [ScdDataPdpController::class, 'status'])->name('scd.apps.data.pdp.status');
                 Route::get('/data', [ScdDataPdpController::class, 'data'])->name('scd.apps.data.pdp.data');
             });
             // instrumen-alat

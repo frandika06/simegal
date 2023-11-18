@@ -216,5 +216,82 @@
                 });
             }
         }
+
+        $(document).on('click', "[data-proses]", function() {
+            let uuid = $(this).attr('data-proses');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Proses Penugasan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya, Proses Penugasan!",
+                cancelButtonText: 'Tidak, Batalkan!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.data.pdp.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        function getStatistikPenugasan() {
+            $.ajax({
+                url: "{!! route('ajax.scd.apps.sts.penugasan') !!}",
+                type: 'POST',
+                data: {
+                    tahun: $('#q_tahun').val(),
+                    status: $('#q_status').val(),
+                    _method: 'post',
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    $("#statistik_tera").html(res.data.jml_tera);
+                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
+                    $("#statistik_bdkt").html(res.data.jml_bdkt);
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: "Error",
+                        text: xhr.responseJSON.message,
+                        icon: "error",
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+            });
+        }
     </script>
 @endpush

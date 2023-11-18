@@ -115,12 +115,6 @@ class ScdDataPdpController extends Controller
     // edit
     public function edit($enc_uuid)
     {
-        // subSubRoleKetuaTimPelayanan
-        $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
-        if ($subSubRoleKetuaTimPelayanan == false) {
-            return redirect()->route('scd.apps.data.pdp.index');
-        }
-
         // uuid
         $uuid = CID::decode($enc_uuid);
 
@@ -181,12 +175,6 @@ class ScdDataPdpController extends Controller
     // update
     public function update(Request $request, $enc_uuid)
     {
-        // subSubRoleKetuaTimPelayanan
-        $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
-        if ($subSubRoleKetuaTimPelayanan == false) {
-            return redirect()->route('scd.apps.data.pdp.index');
-        }
-
         // uuid
         $uuid = CID::decode($enc_uuid);
 
@@ -334,10 +322,73 @@ class ScdDataPdpController extends Controller
     }
 
     /**
+     * Status Aktif
+     */
+    public function status(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // uuid
+        $uuid = CID::decode($request->uuid);
+        $status = CID::decode($request->status);
+
+        // data
+        $data = PdpPenjadwalan::findOrFail($uuid);
+
+        // value
+        $value_1 = [
+            "status_peneraan" => $status,
+            "uuid_updated" => $auth->uuid_profile,
+        ];
+
+        if ($status == "Diproses") {
+            $value_1['uuid_diproses'] = $auth->uuid_profile;
+        }
+
+        // save
+        $save_1 = $data->update($value_1);
+        if ($save_1) {
+            // create log
+            $aktifitas = [
+                "tabel" => array("pdp_penjadwalan"),
+                "uuid" => array($uuid),
+                "value" => array($data),
+            ];
+            $log = [
+                "apps" => "Schedule Apps",
+                "subjek" => "Mengubah Status Jadawal & Penugasan Menjadi : " . $status . " - " . $uuid,
+                "aktifitas" => $aktifitas,
+                "device" => "web",
+                "dashboard" => "1",
+            ];
+            CID::addToLogAktifitas($request, $log);
+            // alert success
+            $msg = "Berhasil Merubah Status Jadawal & Penugasan Menjadi: " . $status . "!";
+            $response = [
+                "status" => true,
+                "message" => $msg,
+            ];
+            return response()->json($response, 200);
+        } else {
+            // gagal
+            $msg = "Gagal Melakukan Perubahan Status Jadawal & Penugasan!";
+            $response = [
+                "status" => false,
+                "message" => $msg,
+            ];
+            return response()->json($response, 422);
+        }
+    }
+
+    /**
      * Data untuk Datatables
      */
     public function data(Request $request)
     {
+        // auth
+        $auth = Auth::user();
+
         if ($request->ajax()) {
             if (isset($_GET['filter'])) {
                 $tahun = $_GET['filter']['tahun'];
@@ -352,14 +403,25 @@ class ScdDataPdpController extends Controller
                 $tags = "Tera";
             }
 
+            // base data
             $data = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
                 ->select("pdp_penjadwalan.*")
                 ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
                 ->where("pdp_penjadwalan.status_peneraan", $status)
                 ->where("permohonan_peneraan.jenis_pengujian", $tags)
                 ->orderBy("pdp_penjadwalan.tanggal_peneraan", "ASC")
-                ->orderBy("pdp_penjadwalan.jam_peneraan", "ASC")
-                ->get();
+                ->orderBy("pdp_penjadwalan.jam_peneraan", "ASC");
+
+            // hak akses
+            $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+            if ($subRoleOnlyPetugas == true) {
+                // hanya petugas
+                $uuid_profile = $auth->uuid_profile;
+                $data = $data->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->get();
+            } else {
+                $data = $data->get();
+            }
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -408,29 +470,46 @@ class ScdDataPdpController extends Controller
                     $view = route('scd.apps.data.pdp.show', $enc_uuid);
                     // hak akses
                     $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
+                    $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
                     if ($subSubRoleKetuaTimPelayanan == true) {
                         // Admin Aplikasi
                         if ($status == "Menunggu") {
                             // status Menunggu
                             $aksi = '<div class="dropdown">
-                            <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Aksi
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-edit"></i> Edit Data</a></li>
-                            </ul>
-                        </div>';
+                                <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Aksi
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-edit"></i> Edit Data</a></li>
+                                </ul>
+                            </div>';
                         } else {
                             // view only
                             $aksi = '<div class="dropdown">
+                                <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Aksi
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="' . $view . '"><i class="fa-solid fa-eye"></i> Lihat Data</a></li>
+                                </ul>
+                            </div>';
+                        }
+                    } elseif ($subRoleOnlyPetugas == true) {
+                        $diproses = CID::encode("Diproses");
+                        if ($status == "Menunggu") {
+                            $item_link = '<li><a class="dropdown-item bg-hover-success" href="javascript:void(0);" data-proses="' . $enc_uuid . '" data-status="' . $diproses . '"><i class="fa-solid fa-check-to-slot"></i> Proses Penugasan</a></li>';
+                        } else {
+                            $item_link = '';
+                        }
+                        $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                ' . $item_link . '
                                 <li><a class="dropdown-item" href="' . $view . '"><i class="fa-solid fa-eye"></i> Lihat Data</a></li>
                             </ul>
                         </div>';
-                        }
                     } else {
                         // view only
                         $aksi = '<div class="dropdown">

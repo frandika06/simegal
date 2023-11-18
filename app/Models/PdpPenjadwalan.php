@@ -36,6 +36,26 @@ class PdpPenjadwalan extends Model
         return $this->belongsTo('App\Models\MasterKelompokUttp', 'uuid_kelompok_uttp', 'uuid')->withTrashed();
     }
 
+    public function RelDiproses()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_diproses', 'uuid')->withTrashed();
+    }
+
+    public function RelDitunda()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_ditunda', 'uuid')->withTrashed();
+    }
+
+    public function RelDibatalkan()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_dibatalkan', 'uuid')->withTrashed();
+    }
+
+    public function RelSelesai()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_selesai', 'uuid')->withTrashed();
+    }
+
     public function RelPdpDataPetugas()
     {
         return $this->hasMany('App\Models\PdpDataPetugas', 'uuid_penjadwalan', 'uuid');

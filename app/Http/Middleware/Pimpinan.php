@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class KetuaTim
+class Pimpinan
 {
     /**
      * Handle an incoming request.
@@ -22,12 +22,14 @@ class KetuaTim
         $ar_role = [
             "Admin System",
             "Super Admin",
+            "Kepala Dinas",
+            "Kepala Bidang",
             "Pegawai",
         ];
         if (in_array($role, $ar_role)) {
             if ($role == "Pegawai") {
-                $subRoleKetuaTim = CID::subRoleKetuaTim();
-                if ($subRoleKetuaTim == false) {
+                $subRoleAdmin = CID::subRoleAdmin();
+                if ($subRoleAdmin == false) {
                     alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
                     return \back();
                 }

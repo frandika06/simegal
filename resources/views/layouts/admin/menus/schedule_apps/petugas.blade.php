@@ -34,82 +34,6 @@
                 </div>
                 {{-- end:Menu item --}}
 
-                {{-- begin::Permohonan --}}
-                {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
-                    <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Permohonan Pengujian</span>
-                    </div>
-                    {{-- end:Menu content --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('scd.apps.pp.index', [\CID::encode('Tera')]) }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-scale-balanced fs-2"></i>
-                        </span>
-                        <span class="menu-title">Tera</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('scd.apps.pp.index', [\CID::encode('Tera Ulang')]) }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-scale-balanced fs-2"></i>
-                        </span>
-                        <span class="menu-title">Tera Ulang</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('scd.apps.pp.index', [\CID::encode('Pengujian BDKT')]) }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-scale-balanced fs-2"></i>
-                        </span>
-                        <span class="menu-title">Pengujian BDKT</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-                {{-- end::Permohonan --}}
-
-                {{-- begin::Penjadwalan --}}
-                {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
-                    <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Penjadwalan & Penugasan</span>
-                    </div>
-                    {{-- end:Menu content --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('scd.apps.input.pdp.index') }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-calendar-days fs-2"></i>
-                        </span>
-                        <span class="menu-title">Input Data</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-                {{-- end::Penjadwalan --}}
-
                 {{-- begin::Manajemen Peneraan --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
@@ -119,17 +43,6 @@
                     </div>
                     {{-- end:Menu content --}}
                 </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                {{-- <div class="menu-item">
-                    <a class="menu-link" href="{{ route('scd.apps.mnj.penera.index') }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-screwdriver-wrench fs-2"></i>
-                        </span>
-                        <span class="menu-title">Manajemen Peneraan</span>
-                    </a>
-                </div> --}}
                 {{-- end:Menu item --}}
 
                 {{-- begin:Menu item --}}
@@ -205,84 +118,6 @@
                 </div>
                 {{-- end:Menu item --}}
                 {{-- end::Tindak Lanjut --}}
-
-                {{-- begin::Pembayaran Retribusi --}}
-                @if (\CID::getMasterFitur('Retribusi')->status == '1')
-                    {{-- begin:Menu item --}}
-                    <div class="menu-item pt-5">
-                        {{-- begin:Menu content --}}
-                        <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Pembayaran Retribusi</span>
-                        </div>
-                        {{-- end:Menu content --}}
-                    </div>
-                    {{-- end:Menu item --}}
-
-                    {{-- begin:Menu item --}}
-                    <div class="menu-item">
-                        {{-- begin:Menu link --}}
-                        <a class="menu-link" href="#">
-                            <span class="menu-icon">
-                                <i class="fa-regular fa-square fs-2"></i>
-                            </span>
-                            <span class="menu-title text-danger">Belum Terverifikasi</span>
-                        </a>
-                        {{-- end:Menu link --}}
-                    </div>
-                    {{-- end:Menu item --}}
-
-                    {{-- begin:Menu item --}}
-                    <div class="menu-item">
-                        {{-- begin:Menu link --}}
-                        <a class="menu-link" href="#">
-                            <span class="menu-icon">
-                                <i class="fa-regular fa-square-check fs-2"></i>
-                            </span>
-                            <span class="menu-title text-success">Sudah Terverifikasi</span>
-                        </a>
-                        {{-- end:Menu link --}}
-                    </div>
-                    {{-- end:Menu item --}}
-                @endif
-                {{-- end::Pembayaran Retribusi --}}
-
-                {{-- begin::Report --}}
-                {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
-                    <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Report</span>
-                    </div>
-                    {{-- end:Menu content --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-chart-column fs-2"></i>
-                        </span>
-                        <span class="menu-title">Rekapitulasi</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-file-export fs-2"></i>
-                        </span>
-                        <span class="menu-title">Export Data</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-                {{-- end::Pembayaran Retribusi --}}
 
             </div>
             {{-- end::Menu --}}

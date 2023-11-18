@@ -1088,6 +1088,66 @@ class CID
         }
     }
 
+    // Hak Akses subSubRolePimpinan
+    public static function subSubRolePimpinan()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
+            // izinkan
+            return true;
+        } else {
+            // blokir
+            return false;
+        }
+    }
+
+    // Hak Akses subSubRoleKetuaTimDanPimpinan
+    public static function subSubRoleKetuaTimDanPimpinan()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Admin System" || $role == "Super Admin") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                return true;
+            } else {
+                // blokir
+                return false;
+            }
+        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
+            // izinkan
+            return true;
+        } else {
+            // blokir
+            return false;
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | PORTAL APPS
@@ -1305,7 +1365,7 @@ class CID
 
         return $pageBg;
     }
-    // Generate Background
+    // get data alert verifikasi perusahaan
     public static function alertVerifikasiPerusahaan()
     {
         $allData = Perusahaan::where("file_npwp", "!=", null)
@@ -1322,6 +1382,24 @@ class CID
             "all_data" => $allData,
             "limit_data" => $limitData,
         ];
+        return $data;
+    }
+    // get data alert jadwal dan penugasan petugas
+    public static function alertPDPPetugas($jp)
+    {
+        $auth = Auth::user();
+        $uuid_profile = $auth->uuid_profile;
+        $tahun = date('Y');
+        $data = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+            ->select("pdp_penjadwalan.*")
+            ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+            ->where("pdp_penjadwalan.status_peneraan", "Menunggu")
+            ->where("permohonan_peneraan.jenis_pengujian", $jp)
+            ->orderBy("pdp_penjadwalan.tanggal_peneraan", "ASC")
+            ->orderBy("pdp_penjadwalan.jam_peneraan", "ASC")
+            ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+            ->get();
         return $data;
     }
 

@@ -22,6 +22,10 @@ return new class extends Migration
             $table->string('jenis_kendaraan', 100)->nullable();
             $table->string('plat_nomor_kendaraan', 100)->nullable();
             $table->string('status_peneraan', 100)->nullable();
+            $table->string('uuid_diproses', 100)->nullable();
+            $table->string('uuid_ditunda', 100)->nullable();
+            $table->string('uuid_dibatalkan', 100)->nullable();
+            $table->string('uuid_selesai', 100)->nullable();
             $table->string('uuid_created', 100)->nullable();
             $table->string('uuid_updated', 100)->nullable();
             $table->string('uuid_deleted', 100)->nullable();

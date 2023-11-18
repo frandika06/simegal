@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class KetuaTim
+class KetuaTimDanPimpinan
 {
     /**
      * Handle an incoming request.
@@ -22,6 +22,8 @@ class KetuaTim
         $ar_role = [
             "Admin System",
             "Super Admin",
+            "Kepala Dinas",
+            "Kepala Bidang",
             "Pegawai",
         ];
         if (in_array($role, $ar_role)) {

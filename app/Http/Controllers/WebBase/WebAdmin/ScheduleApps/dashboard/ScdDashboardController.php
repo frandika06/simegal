@@ -20,21 +20,12 @@ class ScdDashboardController extends Controller
 
         // Admin System
         if ($role == "Admin System" || $role == "Super Admin") {
-            return $this->indexAdminSystem($request);
+            return $this->indexGeneral($request);
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            if (CID::subRoleAdmin() == true) {
+            if (CID::subRolePegawai() == true) {
                 // Admin Aplikasi
-                return $this->indexAdminSystem($request);
-            } elseif (CID::subRoleVerifikator() == true) {
-                // Verifikator
-                return $this->indexAdminSystem($request);
-            } elseif (CID::subRoleKepalaTim() == true) {
-                // Kasi
-                return $this->indexAdminSystem($request);
-            } elseif (CID::subRolePetugas() == true) {
-                // petugas
-                return $this->indexAdminSystem($request);
+                return $this->indexGeneral($request);
             } else {
                 return redirect()->route('auth.home');
             }
@@ -43,8 +34,8 @@ class ScdDashboardController extends Controller
         }
     }
 
-    // index super admin
-    private function indexAdminSystem($request)
+    // index general
+    private function indexGeneral($request)
     {
         // cek filter
         if ($request->session()->exists('filter_tahun')) {
