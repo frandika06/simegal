@@ -137,17 +137,31 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                $('#datatableBaru').DataTable().ajax.reload();
-                                $('#datatableDiproses').DataTable().ajax.reload();
-                                $('#datatableSelesai').DataTable().ajax.reload();
-                                $('#datatableDitolak').DataTable().ajax.reload();
-                                getStatistikPermohonan();
-                            });
+                            if (res.status == true) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: res.message,
+                                    icon: "success",
+                                }).then((result) => {
+                                    $('#datatableBaru').DataTable().ajax.reload();
+                                    $('#datatableDiproses').DataTable().ajax.reload();
+                                    $('#datatableSelesai').DataTable().ajax.reload();
+                                    $('#datatableDitolak').DataTable().ajax.reload();
+                                    getStatistikPermohonan();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: res.message,
+                                    icon: "error",
+                                }).then((result) => {
+                                    $('#datatableBaru').DataTable().ajax.reload();
+                                    $('#datatableDiproses').DataTable().ajax.reload();
+                                    $('#datatableSelesai').DataTable().ajax.reload();
+                                    $('#datatableDitolak').DataTable().ajax.reload();
+                                    getStatistikPermohonan();
+                                });
+                            }
                         },
                         error: function(xhr) {
                             Swal.fire({
@@ -189,17 +203,31 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                $('#datatableBaru').DataTable().ajax.reload();
-                                $('#datatableDiproses').DataTable().ajax.reload();
-                                $('#datatableSelesai').DataTable().ajax.reload();
-                                $('#datatableDitolak').DataTable().ajax.reload();
-                                getStatistikPermohonan();
-                            });
+                            if (res.status == true) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: res.message,
+                                    icon: "success",
+                                }).then((result) => {
+                                    $('#datatableBaru').DataTable().ajax.reload();
+                                    $('#datatableDiproses').DataTable().ajax.reload();
+                                    $('#datatableSelesai').DataTable().ajax.reload();
+                                    $('#datatableDitolak').DataTable().ajax.reload();
+                                    getStatistikPermohonan();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: res.message,
+                                    icon: "error",
+                                }).then((result) => {
+                                    $('#datatableBaru').DataTable().ajax.reload();
+                                    $('#datatableDiproses').DataTable().ajax.reload();
+                                    $('#datatableSelesai').DataTable().ajax.reload();
+                                    $('#datatableDitolak').DataTable().ajax.reload();
+                                    getStatistikPermohonan();
+                                });
+                            }
                         },
                         error: function(xhr) {
                             Swal.fire({
@@ -241,17 +269,31 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                $('#datatableBaru').DataTable().ajax.reload();
-                                $('#datatableDiproses').DataTable().ajax.reload();
-                                $('#datatableSelesai').DataTable().ajax.reload();
-                                $('#datatableDitolak').DataTable().ajax.reload();
-                                getStatistikPermohonan();
-                            });
+                            if (res.status == true) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: res.message,
+                                    icon: "success",
+                                }).then((result) => {
+                                    $('#datatableBaru').DataTable().ajax.reload();
+                                    $('#datatableDiproses').DataTable().ajax.reload();
+                                    $('#datatableSelesai').DataTable().ajax.reload();
+                                    $('#datatableDitolak').DataTable().ajax.reload();
+                                    getStatistikPermohonan();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: res.message,
+                                    icon: "error",
+                                }).then((result) => {
+                                    $('#datatableBaru').DataTable().ajax.reload();
+                                    $('#datatableDiproses').DataTable().ajax.reload();
+                                    $('#datatableSelesai').DataTable().ajax.reload();
+                                    $('#datatableDitolak').DataTable().ajax.reload();
+                                    getStatistikPermohonan();
+                                });
+                            }
                         },
                         error: function(xhr) {
                             Swal.fire({

@@ -60,10 +60,64 @@ class ScdPermohonanPengujianController extends Controller
 
         // cek penjadwalan dan penugasan
         if ($status == "Baru") {
+            // status permohonan Baru
             $cekPdp = PdpPenjadwalan::where("uuid_permohonan", $uuid)->first();
             if ($cekPdp !== null) {
+                // cek status peneraan
+                $status_peneraan = $cekPdp->status_peneraan;
+                if ($status_peneraan == "Dibatalkan") {
+                    // gagal
+                    $msg = "Permohonan Ini Sudah Dibatalkan Oleh Petugas!";
+                    $response = [
+                        "status" => false,
+                        "message" => $msg,
+                    ];
+                    return response()->json($response, 422);
+                } else {
+                    // gagal
+                    $msg = "Permohonan Sudah Dijadwalkan, Tidak Bisa Di Reset!";
+                    $response = [
+                        "status" => false,
+                        "message" => $msg,
+                    ];
+                    return response()->json($response, 422);
+                }
+            }
+        } elseif ($status == "Diproses") {
+            // status permohonan Diproses
+            $cekPdp = PdpPenjadwalan::where("uuid_permohonan", $uuid)->first();
+            if ($cekPdp !== null) {
+                // cek status peneraan
+                $status_peneraan = $cekPdp->status_peneraan;
+                if ($status_peneraan == "Selesai") {
+                    // gagal
+                    $msg = "Permohonan Ini Sudah Selesai Dilaksanakan Pengujian!";
+                    $response = [
+                        "status" => false,
+                        "message" => $msg,
+                    ];
+                    return response()->json($response, 422);
+                }
+            }
+        } elseif ($status == "Selesai") {
+            // status permohonan Selesai
+            $cekPdp = PdpPenjadwalan::where("uuid_permohonan", $uuid)->first();
+            if ($cekPdp !== null) {
+                // cek status peneraan
+                $status_peneraan = $cekPdp->status_peneraan;
+                if ($status_peneraan != "Selesai") {
+                    // gagal
+                    $msg = "Permohonan Belum Diselesaikan Oleh Petugas Penera, Status Saat ini adalah " . Str::upper($status_peneraan) . "!";
+                    $response = [
+                        "status" => false,
+                        "message" => $msg,
+                    ];
+                    return response()->json($response, 422);
+                }
+            } else {
+                // belum dijadwalkan dan ditugaskan
                 // gagal
-                $msg = "Permohonan Sudah Dijadwalkan, Tidak Bisa Di Reset!";
+                $msg = "Permohonan Ini Belum Ada Data Penjadwalan dan Penugasannya!";
                 $response = [
                     "status" => false,
                     "message" => $msg,
@@ -304,15 +358,17 @@ class ScdPermohonanPengujianController extends Controller
                         $dataPdp = PdpPenjadwalan::whereUuidPermohonan($uuid_permohonan)->first();
                         if ($dataPdp !== null) {
                             $tinjut = '
-                                <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Nomor Order</strong><span>: ' . CID::TglSimple($dataPdp->nomor_order) . '</span></p>
+                                <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Nomor Order</strong><span>: ' . $dataPdp->nomor_order . '</span></p>
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Tgl. Peneraan</strong><span>: ' . CID::TglSimple($dataPdp->tanggal_peneraan) . '</span></p>
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Jam. Peneraan</strong><span>: ' . CID::jamMenit($dataPdp->tanggal_peneraan) . '</span></p>
+                                <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Status Peneraan</strong>: <span class="badge badge-info">' . $dataPdp->status_peneraan . '</span></p>
                             ';
                         } else {
                             $tinjut = '
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Nomor Order</strong><span>: -</span></p>
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Tgl. Peneraan</strong><span>: -</span></p>
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Jam. Peneraan</strong><span>: -</span></p>
+                                <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Status Peneraan</strong><span>: -</span></p>
                             ';
                         }
                     } else {
@@ -320,6 +376,7 @@ class ScdPermohonanPengujianController extends Controller
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Nomor Order</strong><span>: -</span></p>
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Tgl. Peneraan</strong><span>: -</span></p>
                                 <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Jam. Peneraan</strong><span>: -</span></p>
+                                <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Status Peneraan</strong><span>: -</span></p>
                             ';
                     }
                     return $tinjut;

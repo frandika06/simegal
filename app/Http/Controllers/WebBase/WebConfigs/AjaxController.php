@@ -178,32 +178,33 @@ class AjaxController extends Controller
         $tahun = $request->tahun;
         $status = $request->status;
         $tera = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
-            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
             ->select("pdp_penjadwalan.*")
             ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-            ->where("pdp_penjadwalan.status_peneraan", $status)
             ->where("permohonan_peneraan.jenis_pengujian", 'Tera');
         $teraUlang = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
-            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
             ->select("pdp_penjadwalan.*")
             ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-            ->where("pdp_penjadwalan.status_peneraan", $status)
             ->where("permohonan_peneraan.jenis_pengujian", 'Tera Ulang');
         $bdkt = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
-            ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
             ->select("pdp_penjadwalan.*")
             ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-            ->where("pdp_penjadwalan.status_peneraan", $status)
             ->where("permohonan_peneraan.jenis_pengujian", 'Pengujian BDKT');
+
+        // Semua Data
+        if ($status != "All") {
+            $tera = $tera->where("pdp_penjadwalan.status_peneraan", $status);
+            $teraUlang = $teraUlang->where("pdp_penjadwalan.status_peneraan", $status);
+            $bdkt = $bdkt->where("pdp_penjadwalan.status_peneraan", $status);
+        }
 
         // hak akses
         $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
         if ($subRoleOnlyPetugas == true) {
             // hanya petugas
             $uuid_profile = $auth->uuid_profile;
-            $tera = $tera->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
-            $teraUlang = $teraUlang->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
-            $bdkt = $bdkt->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
+            $tera = $tera->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
+            $teraUlang = $teraUlang->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
+            $bdkt = $bdkt->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->count();
         } else {
             $tera = $tera->count();
             $teraUlang = $teraUlang->count();

@@ -344,6 +344,20 @@ class ScdDataPdpController extends Controller
 
         if ($status == "Diproses") {
             $value_1['uuid_diproses'] = $auth->uuid_profile;
+        } elseif ($status == "Ditunda") {
+            $value_1['uuid_ditunda'] = $auth->uuid_profile;
+        } elseif ($status == "Dibatalkan") {
+            $value_1['uuid_dibatalkan'] = $auth->uuid_profile;
+            // ubah status permohonan jadi ditolak
+            $uuid_permohonan = $data->uuid_permohonan;
+            // value permohonan
+            $value_2 = [
+                "status" => "Ditolak",
+                "uuid_updated" => $auth->uuid_profile,
+            ];
+            PermohonanPeneraan::whereUuid($uuid_permohonan)->update($value_2);
+        } elseif ($status == "Selesai") {
+            $value_1['uuid_selesai'] = $auth->uuid_profile;
         }
 
         // save
@@ -399,26 +413,30 @@ class ScdDataPdpController extends Controller
                 $request->session()->put('filter_tags', $tags);
             } else {
                 $tahun = date('Y');
-                $status = "Menunggu";
+                $status = "All";
                 $tags = "Tera";
             }
 
             // base data
             $data = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
-                ->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
                 ->select("pdp_penjadwalan.*")
                 ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-                ->where("pdp_penjadwalan.status_peneraan", $status)
                 ->where("permohonan_peneraan.jenis_pengujian", $tags)
                 ->orderBy("pdp_penjadwalan.tanggal_peneraan", "ASC")
                 ->orderBy("pdp_penjadwalan.jam_peneraan", "ASC");
+
+            // Semua Data
+            if ($status != "All") {
+                $data = $data->where("pdp_penjadwalan.status_peneraan", $status);
+            }
 
             // hak akses
             $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
             if ($subRoleOnlyPetugas == true) {
                 // hanya petugas
                 $uuid_profile = $auth->uuid_profile;
-                $data = $data->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->get();
+                $data = $data->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                    ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->get();
             } else {
                 $data = $data->get();
             }
@@ -495,11 +513,20 @@ class ScdDataPdpController extends Controller
                             </div>';
                         }
                     } elseif ($subRoleOnlyPetugas == true) {
-                        $diproses = CID::encode("Diproses");
+                        $Diproses = CID::encode("Diproses");
+                        $Ditunda = CID::encode("Ditunda");
+                        $Dibatalkan = CID::encode("Dibatalkan");
+                        $Selesai = CID::encode("Selesai");
+                        $item_link = '';
                         if ($status == "Menunggu") {
-                            $item_link = '<li><a class="dropdown-item bg-hover-success" href="javascript:void(0);" data-proses="' . $enc_uuid . '" data-status="' . $diproses . '"><i class="fa-solid fa-check-to-slot"></i> Proses Penugasan</a></li>';
-                        } else {
-                            $item_link = '';
+                            $item_link .= '<li><a class="dropdown-item bg-hover-primary" href="javascript:void(0);" data-proses="' . $enc_uuid . '" data-status="' . $Diproses . '"><i class="fa-solid fa-check-to-slot"></i> Proses Penugasan</a></li>';
+                        } elseif ($status == "Diproses") {
+                            $item_link .= '<li><a class="dropdown-item bg-hover-warning" href="javascript:void(0);" data-ditunda="' . $enc_uuid . '" data-status="' . $Ditunda . '"><i class="fa-regular fa-circle-pause"></i> Ditunda</a></li>';
+                            $item_link .= '<li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-dibatalkan="' . $enc_uuid . '" data-status="' . $Dibatalkan . '"><i class="fa-regular fa-circle-xmark"></i> Dibatalkan</a></li>';
+                            $item_link .= '<li><a class="dropdown-item bg-hover-success" href="javascript:void(0);" data-selesai="' . $enc_uuid . '" data-status="' . $Selesai . '"><i class="fa-solid fa-check"></i> Selesai</a></li>';
+                        } elseif ($status == "Ditunda") {
+                            $item_link .= '<li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-dibatalkan="' . $enc_uuid . '" data-status="' . $Dibatalkan . '"><i class="fa-regular fa-circle-xmark"></i> Dibatalkan</a></li>';
+                            $item_link .= '<li><a class="dropdown-item bg-hover-success" href="javascript:void(0);" data-selesai="' . $enc_uuid . '" data-status="' . $Selesai . '"><i class="fa-solid fa-check"></i> Selesai</a></li>';
                         }
                         $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

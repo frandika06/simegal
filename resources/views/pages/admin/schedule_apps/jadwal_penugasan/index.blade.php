@@ -78,6 +78,7 @@
                                         <option value="Ditunda" @if ($status == 'Ditunda') selected @endif>Ditunda</option>
                                         <option value="Dibatalkan" @if ($status == 'Dibatalkan') selected @endif>Dibatalkan</option>
                                         <option value="Selesai" @if ($status == 'Selesai') selected @endif>Selesai</option>
+                                        <option value="All" @if ($status == 'All') selected @endif>Semua Data</option>
                                         {{-- <option value="Semua Data" @if ($status == 'Semua Data') selected @endif>Semua Data</option> --}}
                                     </select>
                                     {{-- end::Menu --}}
@@ -217,6 +218,36 @@
             }
         }
 
+        function getStatistikPenugasan() {
+            $.ajax({
+                url: "{!! route('ajax.scd.apps.sts.penugasan') !!}",
+                type: 'POST',
+                data: {
+                    tahun: $('#q_tahun').val(),
+                    status: $('#q_status').val(),
+                    _method: 'post',
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    $("#statistik_tera").html(res.data.jml_tera);
+                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
+                    $("#statistik_bdkt").html(res.data.jml_bdkt);
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: "Error",
+                        text: xhr.responseJSON.message,
+                        icon: "error",
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+            });
+        }
+    </script>
+
+    {{-- Diproses --}}
+    <script>
         $(document).on('click', "[data-proses]", function() {
             let uuid = $(this).attr('data-proses');
             let status = $(this).attr('data-status');
@@ -225,8 +256,8 @@
                 text: "Apakah Anda Yakin?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Iya, Proses Penugasan!",
-                cancelButtonText: 'Tidak, Batalkan!',
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -266,32 +297,164 @@
                 }
             });
         });
+    </script>
 
-        function getStatistikPenugasan() {
-            $.ajax({
-                url: "{!! route('ajax.scd.apps.sts.penugasan') !!}",
-                type: 'POST',
-                data: {
-                    tahun: $('#q_tahun').val(),
-                    status: $('#q_status').val(),
-                    _method: 'post',
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(res) {
-                    $("#statistik_tera").html(res.data.jml_tera);
-                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
-                    $("#statistik_bdkt").html(res.data.jml_bdkt);
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        title: "Error",
-                        text: xhr.responseJSON.message,
-                        icon: "error",
-                    }).then((result) => {
-                        location.reload();
+    {{-- Ditunda --}}
+    <script>
+        $(document).on('click', "[data-ditunda]", function() {
+            let uuid = $(this).attr('data-ditunda');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Tunda Peneraan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.data.pdp.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        }
                     });
                 }
             });
-        }
+        });
+    </script>
+
+    {{-- Dibatalkan --}}
+    <script>
+        $(document).on('click', "[data-dibatalkan]", function() {
+            let uuid = $(this).attr('data-dibatalkan');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Batalkan Peneraan",
+                text: "Apakah Anda Yakin?, membatalkan sama dengan MENOLAK Permohonan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.data.pdp.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    {{-- Selesai --}}
+    <script>
+        $(document).on('click', "[data-selesai]", function() {
+            let uuid = $(this).attr('data-selesai');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Selesaikan Peneraan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.data.pdp.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                $('#datatableTera').DataTable().ajax.reload();
+                                $('#datatableTulang').DataTable().ajax.reload();
+                                $('#datatableBDKT').DataTable().ajax.reload();
+                                getStatistikPenugasan();
+                            });
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @endpush

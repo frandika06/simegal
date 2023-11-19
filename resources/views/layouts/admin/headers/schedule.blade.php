@@ -8,9 +8,9 @@
     $alertTera = \CID::alertPDPPetugas('Tera');
     $alertTulang = \CID::alertPDPPetugas('Tera Ulang');
     $alertBdkt = \CID::alertPDPPetugas('Pengujian BDKT');
-    $cPdpPetugas[] = \count($alertTera);
-    $cPdpPetugas[] = \count($alertTulang);
-    $cPdpPetugas[] = \count($alertBdkt);
+    $cPdpPetugas = \count($alertTera);
+    $cPdpPetugas += \count($alertTulang);
+    $cPdpPetugas += \count($alertBdkt);
 @endphp
 {{-- begin::Header --}}
 <div id="kt_header" class="header header-bg-list-apps">
@@ -138,7 +138,7 @@
                             <span class="path2"></span>
                             <span class="path3"></span>
                         </i>
-                        @if (count($cPdpPetugas) > 0)
+                        @if ($cPdpPetugas > 0)
                             <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
                         @endif
                     </a>
@@ -152,13 +152,22 @@
                             {{-- begin::Tabs --}}
                             <ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-semibold px-9">
                                 <li class="nav-item">
-                                    <a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active" data-bs-toggle="tab" href="#kt_topbar_alert_tera">Tera @if(\count($alertTera) > 0) <span class="badge badge-danger ms-2">{{ \count($alertTera) }}</span> @endif</a>
+                                    <a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active" data-bs-toggle="tab" href="#kt_topbar_alert_tera">Tera @if (\count($alertTera) > 0)
+                                            <span class="badge badge-danger ms-2">{{ \count($alertTera) }}</span>
+                                        @endif
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_alert_tulang">Tera Ulang @if(\count($alertTulang) > 0)<span class="badge badge-danger ms-2">{{ \count($alertTulang) }}</span> @endif</a>
+                                    <a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_alert_tulang">Tera Ulang @if (\count($alertTulang) > 0)
+                                            <span class="badge badge-danger ms-2">{{ \count($alertTulang) }}</span>
+                                        @endif
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_alert_bdkt">BDKT @if(\count($alertBdkt) > 0)<span class="badge badge-danger ms-2">{{ \count($alertBdkt) }}</span> @endif</a>
+                                    <a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_alert_bdkt">BDKT @if (\count($alertBdkt) > 0)
+                                            <span class="badge badge-danger ms-2">{{ \count($alertBdkt) }}</span>
+                                        @endif
+                                    </a>
                                 </li>
                             </ul>
                             {{-- end::Tabs --}}
@@ -278,7 +287,7 @@
                             </div>
                             {{-- end::Tab panel --}}
                             {{-- begin::View more --}}
-                            @if (count($cPdpPetugas) > 0)
+                            @if ($cPdpPetugas > 0)
                                 <div class="py-3 text-center border-top">
                                     <a href="{{ route('scd.apps.data.pdp.index') }}" class="btn btn-color-gray-600 btn-active-color-primary">Lihat Semua
                                         <i class="ki-duotone ki-arrow-right fs-5">
