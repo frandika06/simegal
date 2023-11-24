@@ -213,8 +213,59 @@
                                 </div>
                             </div>
                             {{-- end::Details content --}}
+
+                            {{-- begin::Details toggle --}}
+                            @if ($data->status_peneraan != 'Menunggu')
+                                <div class="d-flex flex-stack fs-4 py-3">
+                                    <div class="fw-bold rotate" data-bs-toggle="collapse" href="#kt_pdp_proses" role="button" aria-expanded="false" aria-controls="kt_pdp_proses">Detail Pemrosesan
+                                        <span class="ms-2 rotate-180">
+                                            <i class="ki-duotone ki-down fs-3"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                {{-- end::Details toggle --}}
+                                <div class="separator"></div>
+                                {{-- begin::Details content --}}
+                                <div id="kt_pdp_proses" class="collapse">
+                                    <div class="pb-5 fs-6">
+                                        {{-- begin::Details item --}}
+                                        <div class="fw-bold mt-5">Diproses Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_diproses) ? $data->RelDiproses->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Ditunda Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_ditunda) ? $data->RelDitunda->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Dibatalkan Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_dibatalkan) ? $data->RelDibatalkan->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Diselesaikan Oleh:</div>
+                                        <div class="text-gray-600">{{ isset($data->uuid_selesai) ? $data->RelSelesai->nama_lengkap : '-' }}</div>
+                                        <div class="fw-bold mt-5">Terakhir Diupdate:</div>
+                                        <div class="text-gray-600">{{ \CID::TglJam($data->updated_at) }}</div>
+                                        {{-- begin::Details item --}}
+                                    </div>
+                                </div>
+                            @endif
+                            {{-- end::Details content --}}
                         </div>
                         {{-- end::Card body --}}
+                        {{-- begin::Card footer --}}
+                        @if (\CID::subRoleOnlyPetugas() == true)
+                            @if ($data->status_peneraan == 'Menunggu')
+                                <div class="card-footer border-0 d-grid gap-2 pt-0">
+                                    <button class="btn btn-sm btn-light-primary" data-proses="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Diproses') }}"><i class="fa-solid fa-check-to-slot"></i> Proses Penugasan</button>
+                                </div>
+                            @elseif ($data->status_peneraan == 'Diproses')
+                                <div class="card-footer border-0 d-grid gap-2 pt-0">
+                                    <button class="btn btn-sm btn-light-warning" data-ditunda="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Ditunda') }}"><i class="fa-regular fa-circle-pause"></i> Ditunda</button>
+                                    <button class="btn btn-sm btn-light-danger" data-dibatalkan="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Dibatalkan') }}"><i class="fa-regular fa-circle-xmark"></i> Dibatalkan</button>
+                                    <button class="btn btn-sm btn-light-success" data-selesai="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Selesai') }}"><i class="fa-solid fa-check"></i> Selesai</button>
+                                </div>
+                            @elseif ($data->status_peneraan == 'Ditunda')
+                                <div class="card-footer border-0 d-grid gap-2 pt-0">
+                                    <button class="btn btn-sm btn-light-danger" data-dibatalkan="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Dibatalkan') }}"><i class="fa-regular fa-circle-xmark"></i> Dibatalkan</button>
+                                    <button class="btn btn-sm btn-light-success" data-selesai="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Selesai') }}"><i class="fa-solid fa-check"></i> Selesai</button>
+                                </div>
+                            @endif
+                        @endif
+                        {{-- end::Card footer --}}
                     </div>
                     {{-- end::Card --}}
                 </div>
@@ -228,8 +279,8 @@
                         <div class="card-header border-0">
                             {{-- begin::Card title --}}
                             <div class="card-title flex-column">
-                                <h2>Form Edit Jadwal & Penugasan</h2>
-                                <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk mengedit data jadwal & penugasan dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
+                                <h2>Form Lihat Jadwal dan Penugasan</h2>
+                                <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk melihat data Instrumen & Alat dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
                             </div>
                             {{-- end::Card title --}}
                         </div>
@@ -319,6 +370,36 @@
                                 </div>
                             </div>
                             {{-- end::Pendamping Teknis --}}
+
+                            {{-- begin::Status Peneraan --}}
+                            <div class="mt-0">
+                                {{-- begin::Alert --}}
+                                <div class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5">
+                                    {{-- begin::Icon --}}
+                                    <i class="ki-duotone ki-notification-bing fs-2hx text-info me-4 mb-5 mb-sm-0"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                    {{-- end::Icon --}}
+
+                                    {{-- begin::Wrapper --}}
+                                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                                        {{-- begin::Title --}}
+                                        <h4 class="fw-semibold">Status Peneraan</h4>
+                                        {{-- end::Title --}}
+
+                                        {{-- begin::Content --}}
+                                        <span>Penjadwalan dan Penugasan dengan Nomor Order <strong>{{ $data->nomor_order }}</strong> saat ini berstatus: <span class="badge badge-info">{{ \Str::upper($data->status_peneraan) }}</span></span>
+                                        {{-- end::Content --}}
+                                    </div>
+                                    {{-- end::Wrapper --}}
+
+                                    {{-- begin::Close --}}
+                                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                                        <i class="ki-duotone ki-cross fs-1 text-info"><span class="path1"></span><span class="path2"></span></i>
+                                    </button>
+                                    {{-- end::Close --}}
+                                </div>
+                                {{-- end::Alert --}}
+                            </div>
+                            {{-- end::Status Peneraan --}}
                             {{-- end::Form --}}
                         </div>
                         {{-- end::Card body --}}
@@ -346,6 +427,194 @@
         $(document).ready(function() {
             $('.jam_peneraan').mask("00:00", {
                 placeholder: "00:00"
+            });
+        });
+    </script>
+
+    {{-- Diproses --}}
+    <script>
+        $(document).on('click', "[data-proses]", function() {
+            let uuid = $(this).attr('data-proses');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Proses Penugasan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.insalat.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    {{-- Ditunda --}}
+    <script>
+        $(document).on('click', "[data-ditunda]", function() {
+            let uuid = $(this).attr('data-ditunda');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Tunda Peneraan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.insalat.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    {{-- Dibatalkan --}}
+    <script>
+        $(document).on('click', "[data-dibatalkan]", function() {
+            let uuid = $(this).attr('data-dibatalkan');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Batalkan Peneraan",
+                text: "Apakah Anda Yakin?, membatalkan sama dengan MENOLAK Permohonan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.insalat.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    {{-- Selesai --}}
+    <script>
+        $(document).on('click', "[data-selesai]", function() {
+            let uuid = $(this).attr('data-selesai');
+            let status = $(this).attr('data-status');
+            Swal.fire({
+                title: "Selesaikan Peneraan",
+                text: "Apakah Anda Yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{!! route('scd.apps.insalat.status') !!}",
+                        type: 'POST',
+                        data: {
+                            uuid: uuid,
+                            status: status,
+                            _method: 'put',
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                title: "Success",
+                                text: res.message,
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                icon: "error",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
             });
         });
     </script>

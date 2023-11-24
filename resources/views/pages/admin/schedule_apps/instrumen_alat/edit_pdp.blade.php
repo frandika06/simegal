@@ -228,8 +228,8 @@
                         <div class="card-header border-0">
                             {{-- begin::Card title --}}
                             <div class="card-title flex-column">
-                                <h2>Form Edit Jadwal & Penugasan</h2>
-                                <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk mengedit data jadwal & penugasan dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
+                                <h2>Form Edit Instrumen & Alat</h2>
+                                <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk mengedit data Instrumen & Alat dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
                             </div>
                             {{-- end::Card title --}}
                         </div>
@@ -242,21 +242,6 @@
                                 @isset($data)
                                     @method('put')
                                 @endisset
-
-                                {{-- begin::kelompok_uttp --}}
-                                <div class="form-floating mb-5">
-                                    <select class="form-control @error('kelompok_uttp') is-invalid @enderror" name="kelompok_uttp" id="kelompok_uttp" required>
-                                        <option value="" selected disabled>-Pilih Kelompok UTTP</option>
-                                        @foreach ($kelompokUttp as $item)
-                                            <option value="{{ $item->uuid }}" @if (old('kelompok_uttp', isset($data) ? $data->uuid_kelompok_uttp : '') == $item->uuid) selected @endif>{{ $item->nama_kelompok }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="kelompok_uttp">Kelompok UTTP</label>
-                                    @error('kelompok_uttp')
-                                        <div id="kelompok_uttpFeedback" class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                {{-- end::kelompok_uttp --}}
 
                                 {{-- begin::Penjadwalan Peneraan --}}
                                 <div class="mt-0">
@@ -290,77 +275,201 @@
                                 </div>
                                 {{-- end::Penjadwalan Peneraan --}}
 
-                                {{-- begin::Tenaga Ahli Penera --}}
+                                {{-- begin::Nama Supir --}}
                                 <div class="mt-0">
-                                    <label for="">Tenaga Ahli Penera</label>
+                                    <label for="">Nama Supir</label>
                                     <div class="row p-2">
                                         <div class="col">
-                                            {{-- begin::tenaga_ahli_penera --}}
-                                            <div class="form-group mb-5">
-                                                <select class="form-select @error('tenaga_ahli_penera') is-invalid @enderror" name="tenaga_ahli_penera[]" id="tenaga_ahli_penera" required data-control="select2" data-placeholder="Pilih Tenaga Ahli Penera" data-allow-clear="true" multiple="multiple"
-                                                    required>
-                                                    @foreach ($listTa as $item)
-                                                        @if (old('tenaga_ahli_penera'))
-                                                            <option value="{{ $item->uuid }}" @if (in_array($item->uuid, old('tenaga_ahli_penera'))) selected @endif>NIP. {{ $item->nip }} | {{ $item->nama_lengkap }}</option>
-                                                        @else
-                                                            @isset($data)
-                                                                @php
-                                                                    $getPetugasTAP = \CID::getPetugasTAP($data->uuid);
-                                                                    $uuid_tap = [];
-                                                                    foreach ($getPetugasTAP as $itemTAP) {
-                                                                        $uuid_tap[] = $itemTAP->uuid_pegawai;
-                                                                    }
-                                                                @endphp
-                                                                <option value="{{ $item->uuid }}" @if (in_array($item->uuid, $uuid_tap)) selected @endif>NIP. {{ $item->nip }} | {{ $item->nama_lengkap }}</option>
-                                                            @endisset
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                @error('tenaga_ahli_penera')
-                                                    <div id="tenaga_ahli_peneraFeedback" class="invalid-feedback">{{ $message }}</div>
+                                            {{-- begin::nama_supir --}}
+                                            <div class="form-floating mb-5">
+                                                <input type="text" class="form-control @error('nama_supir') is-invalid @enderror" name="nama_supir" id="nama_supir2" placeholder="Nama Supir" autocomplete="off" maxlength="100" value="{{ old('nama_supir', $data->nama_supir) }}" required />
+                                                <label for="nama_supir">Nama Supir</label>
+                                                @error('nama_supir')
+                                                    <div id="nama_supirFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                            {{-- end::tenaga_ahli_penera --}}
+                                            {{-- end::nama_supir --}}
                                         </div>
                                     </div>
                                 </div>
-                                {{-- end::Tenaga Ahli Penera --}}
+                                {{-- end::Nama Supir --}}
 
-                                {{-- begin::Pendamping Teknis --}}
+                                {{-- begin::Jenis Kendaraan --}}
                                 <div class="mt-0">
-                                    <label for="">Pendamping Teknis</label>
+                                    <label for="">Jenis Kendaraan</label>
                                     <div class="row p-2">
                                         <div class="col">
-                                            {{-- begin::pendamping_teknis --}}
+                                            {{-- begin::jenis_kendaraan --}}
                                             <div class="form-group mb-5">
-                                                <select class="form-select @error('pendamping_teknis') is-invalid @enderror" name="pendamping_teknis[]" id="pendamping_teknis" required data-control="select2" data-placeholder="Pilih Pendamping Teknis" data-allow-clear="true" multiple="multiple"
-                                                    required>
-                                                    @foreach ($listPendamping as $item)
-                                                        @if (old('tenaga_ahli_penera'))
-                                                            <option value="{{ $item->uuid }}" @if (in_array($item->uuid, old('pendamping_teknis'))) selected @endif>{{ $item->nama_lengkap }}</option>
-                                                        @else
-                                                            @isset($data)
-                                                                @php
-                                                                    $getPetugasPT = \CID::getPetugasPT($data->uuid);
-                                                                    $uuid_pt = [];
-                                                                    foreach ($getPetugasPT as $itemPT) {
-                                                                        $uuid_pt[] = $itemPT->uuid_pegawai;
-                                                                    }
-                                                                @endphp
-                                                                <option value="{{ $item->uuid }}" @if (in_array($item->uuid, $uuid_pt)) selected @endif>{{ $item->nama_lengkap }}</option>
-                                                            @endisset
-                                                        @endif
-                                                    @endforeach
+                                                <select class="form-select @error('jenis_kendaraan') is-invalid @enderror" name="jenis_kendaraan" id="jenis_kendaraan" data-control="select2" data-placeholder="Pilih Jenis Kendaraan" required>
+                                                    @if (old('jenis_kendaraan'))
+                                                        <option value="Mobil" @if (old('jenis_kendaraan') == 'Mobil') selected @endif>Mobil</option>
+                                                        <option value="Motor" @if (old('jenis_kendaraan') == 'Motor') selected @endif>Motor</option>
+                                                    @else
+                                                        <option value="Mobil" @if ($data->jenis_kendaraan == 'Mobil') selected @endif>Mobil</option>
+                                                        <option value="Motor" @if ($data->jenis_kendaraan == 'Motor') selected @endif>Motor</option>
+                                                    @endif
                                                 </select>
-                                                @error('pendamping_teknis')
-                                                    <div id="pendamping_teknisFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                @error('jenis_kendaraan')
+                                                    <div id="jenis_kendaraanFeedback" class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                            {{-- end::pendamping_teknis --}}
+                                            {{-- end::jenis_kendaraan --}}
                                         </div>
                                     </div>
                                 </div>
-                                {{-- end::Pendamping Teknis --}}
+                                {{-- end::Jenis Kendaraan --}}
+
+                                {{-- begin::Plat Nomor Kendaraan --}}
+                                <div class="mt-0">
+                                    <label for="">Plat Nomor Kendaraan</label>
+                                    <div class="row p-2">
+                                        <div class="col">
+                                            {{-- begin::plat_nomor_kendaraan --}}
+                                            <div class="form-floating mb-5">
+                                                <input type="text" class="form-control text-uppercase @error('plat_nomor_kendaraan') is-invalid @enderror" name="plat_nomor_kendaraan" id="plat_nomor_kendaraan2" placeholder="Plat Nomor Kendaraan" autocomplete="off" maxlength="10"
+                                                    value="{{ old('plat_nomor_kendaraan', $data->plat_nomor_kendaraan) }}" required />
+                                                <label for="plat_nomor_kendaraan">Plat Nomor Kendaraan</label>
+                                                @error('plat_nomor_kendaraan')
+                                                    <div id="plat_nomor_kendaraanFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            {{-- end::plat_nomor_kendaraan --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- end::Plat Nomor Kendaraan --}}
+
+                                {{-- begin::Instrumen --}}
+                                <div class="mt-0">
+                                    <label for="">Instrumen</label>
+                                    <div class="row p-2">
+                                        <div class="col">
+                                            {{-- begin::intrumen --}}
+                                            <!--begin::Repeater-->
+                                            <div id="repeat_instrumen">
+                                                <!--begin::Form group-->
+                                                <div class="form-group">
+                                                    <div data-repeater-list="repeat_instrumen">
+                                                        <div data-repeater-item>
+                                                            <div class="alert alert-secondary">
+                                                                <div class="form-group row mb-5">
+                                                                    <div class="col-12 mb-5">
+                                                                        <label class="form-label">Item UTTP:</label>
+                                                                        <select class="form-select mb-2 mb-md-0 select_test2" name="uuid_instrumen" id="uuid_instrumen" data-placeholder="Pilih Item UTTP" required>
+                                                                            @foreach (\CID::getListInstrumenGByJenisUttp() as $item1)
+                                                                                <optgroup label="{{ $item1->nama_jenis_uttp }}">
+                                                                                    @foreach (\CID::getListInstrumenByJenisUttp($item1->uuid) as $item2)
+                                                                                        @if ($item2->group_instrumen === null)
+                                                                                            <option value="{{ $item2->uuid }}">{{ $item2->nama_instrumen }}</option>
+                                                                                        @else
+                                                                                            <option value="{{ $item2->uuid }}">[{{ $item2->group_instrumen }}] : {{ $item2->nama_instrumen }}</option>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label class="form-label">Jumlah Unit:</label>
+                                                                        <input type="number" class="form-control mb-2 mb-md-0" name="jumlah_unit_instrumen" placeholder="Jumlah Unit" min="0" required />
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label class="form-label">Volume/Jam:</label>
+                                                                        <input type="number" class="form-control mb-2 mb-md-0" name="volume_instrumen" placeholder="Volume/Jam" min="0" required />
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <a href="javascript:;" data-repeater-delete class="btn btn-outline btn-light-danger mt-3 mt-md-8">
+                                                                            <i class="ki-duotone ki-trash fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end::Form group-->
+
+                                                <!--begin::Form group-->
+                                                <div class="form-group mt-5">
+                                                    <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                                                        <i class="ki-duotone ki-plus fs-3"></i>
+                                                        Add
+                                                    </a>
+                                                </div>
+                                                <!--end::Form group-->
+                                            </div>
+                                            <!--end::Repeater-->
+                                            {{-- end::intrumen --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- end::Instrumen --}}
+
+                                {{-- begin::Alat & CTT --}}
+                                <div class="mt-5">
+                                    <label for="">Alat & CTT</label>
+                                    <div class="row p-2">
+                                        <div class="col">
+                                            {{-- begin::intrumen --}}
+                                            <!--begin::Repeater-->
+                                            <div id="repeat_alat">
+                                                <!--begin::Form group-->
+                                                <div class="form-group">
+                                                    <div data-repeater-list="repeat_alat">
+                                                        <div data-repeater-item>
+                                                            <div class="alert alert-secondary">
+                                                                <div class="form-group row mb-5">
+                                                                    <div class="col-12 mb-5">
+                                                                        <label class="form-label">Alat & CTT:</label>
+                                                                        <select class="form-select mb-2 mb-md-0 select_test2" name="uuid_alat" id="uuid_alat" data-placeholder="Pilih Alat & CTT" required>
+                                                                            <optgroup label="Alat Standar & Perlengkapannya">
+                                                                                @foreach (\CID::getListAlat($permohonan->jenis_pengujian, $data->uuid_kelompok_uttp) as $item)
+                                                                                    @if ($item->kategori == '1')
+                                                                                        <option value="{{ $item->uuid }}">{{ $item->nama_kategori }}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </optgroup>
+                                                                            <optgroup label="CTT">
+                                                                                @foreach (\CID::getListAlat($permohonan->jenis_pengujian, $data->uuid_kelompok_uttp) as $item)
+                                                                                    @if ($item->kategori == '2')
+                                                                                        <option value="{{ $item->uuid }}">{{ $item->nama_kategori }}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </optgroup>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label class="form-label">Jumlah Unit:</label>
+                                                                        <input type="number" class="form-control mb-2 mb-md-0" name="jumlah_unit_alat" placeholder="Jumlah Unit" min="0" required />
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <a href="javascript:;" data-repeater-delete class="btn btn-outline btn-light-danger mt-3 mt-md-8">
+                                                                            <i class="ki-duotone ki-trash fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end::Form group-->
+
+                                                <!--begin::Form group-->
+                                                <div class="form-group mt-5">
+                                                    <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                                                        <i class="ki-duotone ki-plus fs-3"></i>
+                                                        Add
+                                                    </a>
+                                                </div>
+                                                <!--end::Form group-->
+                                            </div>
+                                            <!--end::Repeater-->
+                                            {{-- end::intrumen --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- end::Alat & CTT --}}
 
                                 {{-- begin::Action buttons --}}
                                 <div class="d-flex justify-content-end align-items-center mt-12">
@@ -399,6 +508,45 @@
             $('.jam_peneraan').mask("00:00", {
                 placeholder: "00:00"
             });
+            $('.select_test2').select2();
+        });
+    </script>
+    {{-- reapeat instrumen --}}
+    <script>
+        $('#repeat_instrumen').repeater({
+            initEmpty: false,
+            defaultValues: {
+                'text-input': 'foo'
+            },
+            show: function() {
+                $(this).slideDown();
+                $(this).find('select').each(function() {
+                    $('.select_test2').removeAttr("id").removeAttr("data-select2-id");
+                    $('.select_test2').select2();
+                });
+            },
+            hide: function(deleteElement) {
+                $(this).slideUp(deleteElement);
+            }
+        });
+    </script>
+    {{-- reapeat alat & CTT --}}
+    <script>
+        $('#repeat_alat').repeater({
+            initEmpty: false,
+            defaultValues: {
+                'text-input': 'foo'
+            },
+            show: function() {
+                $(this).slideDown();
+                $(this).find('select').each(function() {
+                    $('.select_test2').removeAttr("id").removeAttr("data-select2-id");
+                    $('.select_test2').select2();
+                });
+            },
+            hide: function(deleteElement) {
+                $(this).slideUp(deleteElement);
+            }
         });
     </script>
 @endpush

@@ -21,16 +21,16 @@ class ScdDataPdpController extends Controller
     public function index(Request $request)
     {
         // cek filter
-        if ($request->session()->exists('filter_tahun') && $request->session()->exists('filter_status') && $request->session()->exists('filter_tags')) {
+        if ($request->session()->exists('filter_tahun') && $request->session()->exists('filter_status_pdp') && $request->session()->exists('filter_tags')) {
             $tahun = $request->session()->get('filter_tahun');
-            $status = $request->session()->get('filter_status');
+            $status = $request->session()->get('filter_status_pdp');
             $tags = $request->session()->get('filter_tags');
         } else {
             $request->session()->put('filter_tahun', date('Y'));
-            $request->session()->put('filter_status', 'Menunggu');
+            $request->session()->put('filter_status_pdp', 'All');
             $request->session()->put('filter_tags', 'Tera');
             $tahun = date('Y');
-            $status = "Menunggu";
+            $status = "All";
             $tags = "Tera";
         }
 
@@ -262,7 +262,7 @@ class ScdDataPdpController extends Controller
             "tanggal_peneraan" => $tanggal_peneraan,
             "jam_peneraan" => $jam_peneraan,
             "status_peneraan" => "Menunggu",
-            "uuid_created" => $uuid_profile,
+            "uuid_updated" => $uuid_profile,
         ];
 
         // delete data penugasan
@@ -409,7 +409,7 @@ class ScdDataPdpController extends Controller
                 $status = $_GET['filter']['status'];
                 $tags = $_GET['filter']['tags'];
                 $request->session()->put('filter_tahun', $tahun);
-                $request->session()->put('filter_status', $status);
+                $request->session()->put('filter_status_pdp', $status);
                 $request->session()->put('filter_tags', $tags);
             } else {
                 $tahun = date('Y');
@@ -481,11 +481,13 @@ class ScdDataPdpController extends Controller
                     $detail_pdp .= '</ul>';
                     return $detail_pdp;
                 })
-                ->addColumn('aksi', function ($data) use ($status) {
+                ->addColumn('aksi', function ($data) {
                     $enc_uuid = CID::encode($data->uuid);
                     // route
                     $edit = route('scd.apps.data.pdp.edit', $enc_uuid);
                     $view = route('scd.apps.data.pdp.show', $enc_uuid);
+                    // status peneraan
+                    $status = $data->status_peneraan;
                     // hak akses
                     $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
                     $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();

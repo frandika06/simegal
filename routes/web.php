@@ -162,6 +162,7 @@ Route::group(['prefix' => 'ajax'], function () {
         Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
         Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
         Route::post('/statistik/penugasan', [AjaxController::class, 'ScdStatistikPenugasan'])->name('ajax.scd.apps.sts.penugasan');
+        Route::post('/statistik/insalat', [AjaxController::class, 'ScdStatistikInsAlat'])->name('ajax.scd.apps.sts.insalat');
     });
 });
 
@@ -397,6 +398,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::get('/show/{uuid}', [ScdInstrumenAlatController::class, 'show'])->name('scd.apps.insalat.show');
                 Route::get('/edit/{uuid}', [ScdInstrumenAlatController::class, 'edit'])->name('scd.apps.insalat.edit');
                 Route::put('/edit/{uuid}', [ScdInstrumenAlatController::class, 'update'])->name('scd.apps.insalat.update');
+                Route::put('/status', [ScdInstrumenAlatController::class, 'status'])->name('scd.apps.insalat.status');
                 Route::get('/data', [ScdInstrumenAlatController::class, 'data'])->name('scd.apps.insalat.data');
             });
         });

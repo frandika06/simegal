@@ -5,7 +5,9 @@ namespace App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera;
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\MasterKelompokUttp;
+use App\Models\PdpAlat;
 use App\Models\PdpDataPetugas;
+use App\Models\PdpInstrumen;
 use App\Models\PdpPenjadwalan;
 use App\Models\Pegawai;
 use App\Models\PermohonanPeneraan;
@@ -21,16 +23,16 @@ class ScdInstrumenAlatController extends Controller
     public function index(Request $request)
     {
         // cek filter
-        if ($request->session()->exists('filter_tahun') && $request->session()->exists('filter_status') && $request->session()->exists('filter_tags')) {
+        if ($request->session()->exists('filter_tahun') && $request->session()->exists('filter_status_insalat') && $request->session()->exists('filter_tags')) {
             $tahun = $request->session()->get('filter_tahun');
-            $status = $request->session()->get('filter_status');
+            $status = $request->session()->get('filter_status_insalat');
             $tags = $request->session()->get('filter_tags');
         } else {
             $request->session()->put('filter_tahun', date('Y'));
-            $request->session()->put('filter_status', 'Menunggu');
+            $request->session()->put('filter_status_insalat', 'All');
             $request->session()->put('filter_tags', 'Tera');
             $tahun = date('Y');
-            $status = "Menunggu";
+            $status = "All";
             $tags = "Tera";
         }
 
@@ -93,7 +95,7 @@ class ScdInstrumenAlatController extends Controller
             ->get();
 
         // title
-        $title = "Lihat Jadwal dan Penugasan";
+        $title = "Lihat Instrumen dan Alat";
         $submit = "Simpan";
         return view('pages.admin.schedule_apps.instrumen_alat.view_pdp', compact(
             'enc_uuid',
@@ -115,12 +117,6 @@ class ScdInstrumenAlatController extends Controller
     // edit
     public function edit($enc_uuid)
     {
-        // subSubRoleKetuaTimPelayanan
-        $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
-        if ($subSubRoleKetuaTimPelayanan == false) {
-            return redirect()->route('scd.apps.insalat.index');
-        }
-
         // uuid
         $uuid = CID::decode($enc_uuid);
 
@@ -132,37 +128,8 @@ class ScdInstrumenAlatController extends Controller
         $RelAlamat = $permohonan->RelAlamatPerusahaan;
         $jp = $permohonan->jenis_pengujian;
 
-        // kelompok uttp
-        $kelompokUttp = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
-            ->select("master_kelompok_uttp.*")
-            ->where("master_jenis_pelayanan.nama_pelayanan", $jp)
-            ->where("master_jenis_pelayanan.status", "1")
-            ->where("master_kelompok_uttp.status", "1")
-            ->orderBy("master_kelompok_uttp.no_urut", "ASC")
-            ->get();
-
-        // List TA
-        $listTa = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
-            ->select("pegawai.*")
-            ->where("users.role", "Pegawai")
-            ->where("users.sub_role", 'LIKE', '%Petugas%')
-            ->where("users.status", "1")
-            ->where("pegawai.status_pegawai", "ASN")
-            ->orderBy("pegawai.nama_lengkap", "ASC")
-            ->get();
-
-        // List Pendamping Teknis
-        $listPendamping = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
-            ->select("pegawai.*")
-            ->where("users.role", "Pegawai")
-            ->where("users.sub_role", 'LIKE', '%Petugas%')
-            ->where("users.status", "1")
-            ->where("pegawai.status_pegawai", "Non ASN")
-            ->orderBy("pegawai.nama_lengkap", "ASC")
-            ->get();
-
         // title
-        $title = "Edit Jadwal dan Penugasan";
+        $title = "Edit Instrumen dan Alat";
         $submit = "Simpan";
         return view('pages.admin.schedule_apps.instrumen_alat.edit_pdp', compact(
             'enc_uuid',
@@ -170,9 +137,6 @@ class ScdInstrumenAlatController extends Controller
             'permohonan',
             'profile',
             'RelAlamat',
-            'kelompokUttp',
-            'listTa',
-            'listPendamping',
             'title',
             'submit',
         ));
@@ -181,12 +145,6 @@ class ScdInstrumenAlatController extends Controller
     // update
     public function update(Request $request, $enc_uuid)
     {
-        // subSubRoleKetuaTimPelayanan
-        $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
-        if ($subSubRoleKetuaTimPelayanan == false) {
-            return redirect()->route('scd.apps.insalat.index');
-        }
-
         // uuid
         $uuid = CID::decode($enc_uuid);
 
@@ -194,29 +152,21 @@ class ScdInstrumenAlatController extends Controller
         $auth = Auth::user();
         $uuid_profile = $auth->uuid_profile;
 
+        // return dd($request->all());
+
         // validate
         $request->validate([
-            "kelompok_uttp" => "required|string|max:100",
             "tanggal_peneraan" => "required|string",
             "jam_peneraan" => "required|string",
-            "tenaga_ahli_penera" => "required",
-            "pendamping_teknis" => "required",
+            "nama_supir" => "required|string|max:100",
+            "jenis_kendaraan" => "required|string|max:10",
+            "repeat_instrumen" => "required",
+            "repeat_alat" => "required",
         ]);
 
         // data
         $data = PdpPenjadwalan::findOrFail($uuid);
-        $uuid_permohonan = $data->uuid_permohonan;
-        $uuid_kelompok_uttp = $request->kelompok_uttp;
-        $permohonan = PermohonanPeneraan::findOrFail($uuid_permohonan);
-        $mstKelompokUttp = MasterKelompokUttp::findOrFail($uuid_kelompok_uttp);
-        $kode_uttp = $mstKelompokUttp->kode;
-
-        // cek nomor order
-        if ($uuid_kelompok_uttp != $data->uuid_kelompok_uttp) {
-            $nomor_order = CID::genNomorOrder($kode_uttp);
-        } else {
-            $nomor_order = $data->nomor_order;
-        }
+        $getDataPetugas = $data->RelPdpDataPetugas;
 
         // value 1 - penjadwalan
         $uuid_penjadwalan = $uuid;
@@ -225,60 +175,162 @@ class ScdInstrumenAlatController extends Controller
         $cekJamPeneraan = date('Hi', strtotime($request->jam_peneraan));
 
         // cek jadwal
-        $dataPetugas = [];
-        $PdpJadwal = PdpPenjadwalan::where("uuid", "!=", $uuid_penjadwalan)->whereDate("tanggal_peneraan", $tanggal_peneraan)->get();
-        foreach ($PdpJadwal as $item1) {
-            $baseJamPeneraan = date('Hi', strtotime($item1->jam_peneraan));
-            $jamAwalReal = date('Hi', strtotime($baseJamPeneraan));
-            $next2JamReal = date('Hi', strtotime($jamAwalReal . " + 2hour "));
-            // cek range jam peneraan yg diinput
-            if ($cekJamPeneraan >= $jamAwalReal && $cekJamPeneraan <= $next2JamReal) {
-                // petugas
-                $relDataPetugas = $item1->RelPdpDataPetugas;
-                foreach ($relDataPetugas as $item2) {
-                    $dataPetugas[] = $item2->uuid_pegawai;
-                }
-            }
-        }
+        // $dataPetugas = [];
+        // $PdpJadwal = PdpPenjadwalan::where("uuid", "!=", $uuid_penjadwalan)->whereDate("tanggal_peneraan", $tanggal_peneraan)->get();
+        // foreach ($PdpJadwal as $item1) {
+        //     $baseJamPeneraan = date('Hi', strtotime($item1->jam_peneraan));
+        //     $jamAwalReal = date('Hi', strtotime($baseJamPeneraan));
+        //     $next2JamReal = date('Hi', strtotime($jamAwalReal . " + 2hour "));
+        //     // cek range jam peneraan yg diinput
+        //     if ($cekJamPeneraan >= $jamAwalReal && $cekJamPeneraan <= $next2JamReal) {
+        //         // petugas
+        //         $relDataPetugas = $item1->RelPdpDataPetugas;
+        //         foreach ($relDataPetugas as $item2) {
+        //             $dataPetugas[] = $item2->uuid_pegawai;
+        //         }
+        //     }
+        // }
 
-        // cek jadwal - tenaga ahli penera
-        $ta = $request->tenaga_ahli_penera;
-        $cta = count($ta);
-        for ($i = 0; $i < $cta; $i++) {
-            $uuid_cek_ta = $ta[$i];
-            if (in_array($uuid_cek_ta, $dataPetugas)) {
-                // pegawai sudah ada jadwal dalam 2 jam aktif
-                $pegawai = Pegawai::findOrFail($uuid_cek_ta);
-                alert()->error('Gagal!', $pegawai->nama_lengkap . " Sudah Memiliki Jadwal di Hari Yang Sama dan dalam Rentang Masa Jam Tugas, Cek Jadwal Petugas!");
-                return back()->withInput($request->all());
-            }
-        }
-
-        // cek jadwal - pendamping teknis
-        $teknis = $request->pendamping_teknis;
-        $cteknis = count($teknis);
-        for ($i = 0; $i < $cteknis; $i++) {
-            $uuid_cek_teknis = $teknis[$i];
-            if (in_array($uuid_cek_teknis, $dataPetugas)) {
-                // pegawai sudah ada jadwal dalam 2 jam aktif
-                $pegawai = Pegawai::findOrFail($uuid_cek_teknis);
-                alert()->error('Gagal!', $pegawai->nama_lengkap . " Sudah Memiliki Jadwal di Hari Yang Sama dan dalam Rentang Masa Jam Tugas, Cek Jadwal Petugas!");
-                return back()->withInput($request->all());
-            }
-        }
+        // cek jadwal petugas
+        // foreach ($getDataPetugas as $itemJadwal) {
+        //     $uuid_cek_petugas = $itemJadwal->uuid_pegawai;
+        //     if (in_array($uuid_cek_petugas, $dataPetugas)) {
+        //         // pegawai sudah ada jadwal dalam 2 jam aktif
+        //         $pegawai = Pegawai::findOrFail($uuid_cek_petugas);
+        //         alert()->error('Gagal!', $pegawai->nama_lengkap . " Sudah Memiliki Jadwal di Hari Yang Sama dan dalam Rentang Masa Jam Tugas, Cek Jadwal Petugas!");
+        //         return back()->withInput($request->all());
+        //     }
+        // }
 
         // array value 1
         $value_1 = [
-            "uuid_kelompok_uttp" => $request->kelompok_uttp,
-            "nomor_order" => $nomor_order,
             "tanggal_peneraan" => $tanggal_peneraan,
             "jam_peneraan" => $jam_peneraan,
-            "status_peneraan" => "Menunggu",
-            "uuid_created" => $uuid_profile,
+            "nama_supir" => $request->nama_supir,
+            "jenis_kendaraan" => $request->jenis_kendaraan,
+            "plat_nomor_kendaraan" => $request->plat_nomor_kendaraan,
+            "uuid_updated" => $uuid_profile,
         ];
 
-        // delete data penugasan
-        PdpDataPetugas::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
+        // delete Instrumen & Alat
+        PdpInstrumen::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
+        PdpAlat::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
+
+        return dd($request->repeat_instrumen[0]['uuid_instrumen']);
+
+        // store instrumen pengujian data
+        $total_retribusi = 0;
+        for ($i = 0; $i < count($request->ip_id); $i++) {
+            $get_instrumen = InstrumenPengujian::findOrFail($request->ip_id[$i]);
+            $volume = $request->ip_volume[$i];
+
+            $sisa_volume = $volume;
+            $flagjumlahunit = 0;
+            if (!is_null($get_instrumen->seq_id)) {
+                $flagjumlahunit++;
+                $get_seq = InstrumenPengujian::findOrFail($get_instrumen->seq_id);
+
+                if ($volume > $get_seq->volume_to) {
+                    $sisa_volume = $volume - $get_seq->volume_to;
+
+                    $harga = 0;
+                    $hargajustir = 0;
+                    if ($request->ip_tipe_tera[$i] == 'baru') {
+                        $harga = $get_seq->tera_baru_pengujian;
+                    } else if ($request->ip_tipe_tera[$i] == 'ulang') {
+                        $harga = $get_seq->tera_ulang_pengujian;
+                        $hargajustir = $get_seq->tera_ulang_pejustiran;
+                    } else if ($request->ip_tipe_tera[$i] == 'tarif-per-jam') {
+                        $harga = $get_seq->tarif_per_jam;
+                    }
+
+                    $ret_tera = $harga * $request->ip_jumlah[$i];
+                    $ret_justir = $hargajustir * $request->ip_jumlah[$i];
+                    $nilai_ret = $ret_tera + $ret_justir;
+
+                    $save_instrumen = new TindakLanjutInstrumen;
+                    $save_instrumen->id_tindak_lanjut = $tindak_lanjut->id;
+                    $save_instrumen->id_instrumen = $get_instrumen->seq_id;
+                    $save_instrumen->tipe_tera = $request->ip_tipe_tera[$i];
+                    $save_instrumen->jumlah_unit = $request->ip_jumlah[$i];
+                    $save_instrumen->volume = $get_seq->volume_to;
+                    $save_instrumen->retribusi_tera = $ret_tera;
+                    $save_instrumen->retribusi_justir = $ret_justir;
+                    $save_instrumen->nilai_retribusi = $nilai_ret;
+                    $save_instrumen->save();
+
+                    $total_retribusi += $nilai_ret;
+                }
+            }
+
+            $harga = 0;
+            $hargajustir = 0;
+            if ($request->ip_tipe_tera[$i] == 'baru') {
+                $harga = $get_instrumen->tera_baru_pengujian;
+                if ($get_instrumen->id == 90) {
+                    // kalo pompa ukur bbm tetep kasih justir walaupun tera baru
+                    $hargajustir = $get_instrumen->tera_ulang_pejustiran;
+                }
+            } else if ($request->ip_tipe_tera[$i] == 'ulang') {
+                $harga = $get_instrumen->tera_ulang_pengujian;
+                $hargajustir = $get_instrumen->tera_ulang_pejustiran;
+            } else if ($request->ip_tipe_tera[$i] == 'tarif-per-jam') {
+                $harga = $get_instrumen->tarif_per_jam;
+            }
+
+            if (!is_null($get_instrumen->seq_id)) {
+                // jika uttp yg di pilih punya perhitungan sequence..
+                $ret_tera = $harga * ($sisa_volume / $get_instrumen->volume_per) * $request->ip_jumlah[$i];
+                $ret_justir = $hargajustir * ($sisa_volume / $get_instrumen->volume_per) * $request->ip_jumlah[$i];
+                $nilai_ret = $ret_tera + $ret_justir;
+            } else {
+                // jika uttp yg di pilih, tidak punya perhitungan sequence..
+                $ret_tera = $harga * $request->ip_jumlah[$i];
+                $ret_justir = $hargajustir * $request->ip_jumlah[$i];
+                $nilai_ret = $ret_tera + $ret_justir;
+            }
+
+            $save_instrumen = new TindakLanjutInstrumen;
+            $save_instrumen->id_tindak_lanjut = $tindak_lanjut->id;
+            $save_instrumen->id_instrumen = $request->ip_id[$i];
+            $save_instrumen->tipe_tera = $request->ip_tipe_tera[$i];
+
+            if ($flagjumlahunit != 0) {
+                $save_instrumen->jumlah_unit = 0;
+            } else {
+                $save_instrumen->jumlah_unit = $request->ip_jumlah[$i];
+            }
+
+            $save_instrumen->volume = $sisa_volume;
+            $save_instrumen->retribusi_tera = $ret_tera;
+            $save_instrumen->retribusi_justir = $ret_justir;
+            $save_instrumen->nilai_retribusi = $nilai_ret;
+            $save_instrumen->save();
+
+            $total_retribusi += $nilai_ret;
+        }
+
+        // value 2 - tenaga ahli penera
+        $repeat_instrumen = $request->repeat_instrumen;
+        $crepeat_instrumen = count($repeat_instrumen);
+        for ($i = 0; $i < $crepeat_instrumen; $i++) {
+            $value_2 = [
+                "uuid" => Str::uuid(),
+                "uuid_penjadwalan" => $uuid_penjadwalan,
+                "uuid_instrumen" => $repeat_instrumen[$i]['uuid_instrumen'],
+                "tipe_tera",
+                "jumlah_unit" => $repeat_instrumen[$i]['uuid_instrumen'],
+                "volume" => $repeat_instrumen[$i]['uuid_instrumen'],
+                "retribusi_tera",
+                "retribusi_justir",
+                "nilai_retribusi",
+                "uuid_created" => $uuid_profile,
+            ];
+            PdpInstrumen::create($value_2);
+        }
+
+        return dd($request->all());
+
         // save
         $save_1 = $data->update($value_1);
         if ($save_1) {
@@ -334,32 +386,126 @@ class ScdInstrumenAlatController extends Controller
     }
 
     /**
+     * Status Aktif
+     */
+    public function status(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // uuid
+        $uuid = CID::decode($request->uuid);
+        $status = CID::decode($request->status);
+
+        // data
+        $data = PdpPenjadwalan::findOrFail($uuid);
+
+        // value
+        $value_1 = [
+            "status_peneraan" => $status,
+            "uuid_updated" => $auth->uuid_profile,
+        ];
+
+        if ($status == "Diproses") {
+            $value_1['uuid_diproses'] = $auth->uuid_profile;
+        } elseif ($status == "Ditunda") {
+            $value_1['uuid_ditunda'] = $auth->uuid_profile;
+        } elseif ($status == "Dibatalkan") {
+            $value_1['uuid_dibatalkan'] = $auth->uuid_profile;
+            // ubah status permohonan jadi ditolak
+            $uuid_permohonan = $data->uuid_permohonan;
+            // value permohonan
+            $value_2 = [
+                "status" => "Ditolak",
+                "uuid_updated" => $auth->uuid_profile,
+            ];
+            PermohonanPeneraan::whereUuid($uuid_permohonan)->update($value_2);
+        } elseif ($status == "Selesai") {
+            $value_1['uuid_selesai'] = $auth->uuid_profile;
+        }
+
+        // save
+        $save_1 = $data->update($value_1);
+        if ($save_1) {
+            // create log
+            $aktifitas = [
+                "tabel" => array("pdp_penjadwalan"),
+                "uuid" => array($uuid),
+                "value" => array($data),
+            ];
+            $log = [
+                "apps" => "Schedule Apps",
+                "subjek" => "Mengubah Status Jadawal & Penugasan Menjadi : " . $status . " - " . $uuid,
+                "aktifitas" => $aktifitas,
+                "device" => "web",
+                "dashboard" => "1",
+            ];
+            CID::addToLogAktifitas($request, $log);
+            // alert success
+            $msg = "Berhasil Merubah Status Jadawal & Penugasan Menjadi: " . $status . "!";
+            $response = [
+                "status" => true,
+                "message" => $msg,
+            ];
+            return response()->json($response, 200);
+        } else {
+            // gagal
+            $msg = "Gagal Melakukan Perubahan Status Jadawal & Penugasan!";
+            $response = [
+                "status" => false,
+                "message" => $msg,
+            ];
+            return response()->json($response, 422);
+        }
+    }
+
+    /**
      * Data untuk Datatables
      */
     public function data(Request $request)
     {
+        // auth
+        $auth = Auth::user();
+
         if ($request->ajax()) {
             if (isset($_GET['filter'])) {
                 $tahun = $_GET['filter']['tahun'];
                 $status = $_GET['filter']['status'];
                 $tags = $_GET['filter']['tags'];
                 $request->session()->put('filter_tahun', $tahun);
-                $request->session()->put('filter_status', $status);
+                $request->session()->put('filter_status_insalat', $status);
                 $request->session()->put('filter_tags', $tags);
             } else {
                 $tahun = date('Y');
-                $status = "Menunggu";
+                $status = "All";
                 $tags = "Tera";
             }
 
+            // base data
             $data = PdpPenjadwalan::join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
                 ->select("pdp_penjadwalan.*")
                 ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-                ->where("pdp_penjadwalan.status_peneraan", $status)
                 ->where("permohonan_peneraan.jenis_pengujian", $tags)
                 ->orderBy("pdp_penjadwalan.tanggal_peneraan", "ASC")
-                ->orderBy("pdp_penjadwalan.jam_peneraan", "ASC")
-                ->get();
+                ->orderBy("pdp_penjadwalan.jam_peneraan", "ASC");
+
+            // Semua Data
+            if ($status == "All") {
+                $data = $data->where("pdp_penjadwalan.status_peneraan", "!=", "Menunggu");
+            } else {
+                $data = $data->where("pdp_penjadwalan.status_peneraan", $status);
+            }
+
+            // hak akses
+            $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+            if ($subRoleOnlyPetugas == true) {
+                // hanya petugas
+                $uuid_profile = $auth->uuid_profile;
+                $data = $data->join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                    ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)->get();
+            } else {
+                $data = $data->get();
+            }
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -401,36 +547,28 @@ class ScdInstrumenAlatController extends Controller
                     $detail_pdp .= '</ul>';
                     return $detail_pdp;
                 })
+                ->addColumn('detail_insalat', function ($data) {
+                    $detail_insalat = '';
+                    return $detail_insalat;
+                })
                 ->addColumn('aksi', function ($data) use ($status) {
                     $enc_uuid = CID::encode($data->uuid);
+                    $aksi = '';
                     // route
                     $edit = route('scd.apps.insalat.edit', $enc_uuid);
                     $view = route('scd.apps.insalat.show', $enc_uuid);
                     // hak akses
-                    $subSubRoleKetuaTimPelayanan = CID::subSubRoleKetuaTimPelayanan();
-                    if ($subSubRoleKetuaTimPelayanan == true) {
-                        // Admin Aplikasi
-                        if ($status == "Menunggu") {
-                            // status Menunggu
-                            $aksi = '<div class="dropdown">
+                    $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+                    if ($subRoleOnlyPetugas == true) {
+                        $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-edit"></i> Edit Data</a></li>
-                            </ul>
-                        </div>';
-                        } else {
-                            // view only
-                            $aksi = '<div class="dropdown">
-                            <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Aksi
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-pencil"></i> Edit Data</a></li>
                                 <li><a class="dropdown-item" href="' . $view . '"><i class="fa-solid fa-eye"></i> Lihat Data</a></li>
                             </ul>
                         </div>';
-                        }
                     } else {
                         // view only
                         $aksi = '<div class="dropdown">

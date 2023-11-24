@@ -73,11 +73,11 @@
                                 <div>
                                     {{-- begin::Menu --}}
                                     <select class="form-select" name="q_status" id="q_status">
-                                        <option value="Menunggu" @if ($status == 'Menunggu') selected @endif>Menunggu</option>
                                         <option value="Diproses" @if ($status == 'Diproses') selected @endif>Diproses</option>
                                         <option value="Ditunda" @if ($status == 'Ditunda') selected @endif>Ditunda</option>
                                         <option value="Dibatalkan" @if ($status == 'Dibatalkan') selected @endif>Dibatalkan</option>
                                         <option value="Selesai" @if ($status == 'Selesai') selected @endif>Selesai</option>
+                                        <option value="All" @if ($status == 'All') selected @endif>Semua Data</option>
                                         {{-- <option value="Semua Data" @if ($status == 'Semua Data') selected @endif>Semua Data</option> --}}
                                     </select>
                                     {{-- end::Menu --}}
@@ -159,13 +159,13 @@
                     {{-- begin:::Tab content --}}
                     <div class="tab-content" id="myTabContent">
                         {{-- path-baru::begin --}}
-                        @include('pages.admin.schedule_apps.jadwal_penugasan.path_datatable.tera')
+                        @include('pages.admin.schedule_apps.instrumen_alat.path_datatable.tera')
                         {{-- path-baru::end --}}
                         {{-- path-diproses::begin --}}
-                        @include('pages.admin.schedule_apps.jadwal_penugasan.path_datatable.tera_ulang')
+                        @include('pages.admin.schedule_apps.instrumen_alat.path_datatable.tera_ulang')
                         {{-- path-diproses::end --}}
                         {{-- path-selesai::begin --}}
-                        @include('pages.admin.schedule_apps.jadwal_penugasan.path_datatable.bdkt')
+                        @include('pages.admin.schedule_apps.instrumen_alat.path_datatable.bdkt')
                         {{-- path-selesai::end --}}
                     </div>
                     {{-- end:::Tab content --}}
@@ -215,6 +215,33 @@
                     }
                 });
             }
+        }
+
+        function getStatistikPenugasan() {
+            $.ajax({
+                url: "{!! route('ajax.scd.apps.sts.insalat') !!}",
+                type: 'POST',
+                data: {
+                    tahun: $('#q_tahun').val(),
+                    status: $('#q_status').val(),
+                    _method: 'post',
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    $("#statistik_tera").html(res.data.jml_tera);
+                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
+                    $("#statistik_bdkt").html(res.data.jml_bdkt);
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: "Error",
+                        text: xhr.responseJSON.message,
+                        icon: "error",
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+            });
         }
     </script>
 @endpush

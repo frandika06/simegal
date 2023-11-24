@@ -21,7 +21,7 @@
                         <tr class="text-start text-muted text-uppercase gs-0">
                             <th>#</th>
                             <th>Detail Permohonan</th>
-                            <th>Data Petugas</th>
+                            <th>Instrumen & Alat</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -94,8 +94,8 @@
                     name: 'detail_permohonan'
                 },
                 {
-                    data: 'detail_pdp',
-                    name: 'detail_pdp'
+                    data: 'detail_insalat',
+                    name: 'detail_insalat'
                 },
                 {
                     data: 'aksi',
@@ -132,7 +132,7 @@
 
         function getStatistikPenugasan() {
             $.ajax({
-                url: "{!! route('ajax.scd.apps.sts.penugasan') !!}",
+                url: "{!! route('ajax.scd.apps.sts.insalat') !!}",
                 type: 'POST',
                 data: {
                     tahun: $('#q_tahun').val(),

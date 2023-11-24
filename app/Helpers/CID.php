@@ -1444,13 +1444,43 @@ class CID
         $mstFitur = PdpDataPetugas::where("uuid_penjadwalan", $uuid_pdp)->where("jabatan_petugas", "Pendamping Teknis")->get();
         return $mstFitur;
     }
-    // get dd list instrumen
-    public static function getListInstrumen()
+    // get dd list instrumen all
+    public static function getListInstrumenAll()
     {
         $data = MasterInstrumenDaftarItemUttp::join("master_instrumen_jenis_uttp", "master_instrumen_jenis_uttp.uuid", "=", "master_instrumen_daftar_item_uttp.uuid_instrumen_jenis_uttp")
             ->select("master_instrumen_daftar_item_uttp.*")
             ->orderBy("master_instrumen_jenis_uttp.no_urut", "ASC")
             ->orderBy("master_instrumen_daftar_item_uttp.no_urut", "ASC")
+            ->get();
+        return $data;
+    }
+    // get dd list instrumen group by jenis_uttp
+    public static function getListInstrumenGByJenisUttp()
+    {
+        $data = MasterInstrumenDaftarItemUttp::join("master_instrumen_jenis_uttp", "master_instrumen_jenis_uttp.uuid", "=", "master_instrumen_daftar_item_uttp.uuid_instrumen_jenis_uttp")
+            ->select("master_instrumen_jenis_uttp.*")
+            ->orderBy("master_instrumen_jenis_uttp.no_urut", "ASC")
+            ->orderBy("master_instrumen_daftar_item_uttp.no_urut", "ASC")
+            ->groupBy("master_instrumen_jenis_uttp.nama_jenis_uttp")
+            ->get();
+        return $data;
+    }
+    // get dd list instrumen group by group_instrumen
+    public static function getListInstrumenGByGroupInstrumen()
+    {
+        $data = MasterInstrumenDaftarItemUttp::join("master_instrumen_jenis_uttp", "master_instrumen_jenis_uttp.uuid", "=", "master_instrumen_daftar_item_uttp.uuid_instrumen_jenis_uttp")
+            ->select("master_instrumen_daftar_item_uttp.*")
+            ->orderBy("master_instrumen_jenis_uttp.no_urut", "ASC")
+            ->orderBy("master_instrumen_daftar_item_uttp.no_urut", "ASC")
+            ->groupBy("master_instrumen_daftar_item_uttp.group_instrumen")
+            ->get();
+        return $data;
+    }
+    // get dd list instrumen all
+    public static function getListInstrumenByJenisUttp($uuid_uttp)
+    {
+        $data = MasterInstrumenDaftarItemUttp::where("uuid_instrumen_jenis_uttp", $uuid_uttp)
+            ->orderBy("no_urut", "ASC")
             ->get();
         return $data;
     }
