@@ -354,6 +354,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             // middleware : Verifikator
             Route::group(['middleware' => ['Verifikator']], function () {
                 // permohonan
+                // PATH : WebBase/WebAdmin/ScheduleApps/permohonan
                 Route::group(['prefix' => 'permohonan/{tags}'], function () {
                     Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('scd.apps.pp.index');
                     Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
@@ -364,6 +365,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             // middleware : Admin
             Route::group(['middleware' => ['Admin']], function () {
                 // input-data
+                // PATH : WebBase/WebAdmin/ScheduleApps/permohonan
                 Route::group(['prefix' => 'input-data'], function () {
                     Route::get('/', [ScdInputDataPdpController::class, 'index'])->name('scd.apps.input.pdp.index');
                     Route::get('/create/{uuid}', [ScdInputDataPdpController::class, 'create'])->name('scd.apps.input.pdp.create');
@@ -373,6 +375,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 });
             });
             // manajemen-peneraan
+            // PATH : WebBase/WebAdmin/ScheduleApps/penera
             // Route::group(['prefix' => 'manajemen-peneraan'], function () {
             //     Route::get('/', [ScdInputDataPeneraController::class, 'index'])->name('scd.apps.mnj.penera.index');
             //     Route::get('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'create'])->name('scd.apps.mnj.penera.create');
@@ -384,6 +387,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             //     Route::get('/data', [ScdInputDataPeneraController::class, 'data'])->name('scd.apps.mnj.penera.data');
             // });
             // jadwal-penugasan
+            // PATH : WebBase/WebAdmin/ScheduleApps/penera
             Route::group(['prefix' => 'jadwal-penugasan'], function () {
                 Route::get('/', [ScdDataPdpController::class, 'index'])->name('scd.apps.data.pdp.index');
                 Route::get('/show/{uuid}', [ScdDataPdpController::class, 'show'])->name('scd.apps.data.pdp.show');
@@ -393,6 +397,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::get('/data', [ScdDataPdpController::class, 'data'])->name('scd.apps.data.pdp.data');
             });
             // instrumen-alat
+            // PATH : WebBase/WebAdmin/ScheduleApps/penera
             Route::group(['prefix' => 'instrumen-alat'], function () {
                 Route::get('/', [ScdInstrumenAlatController::class, 'index'])->name('scd.apps.insalat.index');
                 Route::get('/show/{uuid}', [ScdInstrumenAlatController::class, 'show'])->name('scd.apps.insalat.show');

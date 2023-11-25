@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
-class WebFECounter
+class MobileFECounter
 {
     /**
      * Handle an incoming request.
@@ -19,14 +19,14 @@ class WebFECounter
     {
         // cek counter
         $tgl = \date('Y-m-d');
-        $data = AppsCounter::whereDevice("web")->whereDate("tanggal", $tgl)->first();
+        $data = AppsCounter::whereDevice("mobile")->whereDate("tanggal", $tgl)->first();
         if ($data === null) {
             $value = [
                 "uuid" => Str::uuid(),
                 "nama_apps" => "Portal Apps",
                 "visual_template" => "FE",
                 "views" => "1",
-                "device" => "web",
+                "device" => "mobile",
                 "tanggal" => $tgl,
             ];
             AppsCounter::create($value);

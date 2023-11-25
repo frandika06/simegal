@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Helpers\CID;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,29 +16,82 @@ class KetuaTimDanPimpinan
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $auth = Auth::user();
+        if ($request->is('api/*')) {
+            // pengguna mengakses route API
+            $auth = auth()->user();
+        } else {
+            $auth = Auth::user();
+        }
+
         $role = $auth->role;
-        $ar_role = [
-            "Admin System",
-            "Super Admin",
-            "Kepala Dinas",
-            "Kepala Bidang",
-            "Pegawai",
-        ];
-        if (in_array($role, $ar_role)) {
-            if ($role == "Pegawai") {
-                $subRoleKetuaTim = CID::subRoleKetuaTim();
-                if ($subRoleKetuaTim == false) {
-                    alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
-                    return \back();
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
+            // izinkan
+            return $next($request);
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                $ar_sub_sub_role = ['Ketua Tim Pelayanan', 'Ketua Tim Pengawasan', 'Ketua Tim Bina SDM'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return $next($request);
+                } else {
+                    // kembali ke admin
+                    // PEGAWAI
+                    $ar_sub_role = ['Admin Aplikasi'];
+                    if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                        // izinkan
+                        return $next($request);
+                    } else {
+                        // blokir
+                        return $this->blockResponse($request, 1);
+                    }
                 }
-                return $next($request);
             } else {
-                return $next($request);
+                // blokir
+                return $this->blockResponse($request, 1);
             }
         } else {
-            alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
-            return redirect()->route('auth.home');
+            // blokir
+            return $this->blockResponse($request, 1);
         }
+    }
+
+    // function block api
+    private function blockResponse($request, $style = null)
+    {
+        if ($request->is('api/*')) {
+            return $this->blockApi();
+        } else {
+            if ($style == "1") {
+                return $this->blockWebHome();
+            } elseif ($style == "2") {
+                return $this->blockWebBack();
+            }
+        }
+    }
+    // function block api
+    private function blockApi()
+    {
+        $response = [
+            "status" => false,
+            "message" => "You Can't Access This Route!",
+        ];
+        return response()->json($response, 422);
+    }
+    // function block web to home
+    private function blockWebHome()
+    {
+        alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
+        return redirect()->route('auth.home');
+    }
+    // function block web to back
+    private function blockWebBack()
+    {
+        alert()->warning('Akses Ditolak!', 'Anda Tidak Memiliki Hak Akses!');
+        return \back();
     }
 }

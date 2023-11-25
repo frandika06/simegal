@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Pimpinan
+class PetugasOnly
 {
     /**
      * Handle an incoming request.
@@ -26,27 +26,15 @@ class Pimpinan
         $role = $auth->role;
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
-        $ar_role = [
-            "Admin System",
-            "Super Admin",
-            "Kepala Dinas",
-            "Kepala Bidang",
-            "Pegawai",
-        ];
-        if (in_array($role, $ar_role)) {
-            if ($role == "Pegawai") {
-                // PEGAWAI
-                $ar_sub_role = ['Admin Aplikasi'];
-                if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
-                    // izinkan
-                    return $next($request);
-                } else {
-                    // blokir
-                    return $this->blockResponse($request, 1);
-                }
-            } else {
+        if ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Petugas'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return $next($request);
+            } else {
+                // blokir
+                return $this->blockResponse($request, 1);
             }
         } else {
             // blokir

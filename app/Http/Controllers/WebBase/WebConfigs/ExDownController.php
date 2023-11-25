@@ -32,6 +32,8 @@ class ExDownController extends Controller
         if (Storage::disk('public')->exists($url)) {
             $headers = array('Content-Type: application/octet-stream');
             return Storage::disk('public')->download($url, $file_name, $headers);
+        } else {
+            return \abort(404);
         }
     }
 

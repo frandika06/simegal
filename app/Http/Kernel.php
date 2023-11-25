@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'LastSeen' => \App\Http\Middleware\LastSeen::class,
         'WebFECounter' => \App\Http\Middleware\WebFECounter::class,
+        'MobileFECounter' => \App\Http\Middleware\MobileFECounter::class,
         'pbh' => \App\Http\Middleware\PreventBackHistory::class,
         'Pegawai' => \App\Http\Middleware\Pegawai::class,
         'AdminSystem' => \App\Http\Middleware\AdminSystem::class,
@@ -76,6 +77,7 @@ class Kernel extends HttpKernel
         'Pimpinan' => \App\Http\Middleware\Pimpinan::class,
         'Verifikator' => \App\Http\Middleware\Verifikator::class,
         'Petugas' => \App\Http\Middleware\Petugas::class,
+        'PetugasOnly' => \App\Http\Middleware\PetugasOnly::class,
         'AdminPortal' => \App\Http\Middleware\AdminPortal::class,
         'Perusahaan' => \App\Http\Middleware\Perusahaan::class,
     ];

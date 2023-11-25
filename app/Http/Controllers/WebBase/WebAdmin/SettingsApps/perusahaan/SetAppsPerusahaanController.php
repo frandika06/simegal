@@ -149,15 +149,22 @@ class SetAppsPerusahaanController extends Controller
         // data
         $data = Perusahaan::findOrFail($uuid);
 
-        // value
+        // value_1
         $value_1 = [
             "verifikasi" => "1",
             "status" => "1",
+            "uuid_updated" => $auth->uuid_profile,
+        ];
+        // value_2
+        $value_2 = [
+            "status" => "1",
+            "uuid_updated" => $auth->uuid_profile,
         ];
 
         // save
         $save_1 = $data->update($value_1);
-        if ($save_1) {
+        $save_2 = User::whereUuidProfile($uuid)->update($value_2);
+        if ($save_1 && $save_2) {
             // create log
             $aktifitas = [
                 "tabel" => array("perusahaan"),
@@ -201,15 +208,22 @@ class SetAppsPerusahaanController extends Controller
         // data
         $data = Perusahaan::findOrFail($uuid);
 
-        // value
+        // value_1
         $value_1 = [
             "verifikasi" => "1",
             "status" => "0",
+            "uuid_updated" => $auth->uuid_profile,
+        ];
+        // value_2
+        $value_2 = [
+            "status" => "0",
+            "uuid_updated" => $auth->uuid_profile,
         ];
 
         // save
         $save_1 = $data->update($value_1);
-        if ($save_1) {
+        $save_2 = User::whereUuidProfile($uuid)->update($value_2);
+        if ($save_1 && $save_2) {
             // create log
             $aktifitas = [
                 "tabel" => array("perusahaan"),

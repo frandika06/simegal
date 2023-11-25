@@ -6,6 +6,9 @@ use App\Http\Controllers\ApiBase\ApiAdmin\auth\RegisterApiController;
 use App\Http\Controllers\ApiBase\ApiAdmin\configs\ApiDropdownsController;
 use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\dashboard\ApiPDPDashboardController;
 use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\permohonan\ApiPDPPermohonanPeneraanController;
+use App\Http\Controllers\ApiBase\ApiAdmin\PortalApps\ApiPortalAppsController;
+use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\penera\ApiScdDataPdpController;
+use App\Http\Controllers\ApiBase\ApiAdmin\SettingsApps\auth\ApiSetAppsProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,6 +62,7 @@ Route::group(['prefix' => 'exim'], function () {
  */
 Route::group(['prefix' => 'dd'], function () {
     Route::get('/get-alamat-perusahaan/{uuid}', [ApiDropdownsController::class, 'getAlamatPerusahaan']);
+    Route::get('/get-list-tahun-permohonan', [ApiDropdownsController::class, 'getListTahunPermohonan']);
 });
 
 /*
@@ -66,7 +70,7 @@ Route::group(['prefix' => 'dd'], function () {
 | Auth
 |--------------------------------------------------------------------------
  */
-Route::group(['middleware' => ['auth:api', 'LastSeen']], function () {
+Route::group(['middleware' => ['auth:api', 'LastSeen', 'MobileFECounter']], function () {
     // AUTH
     Route::group(['prefix' => 'auth'], function () {
         Route::get('/logout', [LoginApiController::class, 'logout']);
@@ -74,33 +78,92 @@ Route::group(['middleware' => ['auth:api', 'LastSeen']], function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PENJADWALAN DAN PENUGASAN (PDP) APPS
+    | PORTAL APPS
+    | PATH : ApiBase/ApiAdmin/PortalApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'portal-apps'], function () {
+        Route::get('/post/{page?}/{tags?}', [ApiPortalAppsController::class, 'postingan']);
+        Route::get('/unduhan/{page?}/{tags?}', [ApiPortalAppsController::class, 'unduhan']);
+        // read
+        Route::group(['prefix' => 'read'], function () {
+            Route::get('/post/{uuid}', [ApiPortalAppsController::class, 'readPostingan']);
+            Route::get('/unduhan/{uuid}', [ApiPortalAppsController::class, 'readUnduhan']);
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENJADWALAN DAN PENUGASAN (PDP) APPS - ROLE PERUSAHAAN (PdpApps)
     | PATH : ApiBase/ApiAdmin/PdpApps
     |--------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'pdp-apps'], function () {
-        // auth
-        // PATH : ApiBase/ApiAdmin/auth
-        Route::group(['prefix' => 'auth'], function () {
-            Route::get('/profile', [ApiPDPProfileController::class, 'index']);
-            Route::post('/profile', [ApiPDPProfileController::class, 'update']);
-            Route::get('/alamat/{uuid}', [ApiPDPProfileController::class, 'showAlamat']);
-            Route::delete('/alamat', [ApiPDPProfileController::class, 'destroy']);
-        });
+        // middleware : Perusahaan
+        Route::group(['middleware' => ['Perusahaan']], function () {
+            // auth
+            // PATH : ApiBase/ApiAdmin/auth
+            Route::group(['prefix' => 'auth'], function () {
+                Route::get('/profile', [ApiPDPProfileController::class, 'index']);
+                Route::post('/profile', [ApiPDPProfileController::class, 'update']);
+                Route::get('/alamat/{uuid}', [ApiPDPProfileController::class, 'showAlamat']);
+                Route::delete('/alamat', [ApiPDPProfileController::class, 'destroy']);
+            });
 
-        // dashboard
-        // PATH : ApiBase/ApiAdmin/dashboard
-        Route::group(['prefix' => 'dashboard'], function () {
-            Route::get('/{tahun}/{status}', [ApiPDPDashboardController::class, 'index']);
-        });
+            // dashboard
+            // PATH : ApiBase/ApiAdmin/dashboard
+            Route::group(['prefix' => 'dashboard'], function () {
+                Route::get('/{tahun}/{status}', [ApiPDPDashboardController::class, 'index']);
+            });
 
-        // permohonan
-        // PATH : ApiBase/ApiAdmin/permohonan
-        Route::group(['prefix' => 'permohonan'], function () {
-            Route::post('/create', [ApiPDPPermohonanPeneraanController::class, 'store']);
-            Route::put('/edit/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'update']);
-            Route::get('/show/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'show']);
-            Route::delete('/delete', [ApiPDPPermohonanPeneraanController::class, 'destroy']);
+            // permohonan
+            // PATH : ApiBase/ApiAdmin/permohonan
+            Route::group(['prefix' => 'permohonan'], function () {
+                Route::post('/create', [ApiPDPPermohonanPeneraanController::class, 'store']);
+                Route::put('/edit/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'update']);
+                Route::get('/show/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'show']);
+                Route::delete('/delete', [ApiPDPPermohonanPeneraanController::class, 'destroy']);
+            });
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENJADWALAN DAN PENUGASAN (PDP) APPS - ADMIN (ScheduleApps)
+    | PATH : ApiBase/ApiAdmin/ScheduleApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'schedule-apps'], function () {
+        // middleware : KetuaTimDanPimpinan
+        Route::group(['middleware' => ['KetuaTimDanPimpinan']], function () {
+            // jadwal-penugasan
+            // PATH : ApiBase/ApiAdmin/ScheduleApps/penera
+            Route::group(['prefix' => 'jadwal-penugasan'], function () {
+                Route::get('/{tahun}/{status}/{tags}', [ApiScdDataPdpController::class, 'index']);
+                Route::get('/show/{uuid}', [ApiScdDataPdpController::class, 'show']);
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::put('/status', [ApiScdDataPdpController::class, 'status']);
+                });
+            });
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGATURAN APPS
+    | PATH : ApiBase/ApiAdmin/SettingsApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'settings-apps'], function () {
+        // middleware : Pegawai
+        Route::group(['middleware' => ['Pegawai']], function () {
+            // auth
+            // PATH : ApiBase/ApiAdmin/SettingsApps/auth
+            Route::group(['prefix' => 'profile'], function () {
+                Route::get('/', [ApiSetAppsProfileController::class, 'index']);
+                Route::put('/', [ApiSetAppsProfileController::class, 'update']);
+            });
         });
     });
 });

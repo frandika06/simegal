@@ -60,4 +60,18 @@ class PdpPenjadwalan extends Model
     {
         return $this->hasMany('App\Models\PdpDataPetugas', 'uuid_penjadwalan', 'uuid');
     }
+
+    public function RelGetPetugasTAP()
+    {
+        $result = $this->RelPdpDataPetugas();
+        $result = $result->where("jabatan_petugas", "Tenaga Ahli Penera")->with("RelPegawai");
+        return $result;
+    }
+
+    public function RelGetPetugasPT()
+    {
+        $result = $this->RelPdpDataPetugas();
+        $result = $result->where("jabatan_petugas", "Pendamping Teknis")->with("RelPegawai");
+        return $result;
+    }
 }
