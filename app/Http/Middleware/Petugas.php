@@ -27,12 +27,12 @@ class Petugas
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
 
-        if ($role == "Admin System" || $role == "Super Admin") {
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
             // izinkan
             return $next($request);
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim', 'Petugas'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return $next($request);

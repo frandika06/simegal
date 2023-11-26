@@ -384,12 +384,14 @@ class ScdPermohonanPengujianController extends Controller
                 ->addColumn('aksi', function ($data) use ($enc_tags, $status) {
                     $tags = CID::decode($enc_tags);
                     $enc_uuid = CID::encode($data->uuid);
-                    if ($status == "Baru") {
-                        // status baru
-                        $diproses = CID::encode("Diproses");
-                        $ditolak = CID::encode("Ditolak");
-                        if ($tags == "Pengujian BDKT") {
-                            $aksi = '<div class="dropdown">
+                    $verifikator = CID::subRoleVerifikator();
+                    if ($verifikator == true) {
+                        if ($status == "Baru") {
+                            // status baru
+                            $diproses = CID::encode("Diproses");
+                            $ditolak = CID::encode("Ditolak");
+                            if ($tags == "Pengujian BDKT") {
+                                $aksi = '<div class="dropdown">
                                 <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     Aksi
                                 </button>
@@ -398,15 +400,15 @@ class ScdPermohonanPengujianController extends Controller
                                     <li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-ditolak="' . $enc_uuid . '" data-status="' . $ditolak . '"><i class="fa-regular fa-rectangle-xmark"></i> Tolak Permohonan</a></li>
                                 </ul>
                             </div>';
-                        } else {
-                            if ($tags == "Tera") {
-                                $jp = CID::encode("Tera Ulang");
-                                $text = "Pindahkan ke Tera Ulang";
-                            } elseif ($tags == "Tera Ulang") {
-                                $jp = CID::encode("Tera");
-                                $text = "Pindahkan ke Tera";
-                            }
-                            $aksi = '<div class="dropdown">
+                            } else {
+                                if ($tags == "Tera") {
+                                    $jp = CID::encode("Tera Ulang");
+                                    $text = "Pindahkan ke Tera Ulang";
+                                } elseif ($tags == "Tera Ulang") {
+                                    $jp = CID::encode("Tera");
+                                    $text = "Pindahkan ke Tera";
+                                }
+                                $aksi = '<div class="dropdown">
                                 <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     Aksi
                                 </button>
@@ -416,12 +418,12 @@ class ScdPermohonanPengujianController extends Controller
                                     <li><a class="dropdown-item bg-hover-primary" href="javascript:void(0);" data-pindah-jp="' . $enc_uuid . '" data-status="' . $jp . '"><i class="fa-solid fa-right-left"></i> ' . $text . '</a></li>
                                 </ul>
                             </div>';
-                        }
-                    } elseif ($status == "Diproses") {
-                        // status Diproses
-                        $selesai = CID::encode("Selesai");
-                        $reset = CID::encode("Baru");
-                        $aksi = '<div class="dropdown">
+                            }
+                        } elseif ($status == "Diproses") {
+                            // status Diproses
+                            $selesai = CID::encode("Selesai");
+                            $reset = CID::encode("Baru");
+                            $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi
                             </button>
@@ -430,12 +432,12 @@ class ScdPermohonanPengujianController extends Controller
                                 <li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-reset="' . $enc_uuid . '" data-status="' . $reset . '"><i class="fa-solid fa-rotate-left"></i> Reset Permohonan</a></li>
                             </ul>
                         </div>';
-                        // <li><a class="dropdown-item bg-hover-warning" href="' . $tl . '"><i class="fa-solid fa-elevator"></i> Penjadwalan & Penugasan</a></li>
-                    } elseif ($status == "Selesai") {
-                        // status Selesai
-                        $diproses = CID::encode("Diproses");
-                        $reset = CID::encode("Baru");
-                        $aksi = '<div class="dropdown">
+                            // <li><a class="dropdown-item bg-hover-warning" href="' . $tl . '"><i class="fa-solid fa-elevator"></i> Penjadwalan & Penugasan</a></li>
+                        } elseif ($status == "Selesai") {
+                            // status Selesai
+                            $diproses = CID::encode("Diproses");
+                            $reset = CID::encode("Baru");
+                            $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi
                             </button>
@@ -443,10 +445,10 @@ class ScdPermohonanPengujianController extends Controller
                                 <li><a class="dropdown-item bg-hover-success" href="javascript:void(0);" data-reproses="' . $enc_uuid . '" data-status="' . $diproses . '"><i class="fa-solid fa-check-to-slot"></i> Proses Kembali Permohonan</a></li>
                             </ul>
                         </div>';
-                    } elseif ($status == "Ditolak") {
-                        // status Ditolak
-                        $reset = CID::encode("Baru");
-                        $aksi = '<div class="dropdown">
+                        } elseif ($status == "Ditolak") {
+                            // status Ditolak
+                            $reset = CID::encode("Baru");
+                            $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi
                             </button>
@@ -454,8 +456,13 @@ class ScdPermohonanPengujianController extends Controller
                                 <li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-reset="' . $enc_uuid . '" data-status="' . $reset . '"><i class="fa-solid fa-rotate-left"></i> Reset Permohonan</a></li>
                             </ul>
                         </div>';
+                        }
+                    } else {
+                        $aksi = '
+                            <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle disabled" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Aksi
+                            </button>';
                     }
-
                     return $aksi;
                 })
                 ->escapeColumns([''])

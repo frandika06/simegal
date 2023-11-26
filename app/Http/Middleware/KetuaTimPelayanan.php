@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Pegawai
+class KetuaTimPelayanan
 {
     /**
      * Handle an incoming request.
@@ -26,16 +26,30 @@ class Pegawai
         $role = $auth->role;
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
-
-        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
+        if ($role == "Admin System" || $role == "Super Admin") {
             // izinkan
             return $next($request);
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan', 'Verifikator', 'Ketua Tim', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
-                return $next($request);
+                $ar_sub_sub_role = ['Ketua Tim Pelayanan'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return $next($request);
+                } else {
+                    // kembali ke admin
+                    // PEGAWAI
+                    $ar_sub_role = ['Admin Aplikasi'];
+                    if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                        // izinkan
+                        return $next($request);
+                    } else {
+                        // blokir
+                        return $this->blockResponse($request, 1);
+                    }
+                }
             } else {
                 // blokir
                 return $this->blockResponse($request, 1);

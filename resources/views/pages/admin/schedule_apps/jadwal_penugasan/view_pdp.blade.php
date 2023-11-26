@@ -401,6 +401,11 @@
                             </div>
                             {{-- end::Status Peneraan --}}
                             {{-- end::Form --}}
+                            {{-- begin::Action buttons --}}
+                            <div class="d-flex justify-content-end align-items-center mt-12">
+                                <a href="{{ route('scd.apps.data.pdp.index') }}" class="btn btn-secondary"><i class="fa-solid fa-times-circle"></i> Tutup</a>
+                            </div>
+                            {{-- begin::Action buttons --}}
                         </div>
                         {{-- end::Card body --}}
                         {{-- begin::Card footer --}}

@@ -781,7 +781,7 @@ class CID
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
 
-        if ($role == "Admin System" || $role == "Super Admin") {
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
             // izinkan
             return true;
         } elseif ($role == "Pegawai") {
@@ -794,9 +794,6 @@ class CID
                 // blokir
                 return false;
             }
-        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
-            // izinkan
-            return true;
         } else {
             // blokir
             return false;
@@ -914,12 +911,12 @@ class CID
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
 
-        if ($role == "Admin System" || $role == "Super Admin") {
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
             // izinkan
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim', 'Petugas'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -1088,15 +1085,15 @@ class CID
         }
     }
 
-    // Hak Akses subSubRolePimpinan
-    public static function subSubRolePimpinan()
+    // Hak Akses subRolePimpinan
+    public static function subRolePimpinan()
     {
         $auth = Auth::user();
         $role = $auth->role;
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
 
-        if ($role == "Admin System" || $role == "Super Admin") {
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
             // izinkan
             return true;
         } elseif ($role == "Pegawai") {
@@ -1109,24 +1106,21 @@ class CID
                 // blokir
                 return false;
             }
-        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
-            // izinkan
-            return true;
         } else {
             // blokir
             return false;
         }
     }
 
-    // Hak Akses subSubRoleKetuaTimDanPimpinan
-    public static function subSubRoleKetuaTimDanPimpinan()
+    // Hak Akses subRoleKetuaTimDanPimpinan
+    public static function subRoleKetuaTimDanPimpinan()
     {
         $auth = Auth::user();
         $role = $auth->role;
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
 
-        if ($role == "Admin System" || $role == "Super Admin") {
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
             // izinkan
             return true;
         } elseif ($role == "Pegawai") {
@@ -1139,9 +1133,6 @@ class CID
                 // blokir
                 return false;
             }
-        } elseif ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
-            // izinkan
-            return true;
         } else {
             // blokir
             return false;

@@ -246,26 +246,6 @@
                             {{-- end::Details content --}}
                         </div>
                         {{-- end::Card body --}}
-                        {{-- begin::Card footer --}}
-                        @if (\CID::subRoleOnlyPetugas() == true)
-                            @if ($data->status_peneraan == 'Menunggu')
-                                <div class="card-footer border-0 d-grid gap-2 pt-0">
-                                    <button class="btn btn-sm btn-light-primary" data-proses="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Diproses') }}"><i class="fa-solid fa-check-to-slot"></i> Proses Penugasan</button>
-                                </div>
-                            @elseif ($data->status_peneraan == 'Diproses')
-                                <div class="card-footer border-0 d-grid gap-2 pt-0">
-                                    <button class="btn btn-sm btn-light-warning" data-ditunda="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Ditunda') }}"><i class="fa-regular fa-circle-pause"></i> Ditunda</button>
-                                    <button class="btn btn-sm btn-light-danger" data-dibatalkan="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Dibatalkan') }}"><i class="fa-regular fa-circle-xmark"></i> Dibatalkan</button>
-                                    <button class="btn btn-sm btn-light-success" data-selesai="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Selesai') }}"><i class="fa-solid fa-check"></i> Selesai</button>
-                                </div>
-                            @elseif ($data->status_peneraan == 'Ditunda')
-                                <div class="card-footer border-0 d-grid gap-2 pt-0">
-                                    <button class="btn btn-sm btn-light-danger" data-dibatalkan="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Dibatalkan') }}"><i class="fa-regular fa-circle-xmark"></i> Dibatalkan</button>
-                                    <button class="btn btn-sm btn-light-success" data-selesai="{{ \CID::encode($data->uuid) }}" data-status="{{ \CID::encode('Selesai') }}"><i class="fa-solid fa-check"></i> Selesai</button>
-                                </div>
-                            @endif
-                        @endif
-                        {{-- end::Card footer --}}
                     </div>
                     {{-- end::Card --}}
                 </div>
@@ -279,7 +259,7 @@
                         <div class="card-header border-0">
                             {{-- begin::Card title --}}
                             <div class="card-title flex-column">
-                                <h2>Form Lihat Jadwal dan Penugasan</h2>
+                                <h2>Form Lihat Instrumen & Alat</h2>
                                 <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk melihat data Instrumen & Alat dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
                             </div>
                             {{-- end::Card title --}}
@@ -291,14 +271,14 @@
 
                             {{-- begin::nomor_order --}}
                             <div class="form-floating mb-5">
-                                <input type="text" class="form-control" name="nomor_order" id="nomor_order2" value="{{ $data->nomor_order }}" readonly />
+                                <input type="text" class="form-control bg-light-info" name="nomor_order" id="nomor_order2" value="{{ $data->nomor_order }}" readonly />
                                 <label for="nomor_order">Nomor Order</label>
                             </div>
                             {{-- end::nomor_order --}}
 
                             {{-- begin::kelompok_uttp --}}
                             <div class="form-floating mb-5">
-                                <input type="text" class="form-control" name="kelompok_uttp" id="kelompok_uttp2" value="{{ $data->RelMasterKelompokUttp->nama_kelompok }}" readonly />
+                                <input type="text" class="form-control bg-light-info" name="kelompok_uttp" id="kelompok_uttp2" value="{{ $data->RelMasterKelompokUttp->nama_kelompok }}" readonly />
                                 <label for="kelompok_uttp">Kelompok UTTP</label>
                             </div>
                             {{-- end::kelompok_uttp --}}
@@ -310,7 +290,7 @@
                                     <div class="col">
                                         {{-- begin::tanggal_peneraan --}}
                                         <div class="form-floating mb-5">
-                                            <input type="date" class="form-control" name="tanggal_peneraan" id="tanggal_peneraan2" value="{{ $data->tanggal_peneraan }}" readonly />
+                                            <input type="date" class="form-control bg-light-info" name="tanggal_peneraan" id="tanggal_peneraan2" value="{{ $data->tanggal_peneraan }}" readonly />
                                             <label for="tanggal_peneraan">Tanggal Peneraan</label>
                                         </div>
                                         {{-- end::tanggal_peneraan --}}
@@ -318,7 +298,7 @@
                                     <div class="col">
                                         {{-- begin::jam_peneraan --}}
                                         <div class="form-floating mb-5">
-                                            <input type="text" class="form-control jam_peneraan" name="jam_peneraan" id="jam_peneraan2" placeholder="00:00" value="{{ $data->jam_peneraan }}" readonly />
+                                            <input type="text" class="form-control bg-light-info jam_peneraan" name="jam_peneraan" id="jam_peneraan2" placeholder="00:00" value="{{ $data->jam_peneraan }}" readonly />
                                             <label for="jam_peneraan">Jam Peneraan</label>
                                         </div>
                                         {{-- end::jam_peneraan --}}
@@ -327,80 +307,145 @@
                             </div>
                             {{-- end::Penjadwalan Peneraan --}}
 
-                            {{-- begin::Tenaga Ahli Penera --}}
+                            {{-- begin::Nama Supir --}}
                             <div class="mt-0">
-                                <label for="">Tenaga Ahli Penera</label>
+                                <label for="">Nama Supir</label>
                                 <div class="row p-2">
                                     <div class="col">
-                                        {{-- begin::tenaga_ahli_penera --}}
-                                        <div class="form-group mb-5">
-                                            <ul>
-                                                @php
-                                                    $getPetugasTAP = \CID::getPetugasTAP($data->uuid);
-                                                @endphp
-                                                @foreach ($getPetugasTAP as $itemTAP)
-                                                    <li>{{ $itemTAP->RelPegawai->nama_lengkap }}</li>
-                                                @endforeach
-                                            </ul>
+                                        {{-- begin::nama_supir --}}
+                                        <div class="form-floating mb-5">
+                                            <input type="text" class="form-control bg-light-info" name="nama_supir" id="nama_supir2" placeholder="Nama Supir" autocomplete="off" maxlength="100" value="{{ $data->nama_supir }}" readonly />
+                                            <label for="nama_supir">Nama Supir</label>
                                         </div>
-                                        {{-- end::tenaga_ahli_penera --}}
+                                        {{-- end::nama_supir --}}
                                     </div>
                                 </div>
                             </div>
-                            {{-- end::Tenaga Ahli Penera --}}
+                            {{-- end::Nama Supir --}}
 
-                            {{-- begin::Pendamping Teknis --}}
+                            {{-- begin::Jenis Kendaraan --}}
                             <div class="mt-0">
-                                <label for="">Pendamping Teknis</label>
+                                <label for="">Jenis Kendaraan</label>
                                 <div class="row p-2">
                                     <div class="col">
-                                        {{-- begin::pendamping_teknis --}}
-                                        <div class="form-group mb-5">
-                                            <ul>
-                                                @php
-                                                    $getPetugasPT = \CID::getPetugasPT($data->uuid);
-                                                @endphp
-                                                @foreach ($getPetugasPT as $itemPT)
-                                                    <li>{{ $itemPT->RelPegawai->nama_lengkap }}</li>
-                                                @endforeach
-                                            </ul>
+                                        {{-- begin::jenis_kendaraan --}}
+                                        <div class="form-floating mb-5">
+                                            <input type="text" class="form-control bg-light-info" name="jenis_kendaraan" id="jenis_kendaraan2" placeholder="Nama Supir" autocomplete="off" maxlength="100" value="{{ $data->jenis_kendaraan }}" readonly />
+                                            <label for="jenis_kendaraan">Jenis Kendaraan</label>
                                         </div>
-                                        {{-- end::pendamping_teknis --}}
+                                        {{-- end::jenis_kendaraan --}}
                                     </div>
                                 </div>
                             </div>
-                            {{-- end::Pendamping Teknis --}}
+                            {{-- end::Jenis Kendaraan --}}
 
-                            {{-- begin::Status Peneraan --}}
+                            {{-- begin::Plat Nomor Kendaraan --}}
                             <div class="mt-0">
-                                {{-- begin::Alert --}}
-                                <div class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5">
-                                    {{-- begin::Icon --}}
-                                    <i class="ki-duotone ki-notification-bing fs-2hx text-info me-4 mb-5 mb-sm-0"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                                    {{-- end::Icon --}}
-
-                                    {{-- begin::Wrapper --}}
-                                    <div class="d-flex flex-column pe-0 pe-sm-10">
-                                        {{-- begin::Title --}}
-                                        <h4 class="fw-semibold">Status Peneraan</h4>
-                                        {{-- end::Title --}}
-
-                                        {{-- begin::Content --}}
-                                        <span>Penjadwalan dan Penugasan dengan Nomor Order <strong>{{ $data->nomor_order }}</strong> saat ini berstatus: <span class="badge badge-info">{{ \Str::upper($data->status_peneraan) }}</span></span>
-                                        {{-- end::Content --}}
+                                <label for="">Plat Nomor Kendaraan</label>
+                                <div class="row p-2">
+                                    <div class="col">
+                                        {{-- begin::plat_nomor_kendaraan --}}
+                                        <div class="form-floating mb-5">
+                                            <input type="text" class="form-control bg-light-info text-uppercase" name="plat_nomor_kendaraan" id="plat_nomor_kendaraan2" placeholder="Plat Nomor Kendaraan" autocomplete="off" maxlength="10" value="{{ $data->plat_nomor_kendaraan }}" readonly />
+                                            <label for="plat_nomor_kendaraan">Plat Nomor Kendaraan</label>
+                                        </div>
+                                        {{-- end::plat_nomor_kendaraan --}}
                                     </div>
-                                    {{-- end::Wrapper --}}
-
-                                    {{-- begin::Close --}}
-                                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                                        <i class="ki-duotone ki-cross fs-1 text-info"><span class="path1"></span><span class="path2"></span></i>
-                                    </button>
-                                    {{-- end::Close --}}
                                 </div>
-                                {{-- end::Alert --}}
                             </div>
-                            {{-- end::Status Peneraan --}}
+                            {{-- end::Plat Nomor Kendaraan --}}
+
+                            {{-- begin::Instrumen --}}
+                            <div class="mt-0">
+                                <label for="">Instrumen</label>
+                                <div class="row p-2">
+                                    <div class="col">
+                                        {{-- begin::intrumen --}}
+                                        {{-- begin::Repeater --}}
+                                        <div id="repeat_instrumen">
+                                            {{-- begin::Form group --}}
+                                            <div class="form-group">
+                                                <div data-repeater-list="repeat_instrumen">
+                                                    {{-- EDIT INSTRUMEN::BEGIN --}}
+                                                    @isset($data->RelPdpInstrumen)
+                                                        @foreach ($data->RelPdpInstrumenOrder as $itemData)
+                                                            <div class="alert alert-secondary" id="{{ \CID::encode($itemData->uuid) }}">
+                                                                <div class="form-group row mb-5">
+                                                                    <div class="col-12 mb-5">
+                                                                        <label class="form-label">Item UTTP:</label>
+                                                                        <input type="text" class="form-control bg-light-info mb-2 mb-md-0" name="uuid_instrumen[]" value="{{ $itemData->RelMasterInstrumenDaftarItemUttp->nama_instrumen }}" placeholder="Item UTTP" readonly />
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label class="form-label">Jumlah Unit:</label>
+                                                                        <input type="number" class="form-control bg-light-info mb-2 mb-md-0" name="jumlah_unit_instrumen[]" value="{{ $itemData->jumlah_unit }}" placeholder="Jumlah Unit" min="0" readonly />
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label class="form-label">Volume/Jam:</label>
+                                                                        <input type="number" class="form-control bg-light-info mb-2 mb-md-0" name="volume_instrumen[]" value="{{ $itemData->volume }}" placeholder="Volume/Jam" min="0" readonly />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endisset
+                                                    {{-- EDIT INSTRUMEN::END --}}
+                                                </div>
+                                            </div>
+                                            {{-- end::Form group --}}
+                                        </div>
+                                        {{-- end::Repeater --}}
+                                        {{-- end::intrumen --}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- end::Instrumen --}}
+
+                            {{-- begin::Alat & CTT --}}
+                            <div class="mt-5">
+                                <label for="">Alat & CTT</label>
+                                <div class="row p-2">
+                                    <div class="col">
+                                        {{-- begin::intrumen --}}
+                                        {{-- begin::Repeater --}}
+                                        <div id="repeat_alat">
+                                            {{-- begin::Form group --}}
+                                            <div class="form-group">
+                                                <div data-repeater-list="repeat_alat">
+                                                    {{-- EDIT ALAT::BEGIN --}}
+                                                    @isset($data->RelPdpAlat)
+                                                        @foreach ($data->RelPdpAlatOrder as $itemData)
+                                                            <div class="alert alert-secondary" id="{{ \CID::encode($itemData->uuid) }}">
+                                                                <div class="form-group row mb-5">
+                                                                    <div class="col-12 mb-5">
+                                                                        <input type="hidden" name="uuid_pdp_alat[]" value="{{ $itemData->uuid }}">
+                                                                        <label class="form-label">Alat & CTT:</label>
+                                                                        <input type="text" class="form-control bg-light-info mb-2 mb-md-0" name="uuid_alat[]" value="{{ $itemData->RelMasterKategoriKelompok->nama_kategori }}" placeholder="Alat & CTT:" readonly />
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label class="form-label">Jumlah Unit:</label>
+                                                                        <input type="number" class="form-control bg-light-info mb-2 mb-md-0" name="jumlah_unit_alat[]" value="{{ $itemData->jumlah_unit }}" placeholder="Jumlah Unit" min="0" readonly />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endisset
+                                                    {{-- EDIT ALAT::END --}}
+                                                </div>
+                                            </div>
+                                            {{-- end::Form group --}}
+                                        </div>
+                                        {{-- end::Repeater --}}
+                                        {{-- end::intrumen --}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- end::Alat & CTT --}}
+
                             {{-- end::Form --}}
+                            {{-- begin::Action buttons --}}
+                            <div class="d-flex justify-content-end align-items-center mt-12">
+                                <a href="{{ route('scd.apps.insalat.index') }}" class="btn btn-secondary"><i class="fa-solid fa-times-circle"></i> Tutup</a>
+                            </div>
+                            {{-- begin::Action buttons --}}
                         </div>
                         {{-- end::Card body --}}
                         {{-- begin::Card footer --}}
@@ -427,194 +472,6 @@
         $(document).ready(function() {
             $('.jam_peneraan').mask("00:00", {
                 placeholder: "00:00"
-            });
-        });
-    </script>
-
-    {{-- Diproses --}}
-    <script>
-        $(document).on('click', "[data-proses]", function() {
-            let uuid = $(this).attr('data-proses');
-            let status = $(this).attr('data-status');
-            Swal.fire({
-                title: "Proses Penugasan",
-                text: "Apakah Anda Yakin?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Iya",
-                cancelButtonText: 'Tidak',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{!! route('scd.apps.insalat.status') !!}",
-                        type: 'POST',
-                        data: {
-                            uuid: uuid,
-                            status: status,
-                            _method: 'put',
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                title: "Error",
-                                text: xhr.responseJSON.message,
-                                icon: "error",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-
-    {{-- Ditunda --}}
-    <script>
-        $(document).on('click', "[data-ditunda]", function() {
-            let uuid = $(this).attr('data-ditunda');
-            let status = $(this).attr('data-status');
-            Swal.fire({
-                title: "Tunda Peneraan",
-                text: "Apakah Anda Yakin?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Iya",
-                cancelButtonText: 'Tidak',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{!! route('scd.apps.insalat.status') !!}",
-                        type: 'POST',
-                        data: {
-                            uuid: uuid,
-                            status: status,
-                            _method: 'put',
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                title: "Error",
-                                text: xhr.responseJSON.message,
-                                icon: "error",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-
-    {{-- Dibatalkan --}}
-    <script>
-        $(document).on('click', "[data-dibatalkan]", function() {
-            let uuid = $(this).attr('data-dibatalkan');
-            let status = $(this).attr('data-status');
-            Swal.fire({
-                title: "Batalkan Peneraan",
-                text: "Apakah Anda Yakin?, membatalkan sama dengan MENOLAK Permohonan!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Iya",
-                cancelButtonText: 'Tidak',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{!! route('scd.apps.insalat.status') !!}",
-                        type: 'POST',
-                        data: {
-                            uuid: uuid,
-                            status: status,
-                            _method: 'put',
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                title: "Error",
-                                text: xhr.responseJSON.message,
-                                icon: "error",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-
-    {{-- Selesai --}}
-    <script>
-        $(document).on('click', "[data-selesai]", function() {
-            let uuid = $(this).attr('data-selesai');
-            let status = $(this).attr('data-status');
-            Swal.fire({
-                title: "Selesaikan Peneraan",
-                text: "Apakah Anda Yakin?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Iya",
-                cancelButtonText: 'Tidak',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{!! route('scd.apps.insalat.status') !!}",
-                        type: 'POST',
-                        data: {
-                            uuid: uuid,
-                            status: status,
-                            _method: 'put',
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(res) {
-                            Swal.fire({
-                                title: "Success",
-                                text: res.message,
-                                icon: "success",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                title: "Error",
-                                text: xhr.responseJSON.message,
-                                icon: "error",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        }
-                    });
-                }
             });
         });
     </script>

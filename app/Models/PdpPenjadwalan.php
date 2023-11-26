@@ -14,7 +14,7 @@ class PdpPenjadwalan extends Model
     protected $table = "pdp_penjadwalan";
     protected $primaryKey = "uuid";
     protected $keyType = 'string';
-    protected $cascadeDeletes = ['RelPdpDataPetugas'];
+    protected $cascadeDeletes = ['RelPdpDataPetugas', 'RelPdpRetribusi'];
     protected $dates = ['deleted_at'];
     protected $guarded = [];
     protected $hidden = [
@@ -72,6 +72,37 @@ class PdpPenjadwalan extends Model
     {
         $result = $this->RelPdpDataPetugas();
         $result = $result->where("jabatan_petugas", "Pendamping Teknis")->with("RelPegawai");
+        return $result;
+    }
+
+    // INSTRUMEN DAN ALAT
+    // instrumen
+    public function RelPdpInstrumen()
+    {
+        return $this->hasMany('App\Models\PdpInstrumen', 'uuid_penjadwalan', 'uuid');
+    }
+    // instrumen order by
+    public function RelPdpInstrumenOrder()
+    {
+        $result = $this->RelPdpInstrumen();
+        $result = $result->orderBy("no_urut", "ASC");
+        return $result;
+    }
+    // retribusi
+    public function RelPdpRetribusi()
+    {
+        return $this->hasMany('App\Models\PdpRetribusi', 'uuid_penjadwalan', 'uuid');
+    }
+    // alat
+    public function RelPdpAlat()
+    {
+        return $this->hasMany('App\Models\PdpAlat', 'uuid_penjadwalan', 'uuid');
+    }
+    // alat order by
+    public function RelPdpAlatOrder()
+    {
+        $result = $this->RelPdpAlat();
+        $result = $result->orderBy("no_urut", "ASC");
         return $result;
     }
 }

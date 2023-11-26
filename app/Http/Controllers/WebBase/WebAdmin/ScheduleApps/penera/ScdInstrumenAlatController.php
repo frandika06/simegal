@@ -4,12 +4,11 @@ namespace App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
-use App\Models\MasterKelompokUttp;
+use App\Models\MasterInstrumenDaftarItemUttp;
 use App\Models\PdpAlat;
-use App\Models\PdpDataPetugas;
 use App\Models\PdpInstrumen;
 use App\Models\PdpPenjadwalan;
-use App\Models\Pegawai;
+use App\Models\PdpRetribusi;
 use App\Models\PermohonanPeneraan;
 use DataTables;
 use Illuminate\Http\Request;
@@ -65,37 +64,8 @@ class ScdInstrumenAlatController extends Controller
         $RelAlamat = $permohonan->RelAlamatPerusahaan;
         $jp = $permohonan->jenis_pengujian;
 
-        // kelompok uttp
-        $kelompokUttp = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
-            ->select("master_kelompok_uttp.*")
-            ->where("master_jenis_pelayanan.nama_pelayanan", $jp)
-            ->where("master_jenis_pelayanan.status", "1")
-            ->where("master_kelompok_uttp.status", "1")
-            ->orderBy("master_kelompok_uttp.no_urut", "ASC")
-            ->get();
-
-        // List TA
-        $listTa = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
-            ->select("pegawai.*")
-            ->where("users.role", "Pegawai")
-            ->where("users.sub_role", 'LIKE', '%Petugas%')
-            ->where("users.status", "1")
-            ->where("pegawai.status_pegawai", "ASN")
-            ->orderBy("pegawai.nama_lengkap", "ASC")
-            ->get();
-
-        // List Pendamping Teknis
-        $listPendamping = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
-            ->select("pegawai.*")
-            ->where("users.role", "Pegawai")
-            ->where("users.sub_role", 'LIKE', '%Petugas%')
-            ->where("users.status", "1")
-            ->where("pegawai.status_pegawai", "Non ASN")
-            ->orderBy("pegawai.nama_lengkap", "ASC")
-            ->get();
-
         // title
-        $title = "Lihat Instrumen dan Alat";
+        $title = "Edit Instrumen dan Alat";
         $submit = "Simpan";
         return view('pages.admin.schedule_apps.instrumen_alat.view_pdp', compact(
             'enc_uuid',
@@ -103,9 +73,6 @@ class ScdInstrumenAlatController extends Controller
             'permohonan',
             'profile',
             'RelAlamat',
-            'kelompokUttp',
-            'listTa',
-            'listPendamping',
             'title',
             'submit',
         ));
@@ -152,55 +119,24 @@ class ScdInstrumenAlatController extends Controller
         $auth = Auth::user();
         $uuid_profile = $auth->uuid_profile;
 
-        // return dd($request->all());
-
         // validate
         $request->validate([
             "tanggal_peneraan" => "required|string",
             "jam_peneraan" => "required|string",
             "nama_supir" => "required|string|max:100",
             "jenis_kendaraan" => "required|string|max:10",
-            "repeat_instrumen" => "required",
-            "repeat_alat" => "required",
+            "repeat_instrumen" => "sometimes|nullable",
+            "repeat_alat" => "sometimes|nullable",
         ]);
 
         // data
         $data = PdpPenjadwalan::findOrFail($uuid);
-        $getDataPetugas = $data->RelPdpDataPetugas;
 
         // value 1 - penjadwalan
         $uuid_penjadwalan = $uuid;
         $tanggal_peneraan = date('Y-m-d', strtotime($request->tanggal_peneraan));
         $jam_peneraan = date('H:i', strtotime($request->jam_peneraan));
-        $cekJamPeneraan = date('Hi', strtotime($request->jam_peneraan));
-
-        // cek jadwal
-        // $dataPetugas = [];
-        // $PdpJadwal = PdpPenjadwalan::where("uuid", "!=", $uuid_penjadwalan)->whereDate("tanggal_peneraan", $tanggal_peneraan)->get();
-        // foreach ($PdpJadwal as $item1) {
-        //     $baseJamPeneraan = date('Hi', strtotime($item1->jam_peneraan));
-        //     $jamAwalReal = date('Hi', strtotime($baseJamPeneraan));
-        //     $next2JamReal = date('Hi', strtotime($jamAwalReal . " + 2hour "));
-        //     // cek range jam peneraan yg diinput
-        //     if ($cekJamPeneraan >= $jamAwalReal && $cekJamPeneraan <= $next2JamReal) {
-        //         // petugas
-        //         $relDataPetugas = $item1->RelPdpDataPetugas;
-        //         foreach ($relDataPetugas as $item2) {
-        //             $dataPetugas[] = $item2->uuid_pegawai;
-        //         }
-        //     }
-        // }
-
-        // cek jadwal petugas
-        // foreach ($getDataPetugas as $itemJadwal) {
-        //     $uuid_cek_petugas = $itemJadwal->uuid_pegawai;
-        //     if (in_array($uuid_cek_petugas, $dataPetugas)) {
-        //         // pegawai sudah ada jadwal dalam 2 jam aktif
-        //         $pegawai = Pegawai::findOrFail($uuid_cek_petugas);
-        //         alert()->error('Gagal!', $pegawai->nama_lengkap . " Sudah Memiliki Jadwal di Hari Yang Sama dan dalam Rentang Masa Jam Tugas, Cek Jadwal Petugas!");
-        //         return back()->withInput($request->all());
-        //     }
-        // }
+        $nomor_order = $data->nomor_order;
 
         // array value 1
         $value_1 = [
@@ -208,160 +144,17 @@ class ScdInstrumenAlatController extends Controller
             "jam_peneraan" => $jam_peneraan,
             "nama_supir" => $request->nama_supir,
             "jenis_kendaraan" => $request->jenis_kendaraan,
-            "plat_nomor_kendaraan" => $request->plat_nomor_kendaraan,
+            "plat_nomor_kendaraan" => Str::upper($request->plat_nomor_kendaraan),
             "uuid_updated" => $uuid_profile,
         ];
-
-        // delete Instrumen & Alat
-        PdpInstrumen::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
-        PdpAlat::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
-
-        return dd($request->repeat_instrumen[0]['uuid_instrumen']);
-
-        // store instrumen pengujian data
-        $total_retribusi = 0;
-        for ($i = 0; $i < count($request->ip_id); $i++) {
-            $get_instrumen = InstrumenPengujian::findOrFail($request->ip_id[$i]);
-            $volume = $request->ip_volume[$i];
-
-            $sisa_volume = $volume;
-            $flagjumlahunit = 0;
-            if (!is_null($get_instrumen->seq_id)) {
-                $flagjumlahunit++;
-                $get_seq = InstrumenPengujian::findOrFail($get_instrumen->seq_id);
-
-                if ($volume > $get_seq->volume_to) {
-                    $sisa_volume = $volume - $get_seq->volume_to;
-
-                    $harga = 0;
-                    $hargajustir = 0;
-                    if ($request->ip_tipe_tera[$i] == 'baru') {
-                        $harga = $get_seq->tera_baru_pengujian;
-                    } else if ($request->ip_tipe_tera[$i] == 'ulang') {
-                        $harga = $get_seq->tera_ulang_pengujian;
-                        $hargajustir = $get_seq->tera_ulang_pejustiran;
-                    } else if ($request->ip_tipe_tera[$i] == 'tarif-per-jam') {
-                        $harga = $get_seq->tarif_per_jam;
-                    }
-
-                    $ret_tera = $harga * $request->ip_jumlah[$i];
-                    $ret_justir = $hargajustir * $request->ip_jumlah[$i];
-                    $nilai_ret = $ret_tera + $ret_justir;
-
-                    $save_instrumen = new TindakLanjutInstrumen;
-                    $save_instrumen->id_tindak_lanjut = $tindak_lanjut->id;
-                    $save_instrumen->id_instrumen = $get_instrumen->seq_id;
-                    $save_instrumen->tipe_tera = $request->ip_tipe_tera[$i];
-                    $save_instrumen->jumlah_unit = $request->ip_jumlah[$i];
-                    $save_instrumen->volume = $get_seq->volume_to;
-                    $save_instrumen->retribusi_tera = $ret_tera;
-                    $save_instrumen->retribusi_justir = $ret_justir;
-                    $save_instrumen->nilai_retribusi = $nilai_ret;
-                    $save_instrumen->save();
-
-                    $total_retribusi += $nilai_ret;
-                }
-            }
-
-            $harga = 0;
-            $hargajustir = 0;
-            if ($request->ip_tipe_tera[$i] == 'baru') {
-                $harga = $get_instrumen->tera_baru_pengujian;
-                if ($get_instrumen->id == 90) {
-                    // kalo pompa ukur bbm tetep kasih justir walaupun tera baru
-                    $hargajustir = $get_instrumen->tera_ulang_pejustiran;
-                }
-            } else if ($request->ip_tipe_tera[$i] == 'ulang') {
-                $harga = $get_instrumen->tera_ulang_pengujian;
-                $hargajustir = $get_instrumen->tera_ulang_pejustiran;
-            } else if ($request->ip_tipe_tera[$i] == 'tarif-per-jam') {
-                $harga = $get_instrumen->tarif_per_jam;
-            }
-
-            if (!is_null($get_instrumen->seq_id)) {
-                // jika uttp yg di pilih punya perhitungan sequence..
-                $ret_tera = $harga * ($sisa_volume / $get_instrumen->volume_per) * $request->ip_jumlah[$i];
-                $ret_justir = $hargajustir * ($sisa_volume / $get_instrumen->volume_per) * $request->ip_jumlah[$i];
-                $nilai_ret = $ret_tera + $ret_justir;
-            } else {
-                // jika uttp yg di pilih, tidak punya perhitungan sequence..
-                $ret_tera = $harga * $request->ip_jumlah[$i];
-                $ret_justir = $hargajustir * $request->ip_jumlah[$i];
-                $nilai_ret = $ret_tera + $ret_justir;
-            }
-
-            $save_instrumen = new TindakLanjutInstrumen;
-            $save_instrumen->id_tindak_lanjut = $tindak_lanjut->id;
-            $save_instrumen->id_instrumen = $request->ip_id[$i];
-            $save_instrumen->tipe_tera = $request->ip_tipe_tera[$i];
-
-            if ($flagjumlahunit != 0) {
-                $save_instrumen->jumlah_unit = 0;
-            } else {
-                $save_instrumen->jumlah_unit = $request->ip_jumlah[$i];
-            }
-
-            $save_instrumen->volume = $sisa_volume;
-            $save_instrumen->retribusi_tera = $ret_tera;
-            $save_instrumen->retribusi_justir = $ret_justir;
-            $save_instrumen->nilai_retribusi = $nilai_ret;
-            $save_instrumen->save();
-
-            $total_retribusi += $nilai_ret;
-        }
-
-        // value 2 - tenaga ahli penera
-        $repeat_instrumen = $request->repeat_instrumen;
-        $crepeat_instrumen = count($repeat_instrumen);
-        for ($i = 0; $i < $crepeat_instrumen; $i++) {
-            $value_2 = [
-                "uuid" => Str::uuid(),
-                "uuid_penjadwalan" => $uuid_penjadwalan,
-                "uuid_instrumen" => $repeat_instrumen[$i]['uuid_instrumen'],
-                "tipe_tera",
-                "jumlah_unit" => $repeat_instrumen[$i]['uuid_instrumen'],
-                "volume" => $repeat_instrumen[$i]['uuid_instrumen'],
-                "retribusi_tera",
-                "retribusi_justir",
-                "nilai_retribusi",
-                "uuid_created" => $uuid_profile,
-            ];
-            PdpInstrumen::create($value_2);
-        }
-
-        return dd($request->all());
 
         // save
         $save_1 = $data->update($value_1);
         if ($save_1) {
-            // value 2 - tenaga ahli penera
-            $ta = $request->tenaga_ahli_penera;
-            $cta = count($ta);
-            for ($i = 0; $i < $cta; $i++) {
-                $value_2 = [
-                    "uuid" => Str::uuid(),
-                    "uuid_penjadwalan" => $uuid_penjadwalan,
-                    "uuid_pegawai" => $ta[$i],
-                    "jabatan_petugas" => "Tenaga Ahli Penera",
-                    "uuid_created" => $uuid_profile,
-                ];
-                PdpDataPetugas::create($value_2);
-            }
-
-            // value 3 - pendamping teknis
-            $teknis = $request->pendamping_teknis;
-            $cteknis = count($teknis);
-            for ($i = 0; $i < $cteknis; $i++) {
-                $value_3 = [
-                    "uuid" => Str::uuid(),
-                    "uuid_penjadwalan" => $uuid_penjadwalan,
-                    "uuid_pegawai" => $teknis[$i],
-                    "jabatan_petugas" => "Pendamping Teknis",
-                    "uuid_created" => $uuid_profile,
-                ];
-                PdpDataPetugas::create($value_3);
-            }
-
+            // save instrumen & retribusi
+            $this->saveInstrumen($request, $auth, $data);
+            // save alat
+            $this->saveAlat($request, $auth, $data);
             // create log
             $aktifitas = [
                 "tabel" => array("pdp_penjadwalan"),
@@ -370,92 +163,241 @@ class ScdInstrumenAlatController extends Controller
             ];
             $log = [
                 "apps" => "Schedule Apps",
-                "subjek" => "Mengubah Penjadwalan & Penugasan: " . $nomor_order . " - " . $uuid_penjadwalan,
+                "subjek" => "Mengubah Data Instrumen & Alat: " . $nomor_order,
                 "aktifitas" => $aktifitas,
                 "device" => "web",
                 "dashboard" => "0",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', "Berhasil Mengubah Penjadwalan & Penugasan: " . $nomor_order);
+            alert()->success('Berhasil!', "Berhasil Mengubah Instrumen & Alat: " . $nomor_order);
             return redirect()->route('scd.apps.insalat.index');
         } else {
-            alert()->error('Gagal!', "Gagal Mengubah Penjadwalan & Penugasan: " . $nomor_order);
+            alert()->error('Gagal!', "Gagal Mengubah Instrumen & Alat: " . $nomor_order);
             return back()->withInput($request->all());
         }
     }
 
     /**
-     * Status Aktif
+     * PRIVATE FUNCTION
      */
-    public function status(Request $request)
+    // instrumen
+    private function saveInstrumen($request, $auth, $data)
     {
-        // auth
-        $auth = Auth::user();
+        // base data
+        $uuid_penjadwalan = $data->uuid;
+        $jp = $data->RelPermohonanPeneraan->jenis_pengujian;
+        $no_urut = 1;
 
-        // uuid
-        $uuid = CID::decode($request->uuid);
-        $status = CID::decode($request->status);
+        // delete all instrumen
+        PdpInstrumen::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
+        PdpRetribusi::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
 
-        // data
-        $data = PdpPenjadwalan::findOrFail($uuid);
+        // value baru data instrumen
+        $total_retribusi = 0;
+        if ($request->has('repeat_instrumen')) {
+            $repeat_instrumen = $request->repeat_instrumen;
+            $crepeat_instrumen = count($repeat_instrumen);
+            for ($i = 0; $i < $crepeat_instrumen; $i++) {
+                $uuid_instrumen = $repeat_instrumen[$i]['uuid_instrumen'];
+                $get_instrumen = MasterInstrumenDaftarItemUttp::findOrFail($uuid_instrumen);
+                $jumlah_unit = $repeat_instrumen[$i]['jumlah_unit_instrumen'];
+                $volume = $repeat_instrumen[$i]['volume_instrumen'];
+                $sisa_volume = $volume;
+                $flagjumlahunit = 0;
+                $harga = 0;
+                $hargajustir = 0;
+                // tipe_tera
+                if ($jp == "Tera") {
+                    $tipe_tera = "baru";
+                    $harga = $get_instrumen->tera_baru_pengujian;
+                    if ($get_instrumen->nama_instrumen == "POMPA UKUR BBM") {
+                        // kalo pompa ukur bbm tetep kasih justir walaupun tera baru
+                        $hargajustir = $get_instrumen->tera_ulang_pejustiran;
+                    }
+                } elseif ($jp == "Tera Ulang") {
+                    $tipe_tera = "ulang";
+                    $harga = $get_instrumen->tera_ulang_pengujian;
+                    $hargajustir = $get_instrumen->tera_ulang_pejustiran;
+                } elseif ($jp == "Pengujian BDKT") {
+                    $tipe_tera = "tarif-per-jam";
+                    $harga = $get_instrumen->tarif_per_jam;
+                }
 
-        // value
-        $value_1 = [
-            "status_peneraan" => $status,
-            "uuid_updated" => $auth->uuid_profile,
-        ];
+                // instrumen dengan perhitungan perhitungan sequence
+                $ar_seq = [
+                    "LEBIH DARI 3000KG",
+                ];
+                if (in_array($get_instrumen->nama_instrumen, $ar_seq)) {
+                    // jika uttp yg di pilih punya perhitungan sequence..
+                    $ret_tera = $harga * ($sisa_volume / $get_instrumen->volume_per) * $jumlah_unit;
+                    $ret_justir = $hargajustir * ($sisa_volume / $get_instrumen->volume_per) * $jumlah_unit;
+                    $nilai_ret = $ret_tera + $ret_justir;
+                } else {
+                    // jika uttp yg di pilih, tidak punya perhitungan sequence..
+                    $ret_tera = $harga * $jumlah_unit;
+                    $ret_justir = $hargajustir * $jumlah_unit;
+                    $nilai_ret = $ret_tera + $ret_justir;
+                }
 
-        if ($status == "Diproses") {
-            $value_1['uuid_diproses'] = $auth->uuid_profile;
-        } elseif ($status == "Ditunda") {
-            $value_1['uuid_ditunda'] = $auth->uuid_profile;
-        } elseif ($status == "Dibatalkan") {
-            $value_1['uuid_dibatalkan'] = $auth->uuid_profile;
-            // ubah status permohonan jadi ditolak
-            $uuid_permohonan = $data->uuid_permohonan;
-            // value permohonan
-            $value_2 = [
-                "status" => "Ditolak",
-                "uuid_updated" => $auth->uuid_profile,
-            ];
-            PermohonanPeneraan::whereUuid($uuid_permohonan)->update($value_2);
-        } elseif ($status == "Selesai") {
-            $value_1['uuid_selesai'] = $auth->uuid_profile;
+                // create save_instrumen
+                $save_instrumen = new PdpInstrumen;
+                $save_instrumen->uuid = Str::uuid();
+                $save_instrumen->uuid_penjadwalan = $uuid_penjadwalan;
+                $save_instrumen->uuid_instrumen = $uuid_instrumen;
+                $save_instrumen->no_urut = $no_urut;
+                $save_instrumen->tipe_tera = $tipe_tera;
+                if ($flagjumlahunit != 0) {
+                    $save_instrumen->jumlah_unit = 0;
+                } else {
+                    $save_instrumen->jumlah_unit = $jumlah_unit;
+                }
+                $save_instrumen->volume = $sisa_volume;
+                $save_instrumen->retribusi_tera = $ret_tera;
+                $save_instrumen->retribusi_justir = $ret_justir;
+                $save_instrumen->nilai_retribusi = $nilai_ret;
+                $save_instrumen->uuid_created = $auth->uuid_profile;
+                $save_instrumen->save();
+
+                // total_retribusi
+                $total_retribusi += $nilai_ret;
+                $no_urut++;
+            }
         }
 
-        // save
-        $save_1 = $data->update($value_1);
-        if ($save_1) {
-            // create log
-            $aktifitas = [
-                "tabel" => array("pdp_penjadwalan"),
-                "uuid" => array($uuid),
-                "value" => array($data),
-            ];
-            $log = [
-                "apps" => "Schedule Apps",
-                "subjek" => "Mengubah Status Jadawal & Penugasan Menjadi : " . $status . " - " . $uuid,
-                "aktifitas" => $aktifitas,
-                "device" => "web",
-                "dashboard" => "1",
-            ];
-            CID::addToLogAktifitas($request, $log);
-            // alert success
-            $msg = "Berhasil Merubah Status Jadawal & Penugasan Menjadi: " . $status . "!";
-            $response = [
-                "status" => true,
-                "message" => $msg,
-            ];
-            return response()->json($response, 200);
-        } else {
-            // gagal
-            $msg = "Gagal Melakukan Perubahan Status Jadawal & Penugasan!";
-            $response = [
-                "status" => false,
-                "message" => $msg,
-            ];
-            return response()->json($response, 422);
+        // value edit data instrumen
+        if ($request->has('uuid_pdp_instrumen')) {
+            $cPdpInstrumen = count($request->uuid_pdp_instrumen);
+            for ($i = 0; $i < $cPdpInstrumen; $i++) {
+                $uuid_instrumen = $request->uuid_instrumen[$i];
+                $get_instrumen = MasterInstrumenDaftarItemUttp::findOrFail($uuid_instrumen);
+                $jumlah_unit = $request->jumlah_unit_instrumen[$i];
+                $volume = $request->volume_instrumen[$i];
+                $sisa_volume = $volume;
+                $flagjumlahunit = 0;
+                $harga = 0;
+                $hargajustir = 0;
+                // tipe_tera
+                if ($jp == "Tera") {
+                    $tipe_tera = "baru";
+                    $harga = $get_instrumen->tera_baru_pengujian;
+                    if ($get_instrumen->nama_instrumen == "POMPA UKUR BBM") {
+                        // kalo pompa ukur bbm tetep kasih justir walaupun tera baru
+                        $hargajustir = $get_instrumen->tera_ulang_pejustiran;
+                    }
+                } elseif ($jp == "Tera Ulang") {
+                    $tipe_tera = "ulang";
+                    $harga = $get_instrumen->tera_ulang_pengujian;
+                    $hargajustir = $get_instrumen->tera_ulang_pejustiran;
+                } elseif ($jp == "Pengujian BDKT") {
+                    $tipe_tera = "tarif-per-jam";
+                    $harga = $get_instrumen->tarif_per_jam;
+                }
+
+                // instrumen dengan perhitungan perhitungan sequence
+                $ar_seq = [
+                    "LEBIH DARI 3000KG",
+                ];
+                if (in_array($get_instrumen->nama_instrumen, $ar_seq)) {
+                    // jika uttp yg di pilih punya perhitungan sequence..
+                    $ret_tera = $harga * ($sisa_volume / $get_instrumen->volume_per) * $jumlah_unit;
+                    $ret_justir = $hargajustir * ($sisa_volume / $get_instrumen->volume_per) * $jumlah_unit;
+                    $nilai_ret = $ret_tera + $ret_justir;
+                } else {
+                    // jika uttp yg di pilih, tidak punya perhitungan sequence..
+                    $ret_tera = $harga * $jumlah_unit;
+                    $ret_justir = $hargajustir * $jumlah_unit;
+                    $nilai_ret = $ret_tera + $ret_justir;
+                }
+
+                // create save_instrumen
+                $save_instrumen = new PdpInstrumen;
+                $save_instrumen->uuid = Str::uuid();
+                $save_instrumen->uuid_penjadwalan = $uuid_penjadwalan;
+                $save_instrumen->uuid_instrumen = $uuid_instrumen;
+                $save_instrumen->no_urut = $no_urut;
+                $save_instrumen->tipe_tera = $tipe_tera;
+                if ($flagjumlahunit != 0) {
+                    $save_instrumen->jumlah_unit = 0;
+                } else {
+                    $save_instrumen->jumlah_unit = $jumlah_unit;
+                }
+                $save_instrumen->volume = $sisa_volume;
+                $save_instrumen->retribusi_tera = $ret_tera;
+                $save_instrumen->retribusi_justir = $ret_justir;
+                $save_instrumen->nilai_retribusi = $nilai_ret;
+                $save_instrumen->uuid_created = $auth->uuid_profile;
+                $save_instrumen->save();
+
+                // total_retribusi
+                $total_retribusi += $nilai_ret;
+                $no_urut++;
+            }
+        }
+
+        // create retribusi
+        if ($request->has('repeat_instrumen') || $request->has('uuid_pdp_instrumen')) {
+            $retribusi = PdpRetribusi::where("uuid_penjadwalan", $uuid_penjadwalan)->first();
+            if ($retribusi === null) {
+                // create
+                $save_retribusi = new PdpRetribusi;
+                $save_retribusi->uuid = Str::uuid();
+                $save_retribusi->uuid_penjadwalan = $uuid_penjadwalan;
+                $save_retribusi->total_retribusi = $total_retribusi;
+                $save_retribusi->uuid_created = $auth->uuid_profile;
+                $save_retribusi->save();
+            } else {
+                // update
+                $retribusi->total_retribusi = $total_retribusi;
+                $retribusi->save();
+            }
+        }
+    }
+    // alat
+    private function saveAlat($request, $auth, $data)
+    {
+        // base data
+        $uuid_penjadwalan = $data->uuid;
+        $no_urut = 1;
+
+        // delete all alat
+        PdpAlat::where("uuid_penjadwalan", $uuid_penjadwalan)->forceDelete();
+
+        // value baru data alat
+        if ($request->has('repeat_alat')) {
+            $repeat_alat = $request->repeat_alat;
+            $crepeat_alat = count($repeat_alat);
+            for ($i = 0; $i < $crepeat_alat; $i++) {
+                // create
+                $save_alat = new PdpAlat;
+                $save_alat->uuid = Str::uuid();
+                $save_alat->uuid_penjadwalan = $uuid_penjadwalan;
+                $save_alat->uuid_alat = $repeat_alat[$i]['uuid_alat'];
+                $save_alat->no_urut = $no_urut;
+                $save_alat->jumlah_unit = $repeat_alat[$i]['jumlah_unit_alat'];
+                $save_alat->uuid_created = $auth->uuid_profile;
+                $save_alat->save();
+                $no_urut++;
+            }
+        }
+
+        // value edit data alat
+        if ($request->has('uuid_pdp_alat')) {
+            $cPdpAlat = count($request->uuid_pdp_alat);
+            for ($i = 0; $i < $cPdpAlat; $i++) {
+                $uuid_alat = $request->uuid_alat[$i];
+                $jumlah_unit = $request->jumlah_unit_alat[$i];
+                // create
+                $save_alat = new PdpAlat;
+                $save_alat->uuid = Str::uuid();
+                $save_alat->uuid_penjadwalan = $uuid_penjadwalan;
+                $save_alat->uuid_alat = $uuid_alat;
+                $save_alat->no_urut = $no_urut;
+                $save_alat->jumlah_unit = $jumlah_unit;
+                $save_alat->uuid_created = $auth->uuid_profile;
+                $save_alat->save();
+                $no_urut++;
+            }
         }
     }
 
@@ -528,7 +470,7 @@ class ScdInstrumenAlatController extends Controller
                 })
                 ->addColumn('detail_pdp', function ($data) {
                     $getPetugasTAP = CID::getPetugasTAP($data->uuid);
-                    $getPetugasPT = \CID::getPetugasPT($data->uuid);
+                    $getPetugasPT = CID::getPetugasPT($data->uuid);
                     $detail_pdp = '
                     <p class="m-0 p-0"><strong style="display:inline-block; min-width:90px;">Tenaga Ahli Penera</strong><span>:</span></p>
                     <ul>
@@ -548,7 +490,24 @@ class ScdInstrumenAlatController extends Controller
                     return $detail_pdp;
                 })
                 ->addColumn('detail_insalat', function ($data) {
-                    $detail_insalat = '';
+                    $getInstrumen = $data->RelPdpInstrumenOrder;
+                    $getAlat = $data->RelPdpAlatOrder;
+                    $detail_insalat = '
+                    <p class="m-0 p-0"><strong>List Instrumen</strong><span>:</span></p>
+                    <ul>
+                ';
+                    foreach ($getInstrumen as $itemInstrumen) {
+                        $detail_insalat .= '<li>' . $itemInstrumen->RelMasterInstrumenDaftarItemUttp->nama_instrumen . '</li>';
+                    }
+                    $detail_insalat .= '
+                    </ul>
+                    <p class="m-0 p-0"><strong>List Alat</strong><span>:</span></p>
+                    <ul>
+                ';
+                    foreach ($getAlat as $itemAlat) {
+                        $detail_insalat .= '<li>' . $itemAlat->RelMasterKategoriKelompok->nama_kategori . '</li>';
+                    }
+                    $detail_insalat .= '</ul>';
                     return $detail_insalat;
                 })
                 ->addColumn('aksi', function ($data) use ($status) {
@@ -560,12 +519,16 @@ class ScdInstrumenAlatController extends Controller
                     // hak akses
                     $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
                     if ($subRoleOnlyPetugas == true) {
+                        $link_item = '';
+                        if ($data->status_peneraan == "Diproses" || $data->status_peneraan == "Ditunda") {
+                            $link_item = '<li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-pencil"></i> Edit Data</a></li>';
+                        }
                         $aksi = '<div class="dropdown">
                             <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 Aksi
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="' . $edit . '"><i class="fa-solid fa-pencil"></i> Edit Data</a></li>
+                                ' . $link_item . '
                                 <li><a class="dropdown-item" href="' . $view . '"><i class="fa-solid fa-eye"></i> Lihat Data</a></li>
                             </ul>
                         </div>';

@@ -351,19 +351,22 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
         Route::group(['middleware' => ['Pegawai']], function () {
             // dashboard
             Route::get('/', [ScdDashboardController::class, 'index'])->name('scd.apps.home.index');
-            // middleware : Verifikator
-            Route::group(['middleware' => ['Verifikator']], function () {
+            // middleware : KetuaTimDanPimpinan
+            Route::group(['middleware' => ['KetuaTimDanPimpinan']], function () {
                 // permohonan
                 // PATH : WebBase/WebAdmin/ScheduleApps/permohonan
                 Route::group(['prefix' => 'permohonan/{tags}'], function () {
                     Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('scd.apps.pp.index');
-                    Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
-                    Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('scd.apps.pp.pindahjp');
+                    // middleware : Verifikator
+                    Route::group(['middleware' => ['Verifikator']], function () {
+                        Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('scd.apps.pp.status');
+                        Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('scd.apps.pp.pindahjp');
+                    });
                     Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('scd.apps.pp.data');
                 });
             });
-            // middleware : Admin
-            Route::group(['middleware' => ['Admin']], function () {
+            // middleware : KetuaTimPelayanan
+            Route::group(['middleware' => ['KetuaTimPelayanan']], function () {
                 // input-data
                 // PATH : WebBase/WebAdmin/ScheduleApps/permohonan
                 Route::group(['prefix' => 'input-data'], function () {
@@ -374,26 +377,20 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                     Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('scd.apps.input.pdp.data');
                 });
             });
-            // manajemen-peneraan
-            // PATH : WebBase/WebAdmin/ScheduleApps/penera
-            // Route::group(['prefix' => 'manajemen-peneraan'], function () {
-            //     Route::get('/', [ScdInputDataPeneraController::class, 'index'])->name('scd.apps.mnj.penera.index');
-            //     Route::get('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'create'])->name('scd.apps.mnj.penera.create');
-            //     Route::post('/input-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'store'])->name('scd.apps.mnj.penera.store');
-            //     Route::get('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'edit'])->name('scd.apps.mnj.penera.edit');
-            //     Route::put('/edit-instrumen-alat/{uuid}', [ScdInputDataPeneraController::class, 'update'])->name('scd.apps.mnj.penera.update');
-            //     Route::get('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'editPdp'])->name('scd.apps.mnj.penera.edit.pdp');
-            //     Route::put('/edit-jadwal-petugas/{uuid}', [ScdInputDataPeneraController::class, 'updatePdp'])->name('scd.apps.mnj.penera.update.pdp');
-            //     Route::get('/data', [ScdInputDataPeneraController::class, 'data'])->name('scd.apps.mnj.penera.data');
-            // });
             // jadwal-penugasan
             // PATH : WebBase/WebAdmin/ScheduleApps/penera
             Route::group(['prefix' => 'jadwal-penugasan'], function () {
                 Route::get('/', [ScdDataPdpController::class, 'index'])->name('scd.apps.data.pdp.index');
                 Route::get('/show/{uuid}', [ScdDataPdpController::class, 'show'])->name('scd.apps.data.pdp.show');
-                Route::get('/edit/{uuid}', [ScdDataPdpController::class, 'edit'])->name('scd.apps.data.pdp.edit');
-                Route::put('/edit/{uuid}', [ScdDataPdpController::class, 'update'])->name('scd.apps.data.pdp.update');
-                Route::put('/status', [ScdDataPdpController::class, 'status'])->name('scd.apps.data.pdp.status');
+                // middleware : KetuaTimPelayanan
+                Route::group(['middleware' => ['KetuaTimPelayanan']], function () {
+                    Route::get('/edit/{uuid}', [ScdDataPdpController::class, 'edit'])->name('scd.apps.data.pdp.edit');
+                    Route::put('/edit/{uuid}', [ScdDataPdpController::class, 'update'])->name('scd.apps.data.pdp.update');
+                });
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::put('/status', [ScdDataPdpController::class, 'status'])->name('scd.apps.data.pdp.status');
+                });
                 Route::get('/data', [ScdDataPdpController::class, 'data'])->name('scd.apps.data.pdp.data');
             });
             // instrumen-alat
@@ -401,9 +398,11 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
             Route::group(['prefix' => 'instrumen-alat'], function () {
                 Route::get('/', [ScdInstrumenAlatController::class, 'index'])->name('scd.apps.insalat.index');
                 Route::get('/show/{uuid}', [ScdInstrumenAlatController::class, 'show'])->name('scd.apps.insalat.show');
-                Route::get('/edit/{uuid}', [ScdInstrumenAlatController::class, 'edit'])->name('scd.apps.insalat.edit');
-                Route::put('/edit/{uuid}', [ScdInstrumenAlatController::class, 'update'])->name('scd.apps.insalat.update');
-                Route::put('/status', [ScdInstrumenAlatController::class, 'status'])->name('scd.apps.insalat.status');
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::get('/edit/{uuid}', [ScdInstrumenAlatController::class, 'edit'])->name('scd.apps.insalat.edit');
+                    Route::put('/edit/{uuid}', [ScdInstrumenAlatController::class, 'update'])->name('scd.apps.insalat.update');
+                });
                 Route::get('/data', [ScdInstrumenAlatController::class, 'data'])->name('scd.apps.insalat.data');
             });
         });

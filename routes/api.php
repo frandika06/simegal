@@ -134,8 +134,8 @@ Route::group(['middleware' => ['auth:api', 'LastSeen', 'MobileFECounter']], func
     |--------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'schedule-apps'], function () {
-        // middleware : KetuaTimDanPimpinan
-        Route::group(['middleware' => ['KetuaTimDanPimpinan']], function () {
+        // middleware : Petugas
+        Route::group(['middleware' => ['Petugas']], function () {
             // jadwal-penugasan
             // PATH : ApiBase/ApiAdmin/ScheduleApps/penera
             Route::group(['prefix' => 'jadwal-penugasan'], function () {

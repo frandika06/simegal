@@ -243,6 +243,20 @@
                                     @method('put')
                                 @endisset
 
+                                {{-- begin::nomor_order --}}
+                                <div class="form-floating mb-5">
+                                    <input type="text" class="form-control bg-light-info" name="nomor_order" id="nomor_order2" value="{{ $data->nomor_order }}" readonly />
+                                    <label for="nomor_order">Nomor Order</label>
+                                </div>
+                                {{-- end::nomor_order --}}
+
+                                {{-- begin::kelompok_uttp --}}
+                                <div class="form-floating mb-5">
+                                    <input type="text" class="form-control bg-light-info" name="kelompok_uttp" id="kelompok_uttp2" value="{{ $data->RelMasterKelompokUttp->nama_kelompok }}" readonly />
+                                    <label for="kelompok_uttp">Kelompok UTTP</label>
+                                </div>
+                                {{-- end::kelompok_uttp --}}
+
                                 {{-- begin::Penjadwalan Peneraan --}}
                                 <div class="mt-0">
                                     <label for="">Penjadwalan Peneraan</label>
@@ -346,11 +360,53 @@
                                     <div class="row p-2">
                                         <div class="col">
                                             {{-- begin::intrumen --}}
-                                            <!--begin::Repeater-->
+                                            {{-- begin::Repeater --}}
                                             <div id="repeat_instrumen">
-                                                <!--begin::Form group-->
+                                                {{-- begin::Form group --}}
                                                 <div class="form-group">
                                                     <div data-repeater-list="repeat_instrumen">
+                                                        {{-- EDIT INSTRUMEN::BEGIN --}}
+                                                        @isset($data->RelPdpInstrumen)
+                                                            @foreach ($data->RelPdpInstrumenOrder as $itemData)
+                                                                <div class="alert alert-secondary" id="{{ \CID::encode($itemData->uuid) }}">
+                                                                    <div class="form-group row mb-5">
+                                                                        <div class="col-12 mb-5">
+                                                                            <input type="hidden" name="uuid_pdp_instrumen[]" value="{{ $itemData->uuid }}">
+                                                                            <label class="form-label">Item UTTP:</label>
+                                                                            <select class="form-select mb-2 mb-md-0 select_test2" name="uuid_instrumen[]" id="uuid_instrumen" data-placeholder="Pilih Item UTTP" required>
+                                                                                @foreach (\CID::getListInstrumenGByJenisUttp() as $item1)
+                                                                                    <optgroup label="{{ $item1->nama_jenis_uttp }}">
+                                                                                        @foreach (\CID::getListInstrumenByJenisUttp($item1->uuid) as $item2)
+                                                                                            @if ($item2->group_instrumen === null)
+                                                                                                <option value="{{ $item2->uuid }}" @if ($item2->uuid == $itemData->uuid_instrumen) selected @endif>{{ $item2->nama_instrumen }}</option>
+                                                                                            @else
+                                                                                                <option value="{{ $item2->uuid }}" @if ($item2->uuid == $itemData->uuid_instrumen) selected @endif>[{{ $item2->group_instrumen }}] : {{ $item2->nama_instrumen }}</option>
+                                                                                            @endif
+                                                                                        @endforeach
+                                                                                    </optgroup>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <label class="form-label">Jumlah Unit:</label>
+                                                                            <input type="number" class="form-control mb-2 mb-md-0" name="jumlah_unit_instrumen[]" value="{{ $itemData->jumlah_unit }}" placeholder="Jumlah Unit" min="0" required />
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <label class="form-label">Volume/Jam:</label>
+                                                                            <input type="number" class="form-control mb-2 mb-md-0" name="volume_instrumen[]" value="{{ $itemData->volume }}" placeholder="Volume/Jam" min="0" required />
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <a href="javascript:;" class="btn btn-outline btn-light-danger mt-3 mt-md-8 hapus-instrumen" data-del-instrumen="{{ \CID::encode($itemData->uuid) }}">
+                                                                                <i class="ki-duotone ki-trash fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endisset
+                                                        {{-- EDIT INSTRUMEN::END --}}
+
+                                                        {{-- ADD INSTRUMEN::BEGIN --}}
                                                         <div data-repeater-item>
                                                             <div class="alert alert-secondary">
                                                                 <div class="form-group row mb-5">
@@ -386,20 +442,21 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        {{-- ADD INSTRUMEN::END --}}
                                                     </div>
                                                 </div>
-                                                <!--end::Form group-->
+                                                {{-- end::Form group --}}
 
-                                                <!--begin::Form group-->
+                                                {{-- begin::Form group --}}
                                                 <div class="form-group mt-5">
                                                     <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
                                                         <i class="ki-duotone ki-plus fs-3"></i>
                                                         Add
                                                     </a>
                                                 </div>
-                                                <!--end::Form group-->
+                                                {{-- end::Form group --}}
                                             </div>
-                                            <!--end::Repeater-->
+                                            {{-- end::Repeater --}}
                                             {{-- end::intrumen --}}
                                         </div>
                                     </div>
@@ -412,11 +469,52 @@
                                     <div class="row p-2">
                                         <div class="col">
                                             {{-- begin::intrumen --}}
-                                            <!--begin::Repeater-->
+                                            {{-- begin::Repeater --}}
                                             <div id="repeat_alat">
-                                                <!--begin::Form group-->
+                                                {{-- begin::Form group --}}
                                                 <div class="form-group">
                                                     <div data-repeater-list="repeat_alat">
+                                                        {{-- EDIT ALAT::BEGIN --}}
+                                                        @isset($data->RelPdpAlat)
+                                                            @foreach ($data->RelPdpAlatOrder as $itemData)
+                                                                <div class="alert alert-secondary" id="{{ \CID::encode($itemData->uuid) }}">
+                                                                    <div class="form-group row mb-5">
+                                                                        <div class="col-12 mb-5">
+                                                                            <input type="hidden" name="uuid_pdp_alat[]" value="{{ $itemData->uuid }}">
+                                                                            <label class="form-label">Alat & CTT:</label>
+                                                                            <select class="form-select mb-2 mb-md-0 select_test2" name="uuid_alat[]" id="uuid_alat" data-placeholder="Pilih Alat & CTT" required>
+                                                                                <optgroup label="Alat Standar & Perlengkapannya">
+                                                                                    @foreach (\CID::getListAlat($permohonan->jenis_pengujian, $data->uuid_kelompok_uttp) as $item)
+                                                                                        @if ($item->kategori == '1')
+                                                                                            <option value="{{ $item->uuid }}" @if ($item->uuid == $itemData->uuid_alat) selected @endif>{{ $item->nama_kategori }}</option>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
+                                                                                <optgroup label="CTT">
+                                                                                    @foreach (\CID::getListAlat($permohonan->jenis_pengujian, $data->uuid_kelompok_uttp) as $item)
+                                                                                        @if ($item->kategori == '2')
+                                                                                            <option value="{{ $item->uuid }}" @if ($item->uuid == $itemData->uuid_alat) selected @endif>{{ $item->nama_kategori }}</option>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-5">
+                                                                            <label class="form-label">Jumlah Unit:</label>
+                                                                            <input type="number" class="form-control mb-2 mb-md-0" name="jumlah_unit_alat[]" value="{{ $itemData->jumlah_unit }}" placeholder="Jumlah Unit" min="0" required />
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <a href="javascript:;" class="btn btn-outline btn-light-danger mt-3 mt-md-8 hapus-alat" data-del-alat="{{ \CID::encode($itemData->uuid) }}">
+                                                                                <i class="ki-duotone ki-trash fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endisset
+                                                        {{-- EDIT ALAT::END --}}
+
+                                                        {{-- ADD ALAT::BEGIN --}}
                                                         <div data-repeater-item>
                                                             <div class="alert alert-secondary">
                                                                 <div class="form-group row mb-5">
@@ -451,20 +549,21 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        {{-- ADD ALAT::END --}}
                                                     </div>
                                                 </div>
-                                                <!--end::Form group-->
+                                                {{-- end::Form group --}}
 
-                                                <!--begin::Form group-->
+                                                {{-- begin::Form group --}}
                                                 <div class="form-group mt-5">
                                                     <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
                                                         <i class="ki-duotone ki-plus fs-3"></i>
                                                         Add
                                                     </a>
                                                 </div>
-                                                <!--end::Form group-->
+                                                {{-- end::Form group --}}
                                             </div>
-                                            <!--end::Repeater-->
+                                            {{-- end::Repeater --}}
                                             {{-- end::intrumen --}}
                                         </div>
                                     </div>
@@ -514,7 +613,7 @@
     {{-- reapeat instrumen --}}
     <script>
         $('#repeat_instrumen').repeater({
-            initEmpty: false,
+            initEmpty: true,
             defaultValues: {
                 'text-input': 'foo'
             },
@@ -533,7 +632,7 @@
     {{-- reapeat alat & CTT --}}
     <script>
         $('#repeat_alat').repeater({
-            initEmpty: false,
+            initEmpty: true,
             defaultValues: {
                 'text-input': 'foo'
             },
@@ -547,6 +646,20 @@
             hide: function(deleteElement) {
                 $(this).slideUp(deleteElement);
             }
+        });
+    </script>
+    {{-- hapus-instrumen --}}
+    <script>
+        $(document).on('click', ".hapus-instrumen", function() {
+            let id = $(this).attr('data-del-instrumen');
+            $("#" + id).remove();
+        });
+    </script>
+    {{-- hapus-alat --}}
+    <script>
+        $(document).on('click', ".hapus-alat", function() {
+            let id = $(this).attr('data-del-alat');
+            $("#" + id).remove();
         });
     </script>
 @endpush

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('uuid', 100)->primary();
             $table->string('uuid_penjadwalan', 100)->nullable();
             $table->string('uuid_instrumen', 100)->nullable();
+            $table->integer('no_urut')->default(1);
             $table->string('tipe_tera', 100)->nullable();
             $table->integer('jumlah_unit')->default(0);
             $table->integer('volume')->default(0);

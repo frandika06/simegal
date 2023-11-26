@@ -19,7 +19,7 @@ class ScdDashboardController extends Controller
         $role = $auth->role;
 
         // Admin System
-        if ($role == "Admin System" || $role == "Super Admin") {
+        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
             return $this->indexGeneral($request);
         } elseif ($role == "Pegawai") {
             // PEGAWAI

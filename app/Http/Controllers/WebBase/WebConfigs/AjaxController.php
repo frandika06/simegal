@@ -248,7 +248,11 @@ class AjaxController extends Controller
             ->where("permohonan_peneraan.jenis_pengujian", 'Pengujian BDKT');
 
         // Semua Data
-        if ($status != "All") {
+        if ($status == "All") {
+            $tera = $tera->where("pdp_penjadwalan.status_peneraan", "!=", "Menunggu");
+            $teraUlang = $teraUlang->where("pdp_penjadwalan.status_peneraan", "!=", "Menunggu");
+            $bdkt = $bdkt->where("pdp_penjadwalan.status_peneraan", "!=", "Menunggu");
+        } else {
             $tera = $tera->where("pdp_penjadwalan.status_peneraan", $status);
             $teraUlang = $teraUlang->where("pdp_penjadwalan.status_peneraan", $status);
             $bdkt = $bdkt->where("pdp_penjadwalan.status_peneraan", $status);
