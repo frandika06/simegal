@@ -27,6 +27,11 @@ use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdDataPdpControll
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdInstrumenAlatController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdInputDataPdpController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\action\ScdTinjutActionSkhpController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\ScdTinjutBdktController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\ScdTinjutMTController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\ScdTinjutUapvController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tte\ScdTteSkhpController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\dashboard\SetAppsDashboardController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kabid\SetAppsKabidController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\kadis\SetAppsKadisController;
@@ -39,9 +44,12 @@ use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpKe
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpTagsKelompokController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\pegawai\SetAppsPegawaiController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\perusahaan\SetAppsPerusahaanController;
+use App\Http\Controllers\WebBase\WebAdmin\SupervisionApps\dashboard\SpvDashboardController;
 use App\Http\Controllers\WebBase\WebConfigs\AjaxController;
+use App\Http\Controllers\WebBase\WebConfigs\CekTteController;
 use App\Http\Controllers\WebBase\WebConfigs\ExDownController;
 use App\Http\Controllers\WebBase\WebConfigs\NocController;
+use App\Http\Controllers\WebBase\WebConfigs\PrintPdpController;
 use App\Http\Controllers\WebBase\WebConfigs\WilAdmController;
 use App\Http\Controllers\WebBase\WebPortal\HomeController;
 use App\Http\Controllers\WebBase\WebPortal\MediaController;
@@ -138,7 +146,12 @@ Route::group(['prefix' => 'wil-adm'], function () {
 
 });
 
-// eximdown | Export - Import - Download
+/*
+|--------------------------------------------------------------------------
+| eximdown | Export - Import - Download
+| PATH : WebBase/WebConfigs
+|--------------------------------------------------------------------------
+ */
 Route::group(['prefix' => 'eximdown'], function () {
     // unduhan
     Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
@@ -151,7 +164,37 @@ Route::group(['prefix' => 'eximdown'], function () {
     });
 });
 
-// AJAX
+/*
+|--------------------------------------------------------------------------
+| PRINT
+| PATH : WebBase/WebConfigs
+|--------------------------------------------------------------------------
+ */
+Route::group(['prefix' => 'print'], function () {
+    // pdp | Aplikasi Penjadwalan dan Penugasan
+    Route::group(['prefix' => 'pdp'], function () {
+        Route::get('/surat-jalan/{uuid}', [PrintPdpController::class, 'suratJalan'])->name('print.pdp.sj');
+        Route::get('/surat-perintah/{uuid}', [PrintPdpController::class, 'suratPerintah'])->name('print.pdp.spt');
+        Route::get('/kartu-penerus-disposisi/{uuid}', [PrintPdpController::class, 'kartuPenerusDisposisi'])->name('print.pdp.disposisi');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| TTE
+| PATH : WebBase/WebConfigs
+|--------------------------------------------------------------------------
+ */
+Route::group(['prefix' => 'tte'], function () {
+    Route::get('/skhp/{kode_tte}', [CekTteController::class, 'indexSkhp'])->name('cek.tte.skhp');
+});
+
+/*
+|--------------------------------------------------------------------------
+| AJAX
+| PATH : WebBase/WebConfigs
+|--------------------------------------------------------------------------
+ */
 Route::group(['prefix' => 'ajax'], function () {
     // settings-apps
     Route::group(['prefix' => 'settings-apps'], function () {
@@ -163,6 +206,11 @@ Route::group(['prefix' => 'ajax'], function () {
         Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
         Route::post('/statistik/penugasan', [AjaxController::class, 'ScdStatistikPenugasan'])->name('ajax.scd.apps.sts.penugasan');
         Route::post('/statistik/insalat', [AjaxController::class, 'ScdStatistikInsAlat'])->name('ajax.scd.apps.sts.insalat');
+        Route::post('/statistik/tinjut-mt', [AjaxController::class, 'ScdStatistikTinjutMT'])->name('ajax.scd.apps.sts.tinjut.mt');
+        Route::post('/statistik/tinjut-uapv', [AjaxController::class, 'ScdStatistikTinjutUapv'])->name('ajax.scd.apps.sts.tinjut.uapv');
+        Route::post('/statistik/tinjut-bdkt', [AjaxController::class, 'ScdStatistikTinjutBdkt'])->name('ajax.scd.apps.sts.tinjut.bdkt');
+        Route::post('/statistik/tte/data-skhp', [AjaxController::class, 'ScdTteDokumenSKHP'])->name('ajax.scd.apps.sts.tte.skhp');
+        Route::post('/statistik/tte/get-pejabat', [AjaxController::class, 'SetGetTtePejabat'])->name('ajax.scd.apps.tte.get.pejabat');
     });
 });
 
@@ -404,6 +452,128 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                     Route::put('/edit/{uuid}', [ScdInstrumenAlatController::class, 'update'])->name('scd.apps.insalat.update');
                 });
                 Route::get('/data', [ScdInstrumenAlatController::class, 'data'])->name('scd.apps.insalat.data');
+            });
+            // tindak-lanjut
+            // PATH : WebBase/WebAdmin/ScheduleApps/tinjut
+            Route::group(['prefix' => 'tindak-lanjut'], function () {
+                // massa
+                Route::group(['prefix' => 'mt'], function () {
+                    Route::get('/', [ScdTinjutMTController::class, 'index'])->name('scd.apps.tinjut.mt.index');
+                    Route::get('/data', [ScdTinjutMTController::class, 'data'])->name('scd.apps.tinjut.mt.data');
+                });
+                // uapv
+                Route::group(['prefix' => 'uapv'], function () {
+                    Route::get('/', [ScdTinjutUapvController::class, 'index'])->name('scd.apps.tinjut.uapv.index');
+                    Route::get('/data', [ScdTinjutUapvController::class, 'data'])->name('scd.apps.tinjut.uapv.data');
+                });
+                // bdkt
+                Route::group(['prefix' => 'bdkt'], function () {
+                    Route::get('/', [ScdTinjutBdktController::class, 'index'])->name('scd.apps.tinjut.bdkt.index');
+                    Route::get('/data', [ScdTinjutBdktController::class, 'data'])->name('scd.apps.tinjut.bdkt.data');
+                });
+                // action
+                Route::group(['prefix' => 'action/{tags_jp}'], function () {
+                    // manajemen-skhp
+                    // PATH : WebBase/WebAdmin/ScheduleApps/tinjut/action
+                    Route::group(['prefix' => 'manajemen-skhp'], function () {
+                        Route::get('/{uuid}', [ScdTinjutActionSkhpController::class, 'index'])->name('scd.apps.tinjut.action.skhp.index');
+                        Route::post('/{uuid}/generate-tte', [ScdTinjutActionSkhpController::class, 'store'])->name('scd.apps.tinjut.action.skhp.store');
+                        Route::get('/{uuid}/download-tte/{kode_tte}', [ScdTinjutActionSkhpController::class, 'downloadTte'])->name('scd.apps.tinjut.action.skhp.unduh');
+                        Route::delete('/{uuid}/hapus-tte', [ScdTinjutActionSkhpController::class, 'destroy'])->name('scd.apps.tinjut.action.skhp.destroy');
+                    });
+                });
+            });
+            // tte-skhp
+            // PATH : WebBase/WebAdmin/ScheduleApps/tte
+            Route::group(['prefix' => 'tte-skhp'], function () {
+                Route::get('/', [ScdTteSkhpController::class, 'index'])->name('scd.apps.tte.skhp.index');
+            });
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGAWASAN APPS - ADMIN (SupervisionApps)
+    | PATH : WebBase/WebAdmin/SupervisionApps
+    |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'supervision-apps'], function () {
+        // middleware : Pegawai
+        Route::group(['middleware' => ['Pegawai']], function () {
+            // dashboard
+            Route::get('/', [SpvDashboardController::class, 'index'])->name('spv.apps.home.index');
+            // middleware : KetuaTimDanPimpinan
+            Route::group(['middleware' => ['KetuaTimDanPimpinan']], function () {
+                // permohonan
+                // PATH : WebBase/WebAdmin/SupervisionApps/permohonan
+                Route::group(['prefix' => 'permohonan/{tags}'], function () {
+                    Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('spv.apps.pp.index');
+                    // middleware : Verifikator
+                    Route::group(['middleware' => ['Verifikator']], function () {
+                        Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('spv.apps.pp.status');
+                        Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('spv.apps.pp.pindahjp');
+                    });
+                    Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('spv.apps.pp.data');
+                });
+            });
+            // middleware : KetuaTimPelayanan
+            Route::group(['middleware' => ['KetuaTimPelayanan']], function () {
+                // input-data
+                // PATH : WebBase/WebAdmin/SupervisionApps/permohonan
+                Route::group(['prefix' => 'input-data'], function () {
+                    Route::get('/', [ScdInputDataPdpController::class, 'index'])->name('spv.apps.input.pdp.index');
+                    Route::get('/create/{uuid}', [ScdInputDataPdpController::class, 'create'])->name('spv.apps.input.pdp.create');
+                    Route::post('/create/{uuid}', [ScdInputDataPdpController::class, 'store'])->name('spv.apps.input.pdp.store');
+                    Route::put('/update/{uuid}', [ScdInputDataPdpController::class, 'update'])->name('spv.apps.input.pdp.update');
+                    Route::get('/data', [ScdInputDataPdpController::class, 'data'])->name('spv.apps.input.pdp.data');
+                });
+            });
+            // jadwal-penugasan
+            // PATH : WebBase/WebAdmin/SupervisionApps/penera
+            Route::group(['prefix' => 'jadwal-penugasan'], function () {
+                Route::get('/', [ScdDataPdpController::class, 'index'])->name('spv.apps.data.pdp.index');
+                Route::get('/show/{uuid}', [ScdDataPdpController::class, 'show'])->name('spv.apps.data.pdp.show');
+                // middleware : KetuaTimPelayanan
+                Route::group(['middleware' => ['KetuaTimPelayanan']], function () {
+                    Route::get('/edit/{uuid}', [ScdDataPdpController::class, 'edit'])->name('spv.apps.data.pdp.edit');
+                    Route::put('/edit/{uuid}', [ScdDataPdpController::class, 'update'])->name('spv.apps.data.pdp.update');
+                });
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::put('/status', [ScdDataPdpController::class, 'status'])->name('spv.apps.data.pdp.status');
+                });
+                Route::get('/data', [ScdDataPdpController::class, 'data'])->name('spv.apps.data.pdp.data');
+            });
+            // instrumen-alat
+            // PATH : WebBase/WebAdmin/SupervisionApps/penera
+            Route::group(['prefix' => 'instrumen-alat'], function () {
+                Route::get('/', [ScdInstrumenAlatController::class, 'index'])->name('spv.apps.insalat.index');
+                Route::get('/show/{uuid}', [ScdInstrumenAlatController::class, 'show'])->name('spv.apps.insalat.show');
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::get('/edit/{uuid}', [ScdInstrumenAlatController::class, 'edit'])->name('spv.apps.insalat.edit');
+                    Route::put('/edit/{uuid}', [ScdInstrumenAlatController::class, 'update'])->name('spv.apps.insalat.update');
+                });
+                Route::get('/data', [ScdInstrumenAlatController::class, 'data'])->name('spv.apps.insalat.data');
+            });
+            // tindak-lanjut
+            // PATH : WebBase/WebAdmin/SupervisionApps/tinjut
+            Route::group(['prefix' => 'tindak-lanjut'], function () {
+                // massa
+                Route::group(['prefix' => 'mt'], function () {
+                    Route::get('/', [ScdTinjutMTController::class, 'index'])->name('spv.apps.tinjut.mt.index');
+                    Route::get('/data', [ScdTinjutMTController::class, 'data'])->name('spv.apps.tinjut.mt.data');
+                });
+                // uapv
+                Route::group(['prefix' => 'uapv'], function () {
+                    Route::get('/', [ScdTinjutUapvController::class, 'index'])->name('spv.apps.tinjut.uapv.index');
+                    Route::get('/data', [ScdTinjutUapvController::class, 'data'])->name('spv.apps.tinjut.uapv.data');
+                });
+                // bdkt
+                Route::group(['prefix' => 'bdkt'], function () {
+                    Route::get('/', [ScdTinjutBdktController::class, 'index'])->name('spv.apps.tinjut.bdkt.index');
+                    Route::get('/data', [ScdTinjutBdktController::class, 'data'])->name('spv.apps.tinjut.bdkt.data');
+                });
             });
         });
     });

@@ -56,7 +56,7 @@
                 <div class="me-3">
                     {{-- begin::Menu --}}
                     <select class="form-select" name="q_tahun" id="q_tahun">
-                        {{-- @if (\count($tahunPermohonan) > 0)
+                        @if (\count($tahunPermohonan) > 0)
                             @foreach ($tahunPermohonan as $item)
                                 <option value="{{ $item->year }}" @if ($tahun == $item->year) selected @endif>{{ $item->year }}</option>
                             @endforeach
@@ -64,10 +64,10 @@
                             @for ($year = \date('Y') - 5; $year <= \date('Y'); $year++)
                                 <option value="{{ $year }}" @if ($tahun == $year) selected @endif>{{ $year }}</option>
                             @endfor
-                        @endif --}}
-                        @for ($year = \date('Y') - 5; $year <= \date('Y'); $year++)
+                        @endif
+                        {{-- @for ($year = \date('Y') - 5; $year <= \date('Y'); $year++)
                             <option value="{{ $year }}" @if ($tahun == $year) selected @endif>{{ $year }}</option>
-                        @endfor
+                        @endfor --}}
                     </select>
                     {{-- end::Menu --}}
                 </div>

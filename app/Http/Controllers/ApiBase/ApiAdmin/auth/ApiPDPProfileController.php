@@ -211,6 +211,7 @@ class ApiPDPProfileController extends Controller
 
         // validate
         $validator = Validator::make($request->all(), [
+            "label_alamat" => "required|string|max:100",
             "district_id" => "required|string|max:10",
             "village_id" => "required|string|max:10",
             "alamat" => "required|string|max:300",
@@ -239,6 +240,7 @@ class ApiPDPProfileController extends Controller
             $uuid = $request->uuid_form;
             $data = AlamatPerusahaan::findOrFail($uuid);
             $value_1 = [
+                "label_alamat" => $request->label_alamat,
                 "district_id" => $request->district_id,
                 "village_id" => $request->village_id,
                 "alamat" => $request->alamat,
@@ -299,6 +301,7 @@ class ApiPDPProfileController extends Controller
                 "uuid_perusahaan" => $uuid_profile,
                 "province_id" => "36",
                 "regency_id" => "3603",
+                "label_alamat" => $request->label_alamat,
                 "district_id" => $request->district_id,
                 "village_id" => $request->village_id,
                 "alamat" => $request->alamat,

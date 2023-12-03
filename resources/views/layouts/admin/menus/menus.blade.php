@@ -4,4 +4,6 @@
     @include('layouts.admin.menus.settings_apps.menus')
 @elseif (Request::is('schedule-apps*'))
     @include('layouts.admin.menus.schedule_apps.menus')
+@elseif (Request::is('supervision-apps*'))
+    @include('layouts.admin.menus.supervision_apps.menus')
 @endif

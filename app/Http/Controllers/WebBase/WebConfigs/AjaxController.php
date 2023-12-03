@@ -6,6 +6,7 @@ use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\MasterKelompokUttp;
 use App\Models\PdpPenjadwalan;
+use App\Models\Pegawai;
 use App\Models\PermohonanPeneraan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -279,6 +280,273 @@ class AjaxController extends Controller
             "jml_bdkt" => $bdkt,
         ];
 
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // ScdStatistikTinjutMT
+    public function ScdStatistikTinjutMT(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // get kelompok uttp
+        $getKelompokUttpTera = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", "Tera")
+            ->where("master_kelompok_uttp.kode", "MT")
+            ->firstOrFail();
+        $uuid_kelompok_uttp_tera = $getKelompokUttpTera->uuid;
+        $getKelompokUttpTulang = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", "Tera Ulang")
+            ->where("master_kelompok_uttp.kode", "MT")
+            ->firstOrFail();
+        $uuid_kelompok_uttp_tulang = $getKelompokUttpTulang->uuid;
+
+        // request
+        $tahun = $request->tahun;
+
+        // hak akses
+        $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+        if ($subRoleOnlyPetugas == true) {
+            // hanya petugas
+            $uuid_profile = $auth->uuid_profile;
+            $tera = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_tera)
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
+                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+                ->count();
+            $teraUlang = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_tulang)
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
+                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+                ->count();
+        } else {
+            $tera = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_tera)
+                ->whereYear("tanggal_peneraan", $tahun)
+                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
+                ->count();
+            $teraUlang = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_tulang)
+                ->whereYear("tanggal_peneraan", $tahun)
+                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
+                ->count();
+        }
+
+        // data
+        $data = [
+            "jml_tera" => $tera,
+            "jml_tera_ulang" => $teraUlang,
+        ];
+
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // ScdStatistikTinjutUapv
+    public function ScdStatistikTinjutUapv(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // get kelompok uttp
+        $getKelompokUttpTera = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", "Tera")
+            ->where("master_kelompok_uttp.kode", "UAPV")
+            ->firstOrFail();
+        $uuid_kelompok_uttp_tera = $getKelompokUttpTera->uuid;
+        $getKelompokUttpTulang = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", "Tera Ulang")
+            ->where("master_kelompok_uttp.kode", "UAPV")
+            ->firstOrFail();
+        $uuid_kelompok_uttp_tulang = $getKelompokUttpTulang->uuid;
+
+        // request
+        $tahun = $request->tahun;
+
+        // hak akses
+        $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+        if ($subRoleOnlyPetugas == true) {
+            // hanya petugas
+            $uuid_profile = $auth->uuid_profile;
+            $tera = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_tera)
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
+                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+                ->count();
+            $teraUlang = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_tulang)
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
+                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+                ->count();
+        } else {
+            $tera = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_tera)
+                ->whereYear("tanggal_peneraan", $tahun)
+                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
+                ->count();
+            $teraUlang = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_tulang)
+                ->whereYear("tanggal_peneraan", $tahun)
+                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
+                ->count();
+        }
+
+        // data
+        $data = [
+            "jml_tera" => $tera,
+            "jml_tera_ulang" => $teraUlang,
+        ];
+
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // ScdStatistikTinjutBdkt
+    public function ScdStatistikTinjutBdkt(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // get kelompok uttp
+        $getKelompokUttpBdkt = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", "Pengujian BDKT")
+            ->where("master_kelompok_uttp.kode", "BDKT")
+            ->firstOrFail();
+        $uuid_kelompok_uttp_bdkt = $getKelompokUttpBdkt->uuid;
+
+        // request
+        $tahun = $request->tahun;
+
+        // hak akses
+        $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+        if ($subRoleOnlyPetugas == true) {
+            // hanya petugas
+            $uuid_profile = $auth->uuid_profile;
+            $bdkt = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_bdkt)
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
+                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+                ->count();
+        } else {
+            $bdkt = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_bdkt)
+                ->whereYear("tanggal_peneraan", $tahun)
+                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
+                ->count();
+        }
+
+        // data
+        $data = [
+            "jml_bdkt" => $bdkt,
+        ];
+
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // ScdTteDokumenSKHP
+    public function ScdTteDokumenSKHP(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // get kelompok uttp
+        $getKelompokUttpBdkt = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
+            ->select("master_kelompok_uttp.*")
+            ->where("master_jenis_pelayanan.nama_pelayanan", "Pengujian BDKT")
+            ->where("master_kelompok_uttp.kode", "BDKT")
+            ->firstOrFail();
+        $uuid_kelompok_uttp_bdkt = $getKelompokUttpBdkt->uuid;
+
+        // request
+        $tahun = $request->tahun;
+
+        // hak akses
+        $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+        if ($subRoleOnlyPetugas == true) {
+            // hanya petugas
+            $uuid_profile = $auth->uuid_profile;
+            $bdkt = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_bdkt)
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
+                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
+                ->count();
+        } else {
+            $bdkt = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_bdkt)
+                ->whereYear("tanggal_peneraan", $tahun)
+                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
+                ->count();
+        }
+
+        // data
+        $data = [
+            "jml_bdkt" => $bdkt,
+        ];
+
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // SetGetTtePejabat
+    public function SetGetTtePejabat(Request $request)
+    {
+        // uuid jabatan
+        $jabatan = $request->jabatan;
+        if ($jabatan == "Kepala Dinas") {
+            $data = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
+                ->select("pegawai.*", "users.role", "users.sub_role", "users.sub_sub_role", "users.status", "users.uuid as uuid_user")
+                ->where("users.role", "Kepala Dinas")
+                ->where("users.status", "1")
+                ->orderBy("pegawai.nama_lengkap", "ASC")
+                ->get();
+        } elseif ($jabatan == "Kepala Bidang") {
+            $data = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
+                ->select("pegawai.*", "users.role", "users.sub_role", "users.sub_sub_role", "users.status", "users.uuid as uuid_user")
+                ->where("users.role", "Kepala Bidang")
+                ->where("users.status", "1")
+                ->orderBy("pegawai.nama_lengkap", "ASC")
+                ->get();
+        } elseif ($jabatan == "Ketua Tim") {
+            $data = Pegawai::join("users", "users.uuid_profile", "=", "pegawai.uuid")
+                ->select("pegawai.*", "users.role", "users.sub_role", "users.sub_sub_role", "users.status", "users.uuid as uuid_user")
+                ->where("users.role", "Pegawai")
+                ->where("users.sub_role", 'LIKE', '%Ketua Tim%')
+                ->where("users.sub_sub_role", 'LIKE', '%Ketua Tim Pelayanan%')
+                ->where("users.status", "1")
+                ->orderBy("pegawai.nama_lengkap", "ASC")
+                ->get();
+        } else {
+            // response
+            $response = [
+                "status" => false,
+                "message" => "Data Jabatan Tidak Valid!",
+            ];
+            return response()->json($response, 422);
+        }
+
+        // response
         $response = [
             "status" => true,
             "data" => $data,

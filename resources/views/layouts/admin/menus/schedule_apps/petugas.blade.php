@@ -82,9 +82,9 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tinjut.mt.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i>
                         </span>
                         <span class="menu-title">MASSA</span>
                     </a>
@@ -95,9 +95,9 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tinjut.uapv.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i>
                         </span>
                         <span class="menu-title">UAPV</span>
                     </a>
@@ -108,9 +108,9 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tinjut.bdkt.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i>
                         </span>
                         <span class="menu-title">BDKT</span>
                     </a>

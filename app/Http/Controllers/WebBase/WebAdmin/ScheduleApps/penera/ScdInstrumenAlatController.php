@@ -65,7 +65,7 @@ class ScdInstrumenAlatController extends Controller
         $jp = $permohonan->jenis_pengujian;
 
         // title
-        $title = "Edit Instrumen dan Alat";
+        $title = "Lihat Instrumen dan Alat";
         $submit = "Simpan";
         return view('pages.admin.schedule_apps.instrumen_alat.view_pdp', compact(
             'enc_uuid',

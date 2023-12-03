@@ -1,12 +1,12 @@
 {{-- begin:::Tab pane --}}
-<div class="tab-pane fade" id="profile_tab_tera" role="tabpanel">
+<div class="tab-pane fade" id="profile_tab_tulang" role="tabpanel">
     {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
         {{-- begin::Card header --}}
         <div class="card-header border-0">
             {{-- begin::Card title --}}
             <div class="card-title">
-                <h2>Tera</h2>
+                <h2>Tera Ulang</h2>
             </div>
             {{-- end::Card title --}}
         </div>
@@ -16,12 +16,12 @@
             {{-- begin::Table wrapper --}}
             <div class="table-responsive">
                 {{-- begin::Table --}}
-                <table id="datatableTera" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
+                <table id="datatableTulang" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                         <tr class="text-start text-muted text-uppercase gs-0">
                             <th>#</th>
                             <th>Detail Permohonan</th>
-                            <th>Detail PDP</th>
+                            <th>Detail Tinjut</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -47,21 +47,12 @@
 
         $('[name="q_tahun"]').change(function() {
             var q_tahun = $(this).val();
-            var q_status = $('#q_status').val();
-            $('#datatableTera tbody').empty();
-            tableTera.ajax.reload(null, true);
+            $('#datatableTulang tbody').empty();
+            tableTulang.ajax.reload(null, true);
             getStatistikPenugasan();
         });
 
-        $('[name="q_status"]').change(function() {
-            var q_status = $(this).val();
-            var q_tahun = $('#q_tahun').val();
-            $('#datatableTera tbody').empty();
-            tableTera.ajax.reload(null, true);
-            getStatistikPenugasan();
-        });
-
-        var tableTera = $('#datatableTera').DataTable({
+        var tableTulang = $('#datatableTulang').DataTable({
             "select": false,
             "paging": true,
             "searching": true,
@@ -75,13 +66,12 @@
                 "lengthMenu": "Show _MENU_",
             },
             "ajax": {
-                url: "{!! route('scd.apps.mnj.penera.data') !!}",
+                url: "{!! route('scd.apps.tinjut.mt.data') !!}",
                 type: 'GET',
                 data: function(data) {
                     data.filter = {
                         'tahun': $('#q_tahun').val(),
-                        'status': $('#q_status').val(),
-                        'tags': 'Tera',
+                        'tags': 'Tera Ulang',
                     };
                 }
             },
@@ -94,8 +84,8 @@
                     name: 'detail_permohonan'
                 },
                 {
-                    data: 'detail_pdp',
-                    name: 'detail_pdp'
+                    data: 'detail_tinjut',
+                    name: 'detail_tinjut'
                 },
                 {
                     data: 'aksi',
@@ -132,18 +122,16 @@
 
         function getStatistikPenugasan() {
             $.ajax({
-                url: "{!! route('ajax.scd.apps.sts.penera') !!}",
+                url: "{!! route('ajax.scd.apps.sts.tinjut.mt') !!}",
                 type: 'POST',
                 data: {
                     tahun: $('#q_tahun').val(),
-                    status: $('#q_status').val(),
                     _method: 'post',
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(res) {
-                    $("#statistik_tera").html(res.data.jml_tera);
+                    $("#statistulang").html(res.data.jml_tera);
                     $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
-                    $("#statistik_bdkt").html(res.data.jml_bdkt);
                 },
                 error: function(xhr) {
                     Swal.fire({

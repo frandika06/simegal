@@ -3,13 +3,13 @@
     SIMEGAL
 @endpush
 @push('title')
-    Manajemen Peneraan | SIMEGAL
+    SKHP | TTE Dokumen | SIMEGAL
 @endpush
 @push('description')
-    Manajemen Peneraan | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    SKHP | TTE Dokumen | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    Manajemen Peneraan
+    SKHP | TTE Dokumen
 @endpush
 
 {{-- TOOLBOX::BEGIN --}}
@@ -21,7 +21,7 @@
             {{-- begin::Page title --}}
             <div class="page-title d-flex flex-column me-3">
                 {{-- begin::Title --}}
-                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Manajemen Peneraan</h1>
+                <h1 class="d-flex text-dark fw-bold my-1 fs-3">TTE Dokumen</h1>
                 {{-- end::Title --}}
                 {{-- begin::Breadcrumb --}}
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 pt-1">
@@ -36,7 +36,7 @@
                     </li>
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
-                    <li class="breadcrumb-item text-dark">Manajemen Peneraan</li>
+                    <li class="breadcrumb-item text-dark">SKHP</li>
                     {{-- end::Item --}}
                 </ul>
                 {{-- end::Breadcrumb --}}
@@ -67,18 +67,16 @@
                             {{-- begin::Input group --}}
                             <div class="mb-5">
                                 {{-- begin::Label --}}
-                                <label class="form-label fw-semibold">Status Peneraan: {{ $status }}</label>
+                                <label class="form-label fw-semibold">Jenis Pelayanan: {{ $tags }}</label>
                                 {{-- end::Label --}}
                                 {{-- begin::Input --}}
                                 <div>
                                     {{-- begin::Menu --}}
-                                    <select class="form-select" name="q_status" id="q_status">
-                                        <option value="Menunggu" @if ($status == 'Menunggu') selected @endif>Menunggu</option>
-                                        <option value="Diproses" @if ($status == 'Diproses') selected @endif>Diproses</option>
-                                        <option value="Ditunda" @if ($status == 'Ditunda') selected @endif>Ditunda</option>
-                                        <option value="Dibatalkan" @if ($status == 'Dibatalkan') selected @endif>Dibatalkan</option>
-                                        <option value="Selesai" @if ($status == 'Selesai') selected @endif>Selesai</option>
-                                        {{-- <option value="Semua Data" @if ($status == 'Semua Data') selected @endif>Semua Data</option> --}}
+                                    <select class="form-select" name="q_tags" id="q_tags">
+                                        <option value="Tera" @if ($tags == 'Tera') selected @endif>Tera</option>
+                                        <option value="Tera Ulang" @if ($tags == 'Tera Ulang') selected @endif>Tera Ulang</option>
+                                        <option value="Pengujian BDKT" @if ($tags == 'Pengujian BDKT') selected @endif>Pengujian BDKT</option>
+                                        <option value="All" @if ($tags == 'All') selected @endif>Semua Data</option>
                                     </select>
                                     {{-- end::Menu --}}
                                 </div>
@@ -140,17 +138,17 @@
                     <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8 tabs-profile">
                         {{-- begin:::Tab item --}}
                         <li class="nav-item">
-                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#profile_tab_tera">Tera <span class="badge badge-info" id="statistik_tera"></span></a>
+                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#tab_tte_menunggu">Menunggu <span class="badge badge-info" id="statistik_menunggu"></span></a>
                         </li>
                         {{-- end:::Tab item --}}
                         {{-- begin:::Tab item --}}
                         <li class="nav-item">
-                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#profile_tab_tulang">Tera Ulang <span class="badge badge-info" id="statistik_tera_ulang"></span></a>
+                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#tab_tte_disetujui">Disetujui <span class="badge badge-info" id="statistik_disetujui"></span></a>
                         </li>
                         {{-- end:::Tab item --}}
                         {{-- begin:::Tab item --}}
                         <li class="nav-item">
-                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#profile_tab_bdkt">Pengujian BDKT <span class="badge badge-info" id="statistik_bdkt"></span></a>
+                            <a class="nav-link text-active-info pb-4 path-tab" data-bs-toggle="tab" href="#tab_tte_ditolak">Ditolak <span class="badge badge-info" id="statistik_ditolak"></span></a>
                         </li>
                         {{-- end:::Tab item --}}
                     </ul>
@@ -159,14 +157,11 @@
                     {{-- begin:::Tab content --}}
                     <div class="tab-content" id="myTabContent">
                         {{-- path-baru::begin --}}
-                        @include('pages.admin.schedule_apps.penera.path_datatable.tera')
+                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.tera')
                         {{-- path-baru::end --}}
                         {{-- path-diproses::begin --}}
-                        @include('pages.admin.schedule_apps.penera.path_datatable.tera_ulang')
+                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.tera_ulang')
                         {{-- path-diproses::end --}}
-                        {{-- path-selesai::begin --}}
-                        @include('pages.admin.schedule_apps.penera.path_datatable.bdkt')
-                        {{-- path-selesai::end --}}
                     </div>
                     {{-- end:::Tab content --}}
                 </div>
@@ -193,28 +188,53 @@
             getTabsProfil();
             $(".path-tab").click(function() {
                 var href = $(this).attr('href');
-                localStorage.setItem('tabsInputAlat', href);
+                localStorage.setItem('tabsTteMenunggu', href);
             })
         });
 
         function getTabsProfil() {
-            var tabsInputAlat = localStorage.getItem('tabsInputAlat');
-            if (tabsInputAlat === null) {
-                localStorage.setItem('tabsInputAlat', '#profile_tab_tera');
+            var tabsTteMenunggu = localStorage.getItem('tabsTteMenunggu');
+            if (tabsTteMenunggu === null) {
+                localStorage.setItem('tabsTteMenunggu', '#tab_tte_menunggu');
                 $(".tabs-profile>li").each(function(index) {
-                    if ($(this).find('a[href^="#profile_tab_tera"]')) {
-                        $('a[href^="#profile_tab_tera"]').addClass(" active");
-                        $('#profile_tab_tera').addClass(" show active");
+                    if ($(this).find('a[href^="#tab_tte_menunggu"]')) {
+                        $('a[href^="#tab_tte_menunggu"]').addClass(" active");
+                        $('#tab_tte_menunggu').addClass(" show active");
                     }
                 });
             } else {
                 $(".tabs-profile>li").each(function(index) {
-                    if ($(this).find('a[href^="' + tabsInputAlat + '"]')) {
-                        $('a[href^="' + tabsInputAlat + '"]').addClass(" active");
-                        $(tabsInputAlat).addClass(" show active");
+                    if ($(this).find('a[href^="' + tabsTteMenunggu + '"]')) {
+                        $('a[href^="' + tabsTteMenunggu + '"]').addClass(" active");
+                        $(tabsTteMenunggu).addClass(" show active");
                     }
                 });
             }
+        }
+
+        function getStatistikPenugasan() {
+            $.ajax({
+                url: "{!! route('ajax.scd.apps.sts.tte.skhp') !!}",
+                type: 'POST',
+                data: {
+                    tahun: $('#q_tahun').val(),
+                    _method: 'post',
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    $("#statistik_tera").html(res.data.jml_tera);
+                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: "Error",
+                        text: xhr.responseJSON.message,
+                        icon: "error",
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+            });
         }
     </script>
 @endpush

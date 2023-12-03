@@ -105,4 +105,11 @@ class PdpPenjadwalan extends Model
         $result = $result->orderBy("no_urut", "ASC");
         return $result;
     }
+
+    // Tindak Lanjut
+    // Manajemen SKHP
+    public function RelTteSkhp()
+    {
+        return $this->hasOne('App\Models\TteSkhp', 'uuid_penjadwalan', 'uuid');
+    }
 }

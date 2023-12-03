@@ -36,6 +36,13 @@ class Perusahaan extends Model
         return $this->hasMany('App\Models\AlamatPerusahaan', 'uuid_perusahaan', 'uuid');
     }
 
+    public function RelAlamatPerusahaanDefault()
+    {
+        $result = $this->RelAlamatPerusahaan();
+        $result = $result->where("default", "1");
+        return $result;
+    }
+
     public function RelPermohonanPeneraan()
     {
         return $this->hasMany('App\Models\PermohonanPeneraan', 'uuid_perusahaan', 'uuid');

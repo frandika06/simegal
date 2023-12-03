@@ -133,9 +133,9 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tinjut.mt.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i>
                         </span>
                         <span class="menu-title">MASSA</span>
                     </a>
@@ -146,9 +146,9 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tinjut.uapv.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i>
                         </span>
                         <span class="menu-title">UAPV</span>
                     </a>
@@ -159,63 +159,23 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tinjut.bdkt.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chalkboard-user fs-2"></i></i>
+                            <i class="fa-solid fa-chalkboard-user fs-2"></i>
                         </span>
                         <span class="menu-title">BDKT</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
-                {{-- end::Tindak Lanjut --}}
+                {{-- end::TTE Dokumen --}}
 
-                {{-- begin::Pembayaran Retribusi --}}
-                @if (\CID::getMasterFitur('Retribusi')->status == '1')
-                    {{-- begin:Menu item --}}
-                    <div class="menu-item pt-5">
-                        {{-- begin:Menu content --}}
-                        <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Pembayaran Retribusi</span>
-                        </div>
-                        {{-- end:Menu content --}}
-                    </div>
-                    {{-- end:Menu item --}}
-
-                    {{-- begin:Menu item --}}
-                    <div class="menu-item">
-                        {{-- begin:Menu link --}}
-                        <a class="menu-link" href="#">
-                            <span class="menu-icon">
-                                <i class="fa-regular fa-square fs-2"></i>
-                            </span>
-                            <span class="menu-title text-danger">Belum Terverifikasi</span>
-                        </a>
-                        {{-- end:Menu link --}}
-                    </div>
-                    {{-- end:Menu item --}}
-
-                    {{-- begin:Menu item --}}
-                    <div class="menu-item">
-                        {{-- begin:Menu link --}}
-                        <a class="menu-link" href="#">
-                            <span class="menu-icon">
-                                <i class="fa-regular fa-square-check fs-2"></i>
-                            </span>
-                            <span class="menu-title text-success">Sudah Terverifikasi</span>
-                        </a>
-                        {{-- end:Menu link --}}
-                    </div>
-                    {{-- end:Menu item --}}
-                @endif
-                {{-- end::Pembayaran Retribusi --}}
-
-                {{-- begin::Report --}}
+                {{-- begin::TTE Dokumen --}}
                 {{-- begin:Menu item --}}
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Report</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-7">TTE Dokumen</span>
                     </div>
                     {{-- end:Menu content --}}
                 </div>
@@ -224,29 +184,16 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('scd.apps.tte.skhp.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-chart-column fs-2"></i>
+                            <i class="fa-solid fa-stamp  fs-2"></i>
                         </span>
-                        <span class="menu-title">Rekapitulasi</span>
+                        <span class="menu-title">SKHP</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>
                 {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="#">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-file-export fs-2"></i>
-                        </span>
-                        <span class="menu-title">Export Data</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-                {{-- end::Pembayaran Retribusi --}}
+                {{-- end::TTE Dokumen --}}
 
             </div>
             {{-- end::Menu --}}

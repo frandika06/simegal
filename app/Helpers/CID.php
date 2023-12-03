@@ -14,6 +14,7 @@ use App\Models\PortalPage;
 use App\Models\PortalSetup;
 use App\Models\PortalSosmed;
 use App\Models\SysLogAktifitas;
+use App\Models\TteSkhp;
 use Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -641,6 +642,35 @@ class CID
     {
         $ext = strtolower($request->file($field)->extension());
         $ext_array = array('jpg', 'jpeg', 'png', 'pdf', 'JPG', 'JPEG', 'PNG', 'PDF');
+        if (in_array($ext, $ext_array)) {
+            $file = $request->file($field);
+            $filename = $file->getClientOriginalName();
+            $name = ucwords(pathinfo($filename, PATHINFO_FILENAME));
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $size = $file->getSize();
+            $file_name = Str::uuid() . "-" . rand(1000, 9999999999) . "." . Str::lower($ext);
+            $file_save = $path . "/" . $file_name;
+            if (!is_dir(storage_path('app/public/' . $path))) {
+                Storage::disk('public')->makeDirectory($path);
+            }
+            Storage::disk('public')->putFileAs($path, $file, $file_name);
+            $data = [
+                "judul_file" => $name,
+                "nama_file" => $file_name,
+                "tipe_file" => Str::lower($ext),
+                "ukuran_file" => $size,
+                "url" => $file_save,
+            ];
+            return $data;
+        } else {
+            return "0";
+        }
+    }
+    // Untuk Upload File SKHP
+    public static function UpFileSKHP($request, $field, $path)
+    {
+        $ext = strtolower($request->file($field)->extension());
+        $ext_array = array('pdf');
         if (in_array($ext, $ext_array)) {
             $file = $request->file($field);
             $filename = $file->getClientOriginalName();
@@ -1335,6 +1365,32 @@ class CID
         }
         return $kode;
     }
+    // Generate Kode TTE SKHP
+    public static function genKodeTteSkhp($jenis_uttp, $status_apps)
+    {
+        $tahun = date('Y');
+        $bulan = date('m');
+        $ctte = TteSkhp::whereYear("tanggal_generate", $tahun)->whereMonth("tanggal_generate", $bulan)->where("status_apps", $status_apps)->count();
+        if ($ctte == "0") {
+            $ctte = 1;
+        }
+        if ($status_apps == "Schedule") {
+            // Perusahaan
+            $kode = "SCH";
+            $kode .= date('dn');
+            $kode .= $jenis_uttp;
+            $kode .= Self::genzero(3, $ctte);
+            $kode .= Self::gencode(2);
+        } elseif ($status_apps == "Supervision") {
+            // Pemilik UTTP
+            $kode = "SPV";
+            $kode .= date('dn');
+            $kode .= $jenis_uttp;
+            $kode .= Self::genzero(3, $ctte);
+            $kode .= Self::gencode(2);
+        }
+        return Str::upper($kode);
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -1423,6 +1479,19 @@ class CID
     | PENGATURAN APPS
     |--------------------------------------------------------------------------
      */
+    // Untuk Logo Aplikasi
+    public static function logoApps()
+    {
+        $url = asset('assets-portal/dist/img/logo.png');
+        return $url;
+    }
+    // Untuk Logo BANTJANA PATAKARAN PRALAJA KAPRADANAN
+    // sumber: https: //metinsugm.blogspot.com/2014/08/makna-lambang.html
+    public static function logoBPPK()
+    {
+        $url = asset('assets-portal/dist/img/logo-bp.png');
+        return $url;
+    }
     // get data petugas Tenaga Ahli Penera (tap)
     public static function getPetugasTAP($uuid_pdp)
     {

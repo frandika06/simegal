@@ -6,4 +6,6 @@
     @include('layouts.admin.headers.settings')
 @elseif(Request::is('schedule-apps*'))
     @include('layouts.admin.headers.schedule')
+@elseif(Request::is('supervision-apps*'))
+    @include('layouts.admin.headers.supervision')
 @endif
