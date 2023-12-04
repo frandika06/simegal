@@ -1,0 +1,172 @@
+@extends('layouts.admin.pdp')
+@push('apps')
+    SIMEGAL
+@endpush
+@push('title')
+    Retribusi | SIMEGAL
+@endpush
+@push('description')
+    Retribusi | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+@endpush
+@push('header-title')
+    Retribusi
+@endpush
+@push('styles')
+    {{-- begin::Vendor Stylesheets(used for this page only) --}}
+    <link href="{{ asset('assets-pdp/plugins/custom/fullcalendar/fullcalendar.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets-pdp/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+    {{-- end::Vendor Stylesheets --}}
+@endpush
+
+{{-- TOOLBOX::BEGIN --}}
+@push('toolbox')
+    @if ($profile->file_npwp === null || $profile->file_npwp == '')
+        @include('pages.admin.pdp_apps.toolbox.dashboard_1')
+    @else
+        @include('pages.admin.pdp_apps.toolbox.index_retribusi')
+    @endif
+@endpush
+{{-- TOOLBOX::END --}}
+
+{{-- CONTENT::BEGIN --}}
+@section('content')
+    @if ($profile->file_npwp !== null && $profile->file_npwp != '')
+        {{-- begin::Post --}}
+        <div class="content flex-row-fluid" id="kt_content">
+            {{-- begin::Row --}}
+            <div class="row gy-0 gx-10">
+                {{-- begin::Col --}}
+                <div class="col-xl-12">
+                    {{-- begin::General Widget 1 --}}
+                    <div class="mb-10">
+                        {{-- begin::Table wrapper --}}
+                        <div class="table-responsive">
+                            {{-- begin::Table --}}
+                            <table id="datatable" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
+                                <thead class="border-bottom border-gray-200 fs-7 fw-bold">
+                                    <tr class="text-start text-muted text-uppercase gs-0">
+                                        <th>#</th>
+                                        <th>Detail Permohonan</th>
+                                        <th>Detail Retribusi</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fs-6 fw-semibold text-gray-600">
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($dataRetribusi as $item1)
+                                        @php
+                                            if ($item1->jenis_pengujian == 'Tera') {
+                                                $jenis_pengujian = '<span class="badge badge-info">' . $item1->jenis_pengujian . '</span>';
+                                            } elseif ($item1->jenis_pengujian == 'Tera Ulang') {
+                                                $jenis_pengujian = '<span class="badge badge-success">' . $item1->jenis_pengujian . '</span>';
+                                            } elseif ($item1->jenis_pengujian == 'Pengujian BDKT') {
+                                                $jenis_pengujian = '<span class="badge badge-secondary">' . $item1->jenis_pengujian . '</span>';
+                                            }
+                                            // variabel
+                                            $status = $item1->RelPdpPenjadwalan->RelPdpRetribusi->status;
+                                            // url
+                                            $urlViewPermohonan = \route('pdp.apps.reqpeneraan.show', [\CID::encode($item1->uuid)]);
+                                            $urlFilePermohonan = \CID::urlImg($item1->file_surat_permohonan);
+                                            $urlPrintSkrd = \route('print.pdp.skrd', [\CID::encode($item1->RelPdpPenjadwalan->uuid)]);
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $no++ }}</td>
+                                            <td>
+                                                <p class="m-0 p-0"><strong>Kode Permohonan</strong><a target="_BLANK" href="{{ $urlViewPermohonan }}"><span>: {{ $item1->kode_permohonan }}</span></a></p>
+                                                <p class="m-0 p-0"><strong>Nomor Surat</strong><a target="_BLANK" href="{{ $urlFilePermohonan }}"><span>: {{ $item1->nomor_surat_permohonan }}</span></a></p>
+                                                <p class="m-0 p-0"><strong>Nomor Order</strong><span>: {{ $item1->RelPdpPenjadwalan->nomor_order }}</span></p>
+                                                <p class="m-0 p-0"><strong>Perusahaan/UTTP</strong><span>: {{ $item1->RelPerusahaan->nama_perusahaan }}</span></p>
+                                                <p class="m-0 p-0"><strong>Jenis Pengujian</strong><span>: {!! $jenis_pengujian !!}</span></p>
+                                            </td>
+                                            <td>
+                                                <p class="m-0 p-0"><strong>Total Retribusi (Rp)</strong><span>: {{ \CID::toRp($item1->RelPdpPenjadwalan->RelPdpRetribusi->total_retribusi) }}</span></p>
+                                                <p class="m-0 p-0"><strong>Tgl. SKRD</strong><span>: {{ \CID::tglBlnThn($item1->RelPdpPenjadwalan->RelPdpRetribusi->tgl_skrd) }}</span></p>
+                                                <p class="m-0 p-0"><strong>Kode Bayar</strong><span>: {{ $item1->RelPdpPenjadwalan->RelPdpRetribusi->kode_bayar_webr }}</span></p>
+                                            </td>
+                                            <td>
+                                                @if ($status == 'Unpaid')
+                                                    @if ($item1->RelPdpPenjadwalan->RelPdpRetribusi->file_pembayaran === null)
+                                                        <div class="py-8 flex-fill bg-danger text-white text-center fs-5">
+                                                            Belum Dibayar
+                                                        </div>
+                                                    @else
+                                                        @if ($item1->RelPdpPenjadwalan->RelPdpRetribusi->uuid_verifikasi === null)
+                                                            <div class="py-8 flex-fill bg-warning text-white text-center fs-5">
+                                                                Menunggu Verifikasi
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                @elseif($status == 'Paid')
+                                                    <div class="py-8 flex-fill bg-success text-white text-center fs-2">
+                                                        Sudah Dibayar
+                                                    </div>
+                                                @else
+                                                    <div class="py-8 flex-fill bg-primary text-white text-center fs-2">
+                                                        Dibatalkan / Jatuh Tempo
+                                                    </div>
+                                                @endif
+                                            <td>
+                                                <a target="_BLANK" href="{{ $urlPrintSkrd }}" class="btn btn-sm btn-secondary mb-2"><i class="fa fa-print fs-5 m-0"></i></a>
+                                                <a href="{{ route('pdp.apps.retribusi.create', [\CID::encode($item1->RelPdpPenjadwalan->RelPdpRetribusi->uuid)]) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-upload fs-5 m-0"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            {{-- end::Table --}}
+                        </div>
+                        {{-- end::Table wrapper --}}
+                    </div>
+                    {{-- end::General Widget 1 --}}
+                </div>
+                {{-- end::Col --}}
+            </div>
+            {{-- end::Row --}}
+        </div>
+        {{-- end::Post --}}
+    @endif
+@endsection
+{{-- CONTENT::END --}}
+
+@push('scripts')
+    {{-- JS CUSTOM --}}
+    <script>
+        var table = $('#datatable').DataTable({
+            "select": false,
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "processing": true,
+            "serverSide": false,
+            "responsive": false,
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "columnDefs": [{
+                    className: "min_id text-center",
+                    targets: [0, 4]
+                },
+                {
+                    className: "text-end",
+                    targets: [4]
+                }
+            ],
+            "dom": "<'row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">",
+        });
+    </script>
+@endpush

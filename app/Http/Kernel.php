@@ -75,6 +75,7 @@ class Kernel extends HttpKernel
         'KetuaTim' => \App\Http\Middleware\KetuaTim::class,
         'KetuaTimPelayanan' => \App\Http\Middleware\KetuaTimPelayanan::class,
         'KetuaTimDanPimpinan' => \App\Http\Middleware\KetuaTimDanPimpinan::class,
+        'PejabatTte' => \App\Http\Middleware\PejabatTte::class,
         'Pimpinan' => \App\Http\Middleware\Pimpinan::class,
         'Verifikator' => \App\Http\Middleware\Verifikator::class,
         'Petugas' => \App\Http\Middleware\Petugas::class,

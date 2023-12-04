@@ -91,7 +91,7 @@ class PdpPenjadwalan extends Model
     // retribusi
     public function RelPdpRetribusi()
     {
-        return $this->hasMany('App\Models\PdpRetribusi', 'uuid_penjadwalan', 'uuid');
+        return $this->hasOne('App\Models\PdpRetribusi', 'uuid_penjadwalan', 'uuid');
     }
     // alat
     public function RelPdpAlat()

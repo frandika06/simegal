@@ -27,4 +27,14 @@ class PdpRetribusi extends Model
     {
         return $this->belongsTo('App\Models\PdpPenjadwalan', 'uuid_penjadwalan', 'uuid')->withTrashed();
     }
+
+    public function RelGenerator()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_generate_skrd', 'uuid')->withTrashed();
+    }
+
+    public function RelVerifikator()
+    {
+        return $this->belongsTo('App\Models\Pegawai', 'uuid_verifikasi', 'uuid')->withTrashed();
+    }
 }

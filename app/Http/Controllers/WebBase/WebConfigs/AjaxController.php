@@ -468,38 +468,79 @@ class AjaxController extends Controller
         // auth
         $auth = Auth::user();
 
-        // get kelompok uttp
-        $getKelompokUttpBdkt = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
-            ->select("master_kelompok_uttp.*")
-            ->where("master_jenis_pelayanan.nama_pelayanan", "Pengujian BDKT")
-            ->where("master_kelompok_uttp.kode", "BDKT")
-            ->firstOrFail();
-        $uuid_kelompok_uttp_bdkt = $getKelompokUttpBdkt->uuid;
-
         // request
         $tahun = $request->tahun;
+        $tags = $request->tags;
 
         // hak akses
-        $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
-        if ($subRoleOnlyPetugas == true) {
+        $subRoleKetuaTimDanPimpinan = CID::subRoleKetuaTimDanPimpinan();
+        if ($subRoleKetuaTimDanPimpinan == true) {
             // hanya petugas
             $uuid_profile = $auth->uuid_profile;
-            $bdkt = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
-                ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp_bdkt)
+            $menunggu = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->select("pdp_penjadwalan.*")
                 ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-                ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
-                ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
-                ->count();
+                ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                ->where("tte_skhp.uuid_pejabat", $uuid_profile)
+                ->where("tte_skhp.status_acc", "0")
+                ->where("tte_skhp.file_skhp", "!=", null);
+            $disetujui = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->select("pdp_penjadwalan.*")
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                ->where("tte_skhp.uuid_pejabat", $uuid_profile)
+                ->where("tte_skhp.status_acc", "1")
+                ->where("tte_skhp.file_skhp", "!=", null);
+            $ditolak = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->select("pdp_penjadwalan.*")
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                ->where("tte_skhp.uuid_pejabat", $uuid_profile)
+                ->where("tte_skhp.status_acc", "2")
+                ->where("tte_skhp.file_skhp", "!=", null);
         } else {
-            $bdkt = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp_bdkt)
-                ->whereYear("tanggal_peneraan", $tahun)
-                ->whereIn("status_peneraan", ["Diproses", "Selesai"])
-                ->count();
+            $menunggu = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->select("pdp_penjadwalan.*")
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                ->where("tte_skhp.status_acc", "0")
+                ->where("tte_skhp.file_skhp", "!=", null);
+            $disetujui = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->select("pdp_penjadwalan.*")
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                ->where("tte_skhp.status_acc", "1")
+                ->where("tte_skhp.file_skhp", "!=", null);
+            $ditolak = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                ->select("pdp_penjadwalan.*")
+                ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                ->where("tte_skhp.status_acc", "2")
+                ->where("tte_skhp.file_skhp", "!=", null);
+        }
+
+        // cek tags
+        if ($tags == "All") {
+            $menunggu = $menunggu->count();
+            $disetujui = $disetujui->count();
+            $ditolak = $ditolak->count();
+        } else {
+            $menunggu = $menunggu->where("permohonan_peneraan.jenis_pengujian", $tags)->count();
+            $disetujui = $disetujui->where("permohonan_peneraan.jenis_pengujian", $tags)->count();
+            $ditolak = $ditolak->where("permohonan_peneraan.jenis_pengujian", $tags)->count();
         }
 
         // data
         $data = [
-            "jml_bdkt" => $bdkt,
+            "jml_menunggu" => $menunggu,
+            "jml_disetujui" => $disetujui,
+            "jml_ditolak" => $ditolak,
         ];
 
         $response = [

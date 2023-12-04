@@ -4,9 +4,9 @@ namespace App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tte;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
-use App\Models\MasterKelompokUttp;
 use App\Models\PdpPenjadwalan;
 use App\Models\PermohonanPeneraan;
+use App\Models\TteSkhp;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +23,14 @@ class ScdTteSkhpController extends Controller
         if ($request->session()->exists('filter_tahun')) {
             $tahun = $request->session()->get('filter_tahun');
             $tags = $request->session()->get('filter_tags_tte');
+            $status = $request->session()->get('filter_status_tte');
         } else {
             $request->session()->put('filter_tahun', date('Y'));
-            $request->session()->put('filter_tags_tte', 'Tera');
+            $request->session()->put('filter_tags_tte', 'All');
+            $request->session()->put('filter_status_tte', '0');
             $tahun = date('Y');
-            $tags = "Tera";
+            $tags = "All";
+            $status = "0";
         }
 
         // cek data permohonan
@@ -43,6 +46,77 @@ class ScdTteSkhpController extends Controller
     }
 
     /**
+     * Status Aktif
+     */
+    public function status(Request $request)
+    {
+        // auth
+        $auth = Auth::user();
+
+        // uuid
+        $uuid = CID::decode($request->uuid);
+        $status = CID::decode($request->status);
+
+        // data
+        $data = TteSkhp::where("uuid_penjadwalan", $uuid)->firstOrFail();
+
+        // value
+        $value_1 = [
+            "status_acc" => $status,
+            "uuid_updated" => $auth->uuid_profile,
+        ];
+
+        // status_aktif
+        if ($status == "0") {
+            $value_1['status_aktif'] = "0";
+            $value_1['tanggal_acc'] = null;
+            $status_acc = "Menunggu";
+        } elseif ($status == "1") {
+            $value_1['status_aktif'] = "1";
+            $value_1['tanggal_acc'] = date('Y-m-d H:i:s');
+            $status_acc = "Disetujui";
+        } elseif ($status == "2") {
+            $value_1['status_aktif'] = "0";
+            $value_1['tanggal_acc'] = null;
+            $status_acc = "Ditolak";
+        }
+
+        // save
+        $save_1 = $data->update($value_1);
+        if ($save_1) {
+            // create log
+            $aktifitas = [
+                "tabel" => array("tte_skhp"),
+                "uuid" => array($uuid),
+                "value" => array($data),
+            ];
+            $log = [
+                "apps" => "Schedule Apps",
+                "subjek" => "Mengubah Status TTE SKHP Menjadi : " . $status_acc . " - " . $uuid,
+                "aktifitas" => $aktifitas,
+                "device" => "web",
+                "dashboard" => "1",
+            ];
+            CID::addToLogAktifitas($request, $log);
+            // alert success
+            $msg = "Berhasil Merubah Status TTE SKHP Menjadi: " . $status_acc . "!";
+            $response = [
+                "status" => true,
+                "message" => $msg,
+            ];
+            return response()->json($response, 200);
+        } else {
+            // gagal
+            $msg = "Gagal Melakukan Perubahan Status TTE SKHP!";
+            $response = [
+                "status" => false,
+                "message" => $msg,
+            ];
+            return response()->json($response, 422);
+        }
+    }
+
+    /**
      * Data untuk Datatables
      */
     public function data(Request $request)
@@ -54,42 +128,46 @@ class ScdTteSkhpController extends Controller
             if (isset($_GET['filter'])) {
                 $tahun = $_GET['filter']['tahun'];
                 $tags = $_GET['filter']['tags'];
+                $status = $_GET['filter']['status'];
                 $request->session()->put('filter_tahun', $tahun);
                 $request->session()->put('filter_tags_tte', $tags);
+                $request->session()->put('filter_status_tte', $status);
             } else {
                 $tahun = date('Y');
-                $tags = "Tera";
+                $tags = "All";
+                $status = "0";
             }
 
-            // get kelompok uttp
-            $getKelompokUttp = MasterKelompokUttp::join("master_jenis_pelayanan", "master_jenis_pelayanan.uuid", "=", "master_kelompok_uttp.uuid_jenis_pelayanan")
-                ->select("master_kelompok_uttp.*")
-                ->where("master_jenis_pelayanan.nama_pelayanan", $tags)
-                ->where("master_kelompok_uttp.kode", "MT")
-                ->firstOrFail();
-            $uuid_kelompok_uttp = $getKelompokUttp->uuid;
-
             // hak akses
-            $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
-            if ($subRoleOnlyPetugas == true) {
+            $subRoleKetuaTimDanPimpinan = CID::subRoleKetuaTimDanPimpinan();
+            if ($subRoleKetuaTimDanPimpinan == true) {
                 // hanya petugas
                 $uuid_profile = $auth->uuid_profile;
-                $data = PdpPenjadwalan::join("pdp_data_petugas", "pdp_data_petugas.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
-                    ->select("pdp_penjadwalan.*")
-                    ->where("pdp_penjadwalan.uuid_kelompok_uttp", $uuid_kelompok_uttp)
+                $data = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                    ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                    ->select("pdp_penjadwalan.*", "tte_skhp.status_acc", "tte_skhp.file_skhp")
                     ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
-                    ->whereIn("pdp_penjadwalan.status_peneraan", ["Diproses", "Selesai"])
-                    ->where("pdp_data_petugas.uuid_pegawai", $uuid_profile)
-                    ->orderBy("tanggal_peneraan", "ASC")
-                    ->orderBy("jam_peneraan", "ASC")
-                    ->get();
+                    ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                    ->where("tte_skhp.uuid_pejabat", $uuid_profile)
+                    ->where("tte_skhp.status_acc", $status)
+                    ->where("tte_skhp.file_skhp", "!=", null)
+                    ->orderBy("tte_skhp.created_at", "ASC");
             } else {
-                $data = PdpPenjadwalan::where("uuid_kelompok_uttp", $uuid_kelompok_uttp)
-                    ->whereYear("tanggal_peneraan", $tahun)
-                    ->whereIn("status_peneraan", ["Diproses", "Selesai"])
-                    ->orderBy("tanggal_peneraan", "ASC")
-                    ->orderBy("jam_peneraan", "ASC")
-                    ->get();
+                $data = PdpPenjadwalan::join("tte_skhp", "tte_skhp.uuid_penjadwalan", "=", "pdp_penjadwalan.uuid")
+                    ->join("permohonan_peneraan", "permohonan_peneraan.uuid", "=", "pdp_penjadwalan.uuid_permohonan")
+                    ->select("pdp_penjadwalan.*", "tte_skhp.status_acc", "tte_skhp.file_skhp")
+                    ->whereYear("pdp_penjadwalan.tanggal_peneraan", $tahun)
+                    ->where("pdp_penjadwalan.status_peneraan", "Selesai")
+                    ->where("tte_skhp.status_acc", $status)
+                    ->where("tte_skhp.file_skhp", "!=", null)
+                    ->orderBy("tte_skhp.created_at", "ASC");
+            }
+
+            // cek tags
+            if ($tags == "All") {
+                $data = $data->get();
+            } else {
+                $data = $data->where("permohonan_peneraan.jenis_pengujian", $tags)->get();
             }
 
             return Datatables::of($data)
@@ -117,46 +195,26 @@ class ScdTteSkhpController extends Controller
                 })
                 ->addColumn('aksi', function ($data) {
                     $enc_uuid = CID::encode($data->uuid);
-                    $permohonan = $data->RelPermohonanPeneraan;
-                    $perusahaan = $permohonan->RelPerusahaan;
-                    $tags_jp = CID::encode('mt');
-                    // route print
-                    $routeSuratJalan = route('print.pdp.sj', [$enc_uuid]);
-                    $routeSuratPerintah = route('print.pdp.spt', [$enc_uuid]);
-                    $routeDisposisi = route('print.pdp.disposisi', [$enc_uuid]);
+                    $menunggu = CID::encode('0');
+                    $disetujui = CID::encode('1');
+                    $ditolak = CID::encode('2');
+                    $file_skhp = CID::urlImg($data->file_skhp);
+                    $link_action = '';
                     // route action
-                    $routeActionSkhp = route('scd.apps.tinjut.action.skhp.index', [$tags_jp, $enc_uuid]);
-                    // route detail
-                    $routePerusahaan = route('set.apps.perusahaan.show', [CID::encode('Aktif'), CID::encode($perusahaan->uuid)]);
-                    $routePdp = route('scd.apps.data.pdp.show', [$enc_uuid]);
-                    $routeInsalat = route('scd.apps.insalat.show', [$enc_uuid]);
+                    if ($data->status_acc == "0") {
+                        $link_action = '<li><a class="dropdown-item bg-hover-success" href="javascript:void(0);" data-disetujui="' . $enc_uuid . '" data-status="' . $disetujui . '"><i class="fa-solid fa-check"></i> Setujui</a></li>';
+                        $link_action .= '<li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-ditolak="' . $enc_uuid . '" data-status="' . $ditolak . '"><i class="fa-solid fa-times"></i> Tolak</a></li>';
+                    } else {
+                        $link_action = '<li><a class="dropdown-item bg-hover-danger" href="javascript:void(0);" data-hapus="' . $enc_uuid . '" data-status="' . $menunggu . '"><i class="fa-solid fa-trash"></i> Hapus</a></li>';
+                    }
                     // aksi
-                    $aksi = '<div class="dropdown">
-                        <button class="btn btn-light btn-dark btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-print"></i>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a target="_BLANK" class="dropdown-item" href="' . $routeSuratJalan . '"><i class="fa-solid fa-print"></i> Surat Jalan</a></li>
-                            <li><a target="_BLANK" class="dropdown-item" href="' . $routeSuratPerintah . '"><i class="fa-solid fa-print"></i> Surat Perintah</a></li>
-                            <li><a target="_BLANK" class="dropdown-item" href="' . $routeDisposisi . '"><i class="fa-solid fa-print"></i> Kartu Penerus Disposisi</a></li>
-                        </ul>
-                    </div>';
-                    $aksi .= '<div class="dropdown mt-2">
-                        <button class="btn btn-light btn-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-gear"></i>
+                    $aksi = '<div class="dropdown mt-2">
+                        <button class="btn btn-light btn-default btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aksi
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                            <li><a class="dropdown-item" href="' . $routeActionSkhp . '"><i class="fa-solid fa-stamp"></i> Manajemen SKHP</a></li>
-                        </ul>
-                    </div>';
-                    $aksi .= '<div class="dropdown mt-2">
-                        <button class="btn btn-light btn-info btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                            <li><a target="_BLANK" class="dropdown-item" href="' . $routePerusahaan . '"><i class="fa-solid fa-hotel"></i> Detail Perusahaan</a></li>
-                            <li><a target="_BLANK" class="dropdown-item" href="' . $routePdp . '"><i class="fa-solid fa-user-check"></i> Detail Jadwal & Penugasan</a></li>
-                            <li><a target="_BLANK" class="dropdown-item" href="' . $routeInsalat . '"><i class="fa-solid fa-scale-balanced"></i> Detail Instrumen & Alat</a></li>
+                            ' . $link_action . '
+                            <li><a target="_BLANK" class="dropdown-item" href="' . $file_skhp . '"><i class="fa-solid fa-eye"></i> Lihat SKHP</a></li>
                         </ul>
                     </div>';
                     return $aksi;

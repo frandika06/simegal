@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('uuid_penjadwalan', 100)->nullable();
             $table->bigInteger('total_retribusi')->nullable();
             $table->dateTime('tgl_skrd')->nullable();
+            $table->dateTime('tgl_jatuh_tempo')->nullable();
             $table->string('kode_bayar_webr', 100)->nullable();
             $table->text('file_pembayaran')->nullable();
             $table->dateTime('tgl_upload')->nullable();

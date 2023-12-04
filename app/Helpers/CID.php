@@ -243,6 +243,45 @@ class CID
         }
         return $bytes;
     }
+    // penyebut
+    public static function penyebut($nilai)
+    {
+        $nilai = abs($nilai);
+        $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($nilai < 12) {
+            $temp = " " . $huruf[$nilai];
+        } else if ($nilai < 20) {
+            $temp = self::penyebut($nilai - 10) . " belas";
+        } else if ($nilai < 100) {
+            $temp = self::penyebut($nilai / 10) . " puluh" . self::penyebut($nilai % 10);
+        } else if ($nilai < 200) {
+            $temp = " seratus" . self::penyebut($nilai - 100);
+        } else if ($nilai < 1000) {
+            $temp = self::penyebut($nilai / 100) . " ratus" . self::penyebut($nilai % 100);
+        } else if ($nilai < 2000) {
+            $temp = " seribu" . self::penyebut($nilai - 1000);
+        } else if ($nilai < 1000000) {
+            $temp = self::penyebut($nilai / 1000) . " ribu" . self::penyebut($nilai % 1000);
+        } else if ($nilai < 1000000000) {
+            $temp = self::penyebut($nilai / 1000000) . " juta" . self::penyebut($nilai % 1000000);
+        } else if ($nilai < 1000000000000) {
+            $temp = self::penyebut($nilai / 1000000000) . " milyar" . self::penyebut(fmod($nilai, 1000000000));
+        } else if ($nilai < 1000000000000000) {
+            $temp = self::penyebut($nilai / 1000000000000) . " trilyun" . self::penyebut(fmod($nilai, 1000000000000));
+        }
+        return $temp;
+    }
+    // terbilang
+    public static function terbilang($nilai)
+    {
+        if ($nilai < 0) {
+            $hasil = "minus " . trim(self::penyebut($nilai));
+        } else {
+            $hasil = trim(self::penyebut($nilai));
+        }
+        return $hasil;
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -438,7 +477,7 @@ class CID
     public static function hitungHariSekarang($tgl)
     {
         $date = Carbon::parse($tgl);
-        $now = Carbon::now();
+        $now = Carbon::now('Asia/Jakarta');
         $diff = $date->diffInDays($now);
         $result = (int) $diff;
         return $result;
@@ -447,7 +486,7 @@ class CID
     public static function hitungJamSekarang($tgl)
     {
         $date = Carbon::parse($tgl);
-        $now = Carbon::now();
+        $now = Carbon::now('Asia/Jakarta');
         $diff = $date->diffInHours($now);
         $result = (int) $diff;
         return $result;
@@ -508,6 +547,194 @@ class CID
         $waktu = Self::Greeting();
         $welcome = $waktu . " " . $nama_lengkap;
         return $welcome;
+    }
+    // hitungMasaAktifHari
+    public static function hitungMasaAktif($expired)
+    {
+        // Tanggal sekarang
+        $now = Carbon::now('Asia/Jakarta');
+
+        // Tanggal kadaluwarsa
+        $expiration = Carbon::parse($expired);
+
+        // Periksa apakah sudah kadaluwarsa
+        if ($now > $expiration) {
+            return 'Expired';
+        }
+
+        // Hitung selisih hari
+        $remainingDays = $now->diffInDays($expiration);
+
+        return $remainingDays;
+    }
+    // hitungMasaAktifLengkap
+    public static function hitungMasaAktifLengkap($expired)
+    {
+        // Tanggal sekarang
+        $now = Carbon::now('Asia/Jakarta');
+
+        // Tanggal kadaluwarsa
+        $expiration = Carbon::parse($expired);
+
+        // Periksa apakah sudah kadaluwarsa
+        if ($now > $expiration) {
+            return 'Expired';
+        }
+
+        // Hitung selisih waktu
+        $diff = $now->diff($expiration);
+
+        // Format hasil
+        $result = [];
+
+        if ($diff->d > 0) {
+            $result[] = $diff->d . ' Hari';
+        }
+
+        if ($diff->h > 0) {
+            $result[] = $diff->h . ' Jam';
+        }
+
+        if ($diff->i > 0) {
+            $result[] = $diff->i . ' Menit';
+        }
+
+        return implode(', ', $result);
+    }
+    // getBulanLetterFromParameter
+    public static function getBulanLetterFromParameter($bulan)
+    {
+        switch ($bulan) {
+            case '01':
+                return "Januari";
+                break;
+            case '02':
+                return "Februari";
+                break;
+            case '03':
+                return "Maret";
+                break;
+            case '04':
+                return "April";
+                break;
+            case '05':
+                return "Mei";
+                break;
+            case '06':
+                return "Juni";
+                break;
+            case '07':
+                return "Juli";
+                break;
+            case '08':
+                return "Agustus";
+                break;
+            case '09':
+                return "September";
+                break;
+            case '10':
+                return "Oktober";
+                break;
+            case '11':
+                return "November";
+                break;
+            case '12':
+                return "Desember";
+                break;
+            default:
+                return "NONE";
+                break;
+        }
+    }
+    // getBulanLetter
+    public static function getBulanLetter()
+    {
+        switch (date('m')) {
+            case '01':
+                return "Januari";
+                break;
+            case '02':
+                return "Februari";
+                break;
+            case '03':
+                return "Maret";
+                break;
+            case '04':
+                return "April";
+                break;
+            case '05':
+                return "Mei";
+                break;
+            case '06':
+                return "Juni";
+                break;
+            case '07':
+                return "Juli";
+                break;
+            case '08':
+                return "Agustus";
+                break;
+            case '09':
+                return "September";
+                break;
+            case '10':
+                return "Oktober";
+                break;
+            case '11':
+                return "November";
+                break;
+            case '12':
+                return "Desember";
+                break;
+            default:
+                return "NONE";
+                break;
+        }
+    }
+    // getRomawi
+    public static function getRomawi()
+    {
+        switch (date('m')) {
+            case '01':
+                return "I";
+                break;
+            case '02':
+                return "II";
+                break;
+            case '03':
+                return "III";
+                break;
+            case '04':
+                return "IV";
+                break;
+            case '05':
+                return "V";
+                break;
+            case '06':
+                return "VI";
+                break;
+            case '07':
+                return "VII";
+                break;
+            case '08':
+                return "VIII";
+                break;
+            case '09':
+                return "IX";
+                break;
+            case '10':
+                return "X";
+                break;
+            case '11':
+                return "XI";
+                break;
+            case '12':
+                return "XII";
+                break;
+            default:
+                return "NONE";
+                break;
+        }
     }
     /*
     |--------------------------------------------------------------------------
@@ -941,12 +1168,12 @@ class CID
         $sub_role = \explode(',', $auth->sub_role);
         $sub_sub_role = \explode(',', $auth->sub_sub_role);
 
-        if ($role == "Admin System" || $role == "Super Admin" || $role == "Kepala Dinas" || $role == "Kepala Bidang") {
+        if ($role == "Admin System" || $role == "Super Admin") {
             // izinkan
             return true;
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim', 'Petugas'];
+            $ar_sub_role = ['Admin Aplikasi', 'Petugas'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 return true;
@@ -1081,6 +1308,39 @@ class CID
                 } else {
                     // kembali ke admin
                     return Self::subRoleAdmin();
+                }
+            } else {
+                // blokir
+                return false;
+            }
+        } else {
+            // blokir
+            return false;
+        }
+    }
+    // Hak Akses subRolePejabatTte
+    public static function subRolePejabatTte()
+    {
+        $auth = Auth::user();
+        $role = $auth->role;
+        $sub_role = \explode(',', $auth->sub_role);
+        $sub_sub_role = \explode(',', $auth->sub_sub_role);
+
+        if ($role == "Kepala Dinas" || $role == "Kepala Bidang") {
+            // izinkan
+            return true;
+        } elseif ($role == "Pegawai") {
+            // PEGAWAI
+            $ar_sub_role = ['Ketua Tim'];
+            if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
+                // izinkan
+                $ar_sub_sub_role = ['Ketua Tim Pelayanan', 'Ketua Tim Pengawasan', 'Ketua Tim Bina SDM'];
+                if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
+                    // izinkan
+                    return true;
+                } else {
+                    // blokir
+                    return false;
                 }
             } else {
                 // blokir
@@ -1249,6 +1509,33 @@ class CID
     | PENJADWALAN DAN PENUGASAN APPS
     |--------------------------------------------------------------------------
      */
+    // get alamat perusahaan
+    public static function getAlamatPerusahaan($permohonan)
+    {
+        $alamat = '';
+        if ($permohonan->uuid_alamat === null) {
+            $alamatDefault = $permohonan->RelPerusahaan->RelAlamatPerusahaanDefault[0];
+            $alamat = $alamatDefault->alamat . ',';
+            $alamat .= isset($alamatDefault->rt) ? 'RT. ' . $alamatDefault->rt . ', ' : '';
+            $alamat .= isset($alamatDefault->rw) ? 'RW. ' . $alamatDefault->rw . ', ' : '';
+            $alamat .= Str::title($alamatDefault->Desa->name) . ',';
+            $alamat .= Str::title($alamatDefault->Kecamatan->name) . ',';
+            $alamat .= Str::title($alamatDefault->Kabupaten->name) . ',';
+            $alamat .= Str::title($alamatDefault->Provinsi->name);
+            $alamat .= isset($alamatDefault->kode_pos) ? ', ' . $alamatDefault->kode_pos . '.' : '.';
+        } else {
+            $alamatDefault = $permohonan->RelAlamatPerusahaan;
+            $alamat = $alamatDefault->alamat . ',';
+            $alamat .= isset($alamatDefault->rt) ? 'RT. ' . $alamatDefault->rt . ', ' : '';
+            $alamat .= isset($alamatDefault->rw) ? 'RW. ' . $alamatDefault->rw . ', ' : '';
+            $alamat .= Str::title($alamatDefault->Desa->name) . ',';
+            $alamat .= Str::title($alamatDefault->Kecamatan->name) . ',';
+            $alamat .= Str::title($alamatDefault->Kabupaten->name) . ',';
+            $alamat .= Str::title($alamatDefault->Provinsi->name);
+            $alamat .= isset($alamatDefault->kode_pos) ? ', ' . $alamatDefault->kode_pos . '.' : '.';
+        }
+        return $alamat;
+    }
     // Generate Kode Perusahaan
     public static function genKodePerusahaan($jp)
     {
@@ -1485,6 +1772,12 @@ class CID
         $url = asset('assets-portal/dist/img/logo.png');
         return $url;
     }
+    // Untuk Logo Aplikasi
+    public static function logoSimegal()
+    {
+        $url = asset('assets-portal/dist/img/logo-color.png');
+        return $url;
+    }
     // Untuk Logo BANTJANA PATAKARAN PRALAJA KAPRADANAN
     // sumber: https: //metinsugm.blogspot.com/2014/08/makna-lambang.html
     public static function logoBPPK()
@@ -1560,5 +1853,137 @@ class CID
             ->orderBy("master_kategori_kelompok.no_urut", "ASC")
             ->get();
         return $data;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | WEBR HELPER
+    |--------------------------------------------------------------------------
+     */
+    public static function webrSetHeader()
+    {
+        date_default_timezone_set("UTC");
+
+        $userid = \env('WEBR_USERID');
+        $password = \env('WEBR_PASSWORD');
+
+        $inttime = strval(time() - strtotime("1970-01-01 00:00:00"));
+
+        $value = "$userid&$inttime";
+        $key = $password;
+
+        $signature = hash_hmac("sha256", $value, $key, true);
+        $signature64 = base64_encode($signature);
+
+        $headers = [
+            "userid:$userid",
+            "signature:$signature64",
+            "key:$inttime",
+        ];
+
+        return $headers;
+    }
+
+    public static function webrSetInvoice(
+        $id_perusahaan, $nama_perusahaan, $alamat_perusahaan, $biaya,
+        $no_skrd, $tgl_skrd, $tgl_jatuh_tempo
+    ) {
+        $data = '
+		{
+			"departemen_kode" : "3.07.01.01",
+            "departemen_nama" : "DINAS PERINDUSTRIAN DAN PERDAGANGAN",
+            "objek_kode" : "' . $id_perusahaan . '",
+            "objek_nama" : "Retribusi ' . $nama_perusahaan . '",
+            "objek_alamat_1" : "' . $alamat_perusahaan . '",
+            "objek_alamat_2" : "-",
+            "produk_kode" : "4.1.2.01.46",
+            "produk_nama" : "Retribusi Pelayanan Tera/Tera Ulang",
+            "rekening_kode" : "4.1.2.01.46",
+            "rekening_nama" : "Retribusi Pelayanan Tera/Tera Ulang",
+            "pejabat_nm" : "IRWAN HENGKI, SH,. M.Si",
+            "subjek_kode" : "' . $id_perusahaan . '",
+            "subjek_nama" : "' . $nama_perusahaan . '",
+            "subjek_alamat_1" : "' . $alamat_perusahaan . '",
+            "subjek_alamat_2" : "-",
+            "dasar" : "0",
+            "tarif" : "1",
+            "pokok" : "' . $biaya . '",
+            "pengurang" : "0",
+            "penambah" : "0",
+            "setoran" : "0",
+            "terutang" : "' . $biaya . '",
+            "denda" : "0",
+            "bunga" : "0",
+            "jumlah" : "' . $biaya . '",
+            "jenis" : "1",
+            "jenis_penerimaan" : "1",
+            "no_skrd" : "' . $no_skrd . '",
+            "tgl_skrd" : "' . $tgl_skrd . '",
+            "periode_1" : "' . $tgl_skrd . '",
+            "periode_2" : "' . $tgl_skrd . '",
+            "tgl_terima" : "' . $tgl_skrd . '",
+            "jatuh_tempo" : "' . $tgl_jatuh_tempo . '"
+        }';
+
+        $params = '
+        {
+            "jsonrpc":"2.0",
+            "method":"set_invoice",
+            "params":{
+                "data":' . $data . '
+            },
+            "id":1
+        }';
+
+        $url = \env('WEBR_URL');
+
+        $headers = self::webrSetHeader();
+
+        $session = curl_init($url);
+        curl_setopt($session, CURLOPT_URL, $url);
+        curl_setopt($session, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($session, CURLOPT_VERBOSE, true);
+        curl_setopt($session, CURLOPT_POST, true);
+        curl_setopt($session, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($session);
+
+        return $response;
+    }
+
+    public static function webrGetPayment($kode_bayar)
+    {
+        $data = '
+		{
+			"kd_bayar" : "' . $kode_bayar . '"
+        }';
+
+        $params = '
+        {
+            "jsonrpc":"2.0",
+            "method":"get_payment",
+            "params":{
+                "data":' . $data . '
+            },
+            "id":1
+        }';
+
+        $url = \env('WEBR_URL');
+        $headers = self::webrSetHeader();
+
+        $session = curl_init($url);
+        curl_setopt($session, CURLOPT_URL, $url);
+        curl_setopt($session, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($session, CURLOPT_VERBOSE, true);
+        curl_setopt($session, CURLOPT_POST, true);
+        curl_setopt($session, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($session);
+
+        if ($response === false) {
+            dd(curl_error($session));
+        }
+
+        return $response;
     }
 }

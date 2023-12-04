@@ -157,10 +157,13 @@
                     {{-- begin:::Tab content --}}
                     <div class="tab-content" id="myTabContent">
                         {{-- path-baru::begin --}}
-                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.tera')
+                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.menunggu')
                         {{-- path-baru::end --}}
                         {{-- path-diproses::begin --}}
-                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.tera_ulang')
+                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.disetujui')
+                        {{-- path-diproses::end --}}
+                        {{-- path-diproses::begin --}}
+                        @include('pages.admin.schedule_apps.tte_dokumen.skhp.path_datatable.ditolak')
                         {{-- path-diproses::end --}}
                     </div>
                     {{-- end:::Tab content --}}
@@ -212,18 +215,20 @@
             }
         }
 
-        function getStatistikPenugasan() {
+        function getStatistikTteSkhp() {
             $.ajax({
                 url: "{!! route('ajax.scd.apps.sts.tte.skhp') !!}",
                 type: 'POST',
                 data: {
                     tahun: $('#q_tahun').val(),
+                    tags: $('#q_tags').val(),
                     _method: 'post',
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(res) {
-                    $("#statistik_tera").html(res.data.jml_tera);
-                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
+                    $("#statistik_menunggu").html(res.data.jml_menunggu);
+                    $("#statistik_disetujui").html(res.data.jml_disetujui);
+                    $("#statistik_ditolak").html(res.data.jml_ditolak);
                 },
                 error: function(xhr) {
                     Swal.fire({

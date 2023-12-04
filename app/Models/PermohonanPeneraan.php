@@ -37,4 +37,9 @@ class PermohonanPeneraan extends Model
     {
         return $this->belongsTo('App\Models\Pegawai', 'uuid_verifikator', 'uuid')->withTrashed();
     }
+
+    public function RelPdpPenjadwalan()
+    {
+        return $this->hasOne('App\Models\PdpPenjadwalan', 'uuid_permohonan', 'uuid')->withTrashed();
+    }
 }

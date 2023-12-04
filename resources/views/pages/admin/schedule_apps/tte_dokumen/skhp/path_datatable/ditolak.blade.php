@@ -1,12 +1,12 @@
 {{-- begin:::Tab pane --}}
-<div class="tab-pane fade" id="profile_tab_tulang" role="tabpanel">
+<div class="tab-pane fade" id="tab_tte_ditolak" role="tabpanel">
     {{-- begin::Card --}}
     <div class="card pt-4 mb-6 mb-xl-9">
         {{-- begin::Card header --}}
         <div class="card-header border-0">
             {{-- begin::Card title --}}
             <div class="card-title">
-                <h2>Tera Ulang</h2>
+                <h2>Ditolak</h2>
             </div>
             {{-- end::Card title --}}
         </div>
@@ -16,7 +16,7 @@
             {{-- begin::Table wrapper --}}
             <div class="table-responsive">
                 {{-- begin::Table --}}
-                <table id="datatableTulang" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
+                <table id="datatableDitolak" class="table table-striped table-hover table-row-bordered gy-5 gs-7 border rounded">
                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                         <tr class="text-start text-muted text-uppercase gs-0">
                             <th>#</th>
@@ -42,17 +42,26 @@
     {{-- JS CUSTOM --}}
     <script>
         $(document).ready(function() {
-            getStatistikPenugasan();
+            getStatistikTteSkhp();
         });
 
         $('[name="q_tahun"]').change(function() {
             var q_tahun = $(this).val();
-            $('#datatableTulang tbody').empty();
-            tableTulang.ajax.reload(null, true);
-            getStatistikPenugasan();
+            var q_tags = $('#q_tags').val();
+            $('#datatableDitolak tbody').empty();
+            tableDitolak.ajax.reload(null, true);
+            getStatistikTteSkhp();
         });
 
-        var tableTulang = $('#datatableTulang').DataTable({
+        $('[name="q_tags"]').change(function() {
+            var q_tags = $(this).val();
+            var q_tahun = $('#q_tahun').val();
+            $('#datatableDitolak tbody').empty();
+            tableDitolak.ajax.reload(null, true);
+            getStatistikTteSkhp();
+        });
+
+        var tableDitolak = $('#datatableDitolak').DataTable({
             "select": false,
             "paging": true,
             "searching": true,
@@ -66,12 +75,13 @@
                 "lengthMenu": "Show _MENU_",
             },
             "ajax": {
-                url: "{!! route('scd.apps.tinjut.mt.data') !!}",
+                url: "{!! route('scd.apps.tte.skhp.data') !!}",
                 type: 'GET',
                 data: function(data) {
                     data.filter = {
                         'tahun': $('#q_tahun').val(),
-                        'tags': 'Tera Ulang',
+                        'tags': $('#q_tags').val(),
+                        'status': "2",
                     };
                 }
             },
@@ -120,18 +130,20 @@
                 ">",
         });
 
-        function getStatistikPenugasan() {
+        function getStatistikTteSkhp() {
             $.ajax({
-                url: "{!! route('ajax.scd.apps.sts.tinjut.mt') !!}",
+                url: "{!! route('ajax.scd.apps.sts.tte.skhp') !!}",
                 type: 'POST',
                 data: {
                     tahun: $('#q_tahun').val(),
+                    tags: $('#q_tags').val(),
                     _method: 'post',
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(res) {
-                    $("#statistulang").html(res.data.jml_tera);
-                    $("#statistik_tera_ulang").html(res.data.jml_tera_ulang);
+                    $("#statistik_menunggu").html(res.data.jml_menunggu);
+                    $("#statistik_disetujui").html(res.data.jml_disetujui);
+                    $("#statistik_ditolak").html(res.data.jml_ditolak);
                 },
                 error: function(xhr) {
                     Swal.fire({

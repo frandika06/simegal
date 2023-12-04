@@ -108,11 +108,17 @@
                                         {!! QrCode::size(290)->backgroundColor(255, 55, 0)->generate($urlTte) !!}
                                     @else
                                         {!! QrCode::size(290)->generate($urlTte) !!}
+                                        @if ($tte->status_acc == '0')
+                                            <div class="mt-5">
+                                                <a href="{{ route('scd.apps.tinjut.action.skhp.unduh', [$tags_jp, $enc_uuid, $tte->kode_tte]) }}" class="btn btn-light-info"><i class="fa fa-download"></i> Unduh QR TTE</a>
+                                                <a href="javascript:void(0);" class="btn btn-light-danger" data-hapus-tte="{{ \CID::encode($tte->uuid) }}"><i class="fa fa-trash me-0"></i></a>
+                                            </div>
+                                        @else
+                                            <div class="mt-5">
+                                                <a href="{{ route('scd.apps.tinjut.action.skhp.unduh', [$tags_jp, $enc_uuid, $tte->kode_tte]) }}" class="btn btn-light-info"><i class="fa fa-download"></i> Unduh QR TTE</a>
+                                            </div>
+                                        @endif
                                     @endif
-                                    <div class="mt-5">
-                                        <a href="{{ route('scd.apps.tinjut.action.skhp.unduh', [$tags_jp, $enc_uuid, $tte->kode_tte]) }}" class="btn btn-light-info"><i class="fa fa-download"></i> Unduh QR TTE</a>
-                                        <a href="javascript:void(0);" class="btn btn-light-danger" data-hapus-tte="{{ \CID::encode($tte->uuid) }}"><i class="fa fa-trash me-0"></i></a>
-                                    </div>
                                 </div>
                                 {{-- begin::Details toggle --}}
                                 <div class="d-flex flex-stack fs-4 py-3">
@@ -134,7 +140,7 @@
                                         </div>
                                         {{-- end::Details item --}}
                                         {{-- begin::Details item --}}
-                                        <div class="fw-bold mt-5">Status TTE</div>
+                                        <div class="fw-bold mt-5 mb-3">Status TTE</div>
                                         @if ($tte->status_acc == '0')
                                             <div class="p-3 bg-warning text-center rounded-3">
                                                 TTE Menunggu Persetujuan
@@ -144,7 +150,7 @@
                                                 TTE Disetujui
                                             </div>
                                         @elseif ($tte->status_acc == '2')
-                                            <div class="p-3 bg-danger text-center rounded-3">
+                                            <div class="p-3 bg-danger text-center text-white rounded-3">
                                                 TTE Ditolak
                                             </div>
                                         @endif
@@ -158,7 +164,7 @@
                                         {{-- begin::Details item --}}
                                         <div class="fw-bold mt-5">Tgl. Expired SKHP</div>
                                         <div class="text-gray-600">
-                                            {{ \CID::tglBlnThn($tte->tanggal_expired) }}}
+                                            {{ \CID::tglBlnThn($tte->tanggal_expired) }}
                                         </div>
                                         {{-- end::Details item --}}
                                         {{-- begin::Details item --}}

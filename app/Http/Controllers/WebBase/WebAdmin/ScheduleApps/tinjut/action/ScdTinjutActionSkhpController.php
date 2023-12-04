@@ -94,7 +94,7 @@ class ScdTinjutActionSkhpController extends Controller
         $uuid_tte = Str::uuid();
         $status_apps = "Schedule";
         $kode_tte = CID::genKodeTteSkhp($jenis_uttp, $status_apps);
-        $tanggal_generate = date('Y-m-d 00:00:00');
+        $tanggal_generate = date('Y-m-d H:i:s');
         $tanggal_expired = date("Y-m-d", strtotime(date('Y-m-d') . " +1 year"));
         $value_1 = [
             "uuid" => $uuid_tte,
@@ -170,19 +170,9 @@ class ScdTinjutActionSkhpController extends Controller
             return back();
         }
 
-        // cek status acc
-        // if ($data->status_acc == "0") {
-        //     alert()->error('Gagal!', 'TTE Belum Disetujui Oleh Pejabat Penandatangan!');
-        //     return back();
-        // } elseif ($data->status_acc == "2") {
-        //     alert()->error('Gagal!', 'TTE Tidak Disetujui/Ditolak Oleh Pejabat Penandatangan!');
-        //     return back();
-        // }
-
         // validate
         $request->validate([
             "tanggal_expired" => "required|string|max:10",
-            "file_skhp" => "required|file|mimes:pdf|max:50000",
         ]);
 
         // value_1
@@ -197,6 +187,11 @@ class ScdTinjutActionSkhpController extends Controller
         $kode_tte = $data->kode_tte;
         $path = "file_skhp/" . date('Y', strtotime($data->tanggal_generate)) . "/" . $kode_tte;
         if ($request->hasFile('file_skhp')) {
+            // validate
+            $request->validate([
+                "file_skhp" => "required|file|mimes:pdf|max:50000",
+            ]);
+
             if ($data->file_skhp !== null) {
                 $file_skhp_unlik = $data->file_skhp;
                 if (Storage::disk('public')->exists($file_skhp_unlik)) {

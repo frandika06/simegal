@@ -76,4 +76,31 @@ class PrintPdpController extends Controller
             'jenis_pengujian',
         ));
     }
+
+    // suratKeteranganRetribusi
+    public function suratKeteranganRetribusi(Request $request, $enc_uuid)
+    {
+        // uuid
+        $uuid = CID::decode($enc_uuid);
+
+        // data
+        $data = PdpPenjadwalan::findOrFail($uuid);
+        $permohonan = $data->RelPermohonanPeneraan;
+        $perusahaan = $permohonan->RelPerusahaan;
+        $alamat_peneraan = $permohonan->RelAlamatPerusahaan;
+        $jenis_pengujian = $permohonan->jenis_pengujian;
+        $alamatDefault = $perusahaan->RelAlamatPerusahaanDefault[0];
+        $retribusi = $data->RelPdpRetribusi;
+
+        return view('pages.print.pdp.skrd', compact(
+            'enc_uuid',
+            'data',
+            'permohonan',
+            'perusahaan',
+            'alamatDefault',
+            'alamat_peneraan',
+            'jenis_pengujian',
+            'retribusi',
+        ));
+    }
 }
