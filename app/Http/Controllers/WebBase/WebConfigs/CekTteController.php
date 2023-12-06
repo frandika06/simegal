@@ -29,7 +29,7 @@ class CekTteController extends Controller
         if ($data === null) {
             $title = "404 - Dokumen Tidak Ditemukan";
             return \view('pages.tte.invalid', compact(
-                'enc_uuid',
+                'kode_tte',
                 'pageBg',
                 'title',
             ));
@@ -37,7 +37,7 @@ class CekTteController extends Controller
             if ($data->status_aktif == "0") {
                 $title = "404 - Dokumen Tidak Ditemukan";
                 return \view('pages.tte.invalid', compact(
-                    'enc_uuid',
+                    'kode_tte',
                     'pageBg',
                     'title',
                 ));

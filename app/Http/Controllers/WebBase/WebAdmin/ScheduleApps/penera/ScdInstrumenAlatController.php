@@ -123,8 +123,9 @@ class ScdInstrumenAlatController extends Controller
         $request->validate([
             "tanggal_peneraan" => "required|string",
             "jam_peneraan" => "required|string",
-            "nama_supir" => "required|string|max:100",
-            "jenis_kendaraan" => "required|string|max:10",
+            "nama_supir" => "sometimes|nullable|string|max:100",
+            "jenis_kendaraan" => "sometimes|nullable|string|max:10",
+            "plat_nomor_kendaraan" => "sometimes|nullable|string|max:10",
             "repeat_instrumen" => "sometimes|nullable",
             "repeat_alat" => "sometimes|nullable",
         ]);
@@ -142,9 +143,9 @@ class ScdInstrumenAlatController extends Controller
         $value_1 = [
             "tanggal_peneraan" => $tanggal_peneraan,
             "jam_peneraan" => $jam_peneraan,
-            "nama_supir" => $request->nama_supir,
-            "jenis_kendaraan" => $request->jenis_kendaraan,
-            "plat_nomor_kendaraan" => Str::upper($request->plat_nomor_kendaraan),
+            "nama_supir" => isset($request->nama_supir) ? $request->nama_supir : null,
+            "jenis_kendaraan" => isset($request->jenis_kendaraan) ? $request->jenis_kendaraan : null,
+            "plat_nomor_kendaraan" => isset($request->plat_nomor_kendaraan) ? Str::upper($request->plat_nomor_kendaraan) : null,
             "uuid_updated" => $uuid_profile,
         ];
 

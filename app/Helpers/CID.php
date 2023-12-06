@@ -1864,8 +1864,10 @@ class CID
     {
         date_default_timezone_set("UTC");
 
-        $userid = \env('WEBR_USERID');
-        $password = \env('WEBR_PASSWORD');
+        // $userid = \env('WEBR_USERID');
+        $userid = "wssimegal";
+        // $password = \env('WEBR_PASSWORD');
+        $password = "XcILzDqjuMjXedGLnKCJRP3NVK79SVTfbWQmOrkpDsTgvIEtOAlogbEuYZUACp2y";
 
         $inttime = strval(time() - strtotime("1970-01-01 00:00:00"));
 
@@ -1935,7 +1937,8 @@ class CID
             "id":1
         }';
 
-        $url = \env('WEBR_URL');
+        // $url = \env('WEBR_URL');
+        $url = "https://webr.tangkab.dapda.id/api/webr";
 
         $headers = self::webrSetHeader();
 

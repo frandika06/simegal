@@ -289,70 +289,72 @@
                                 </div>
                                 {{-- end::Penjadwalan Peneraan --}}
 
-                                {{-- begin::Nama Supir --}}
-                                <div class="mt-0">
-                                    <label for="">Nama Supir</label>
-                                    <div class="row p-2">
-                                        <div class="col">
-                                            {{-- begin::nama_supir --}}
-                                            <div class="form-floating mb-5">
-                                                <input type="text" class="form-control @error('nama_supir') is-invalid @enderror" name="nama_supir" id="nama_supir2" placeholder="Nama Supir" autocomplete="off" maxlength="100" value="{{ old('nama_supir', $data->nama_supir) }}" required />
-                                                <label for="nama_supir">Nama Supir</label>
-                                                @error('nama_supir')
-                                                    <div id="nama_supirFeedback" class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                @if ($permohonan->lokasi_peneraan == 'Luar Kantor Metrologi')
+                                    {{-- begin::Nama Supir --}}
+                                    <div class="mt-0">
+                                        <label for="">Nama Supir</label>
+                                        <div class="row p-2">
+                                            <div class="col">
+                                                {{-- begin::nama_supir --}}
+                                                <div class="form-floating mb-5">
+                                                    <input type="text" class="form-control @error('nama_supir') is-invalid @enderror" name="nama_supir" id="nama_supir2" placeholder="Nama Supir" autocomplete="off" maxlength="100" value="{{ old('nama_supir', $data->nama_supir) }}" />
+                                                    <label for="nama_supir">Nama Supir</label>
+                                                    @error('nama_supir')
+                                                        <div id="nama_supirFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                {{-- end::nama_supir --}}
                                             </div>
-                                            {{-- end::nama_supir --}}
                                         </div>
                                     </div>
-                                </div>
-                                {{-- end::Nama Supir --}}
+                                    {{-- end::Nama Supir --}}
 
-                                {{-- begin::Jenis Kendaraan --}}
-                                <div class="mt-0">
-                                    <label for="">Jenis Kendaraan</label>
-                                    <div class="row p-2">
-                                        <div class="col">
-                                            {{-- begin::jenis_kendaraan --}}
-                                            <div class="form-group mb-5">
-                                                <select class="form-select @error('jenis_kendaraan') is-invalid @enderror" name="jenis_kendaraan" id="jenis_kendaraan" data-control="select2" data-placeholder="Pilih Jenis Kendaraan" required>
-                                                    @if (old('jenis_kendaraan'))
-                                                        <option value="Mobil" @if (old('jenis_kendaraan') == 'Mobil') selected @endif>Mobil</option>
-                                                        <option value="Motor" @if (old('jenis_kendaraan') == 'Motor') selected @endif>Motor</option>
-                                                    @else
-                                                        <option value="Mobil" @if ($data->jenis_kendaraan == 'Mobil') selected @endif>Mobil</option>
-                                                        <option value="Motor" @if ($data->jenis_kendaraan == 'Motor') selected @endif>Motor</option>
-                                                    @endif
-                                                </select>
-                                                @error('jenis_kendaraan')
-                                                    <div id="jenis_kendaraanFeedback" class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                    {{-- begin::Jenis Kendaraan --}}
+                                    <div class="mt-0">
+                                        <label for="">Jenis Kendaraan</label>
+                                        <div class="row p-2">
+                                            <div class="col">
+                                                {{-- begin::jenis_kendaraan --}}
+                                                <div class="form-group mb-5">
+                                                    <select class="form-select @error('jenis_kendaraan') is-invalid @enderror" name="jenis_kendaraan" id="jenis_kendaraan" data-control="select2" data-placeholder="Pilih Jenis Kendaraan">
+                                                        @if (old('jenis_kendaraan'))
+                                                            <option value="Mobil" @if (old('jenis_kendaraan') == 'Mobil') selected @endif>Mobil</option>
+                                                            <option value="Motor" @if (old('jenis_kendaraan') == 'Motor') selected @endif>Motor</option>
+                                                        @else
+                                                            <option value="Mobil" @if ($data->jenis_kendaraan == 'Mobil') selected @endif>Mobil</option>
+                                                            <option value="Motor" @if ($data->jenis_kendaraan == 'Motor') selected @endif>Motor</option>
+                                                        @endif
+                                                    </select>
+                                                    @error('jenis_kendaraan')
+                                                        <div id="jenis_kendaraanFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                {{-- end::jenis_kendaraan --}}
                                             </div>
-                                            {{-- end::jenis_kendaraan --}}
                                         </div>
                                     </div>
-                                </div>
-                                {{-- end::Jenis Kendaraan --}}
+                                    {{-- end::Jenis Kendaraan --}}
 
-                                {{-- begin::Plat Nomor Kendaraan --}}
-                                <div class="mt-0">
-                                    <label for="">Plat Nomor Kendaraan</label>
-                                    <div class="row p-2">
-                                        <div class="col">
-                                            {{-- begin::plat_nomor_kendaraan --}}
-                                            <div class="form-floating mb-5">
-                                                <input type="text" class="form-control text-uppercase @error('plat_nomor_kendaraan') is-invalid @enderror" name="plat_nomor_kendaraan" id="plat_nomor_kendaraan2" placeholder="Plat Nomor Kendaraan" autocomplete="off" maxlength="10"
-                                                    value="{{ old('plat_nomor_kendaraan', $data->plat_nomor_kendaraan) }}" required />
-                                                <label for="plat_nomor_kendaraan">Plat Nomor Kendaraan</label>
-                                                @error('plat_nomor_kendaraan')
-                                                    <div id="plat_nomor_kendaraanFeedback" class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                    {{-- begin::Plat Nomor Kendaraan --}}
+                                    <div class="mt-0">
+                                        <label for="">Plat Nomor Kendaraan</label>
+                                        <div class="row p-2">
+                                            <div class="col">
+                                                {{-- begin::plat_nomor_kendaraan --}}
+                                                <div class="form-floating mb-5">
+                                                    <input type="text" class="form-control text-uppercase @error('plat_nomor_kendaraan') is-invalid @enderror" name="plat_nomor_kendaraan" id="plat_nomor_kendaraan2" placeholder="Plat Nomor Kendaraan" autocomplete="off" maxlength="10"
+                                                        value="{{ old('plat_nomor_kendaraan', $data->plat_nomor_kendaraan) }}" />
+                                                    <label for="plat_nomor_kendaraan">Plat Nomor Kendaraan</label>
+                                                    @error('plat_nomor_kendaraan')
+                                                        <div id="plat_nomor_kendaraanFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                {{-- end::plat_nomor_kendaraan --}}
                                             </div>
-                                            {{-- end::plat_nomor_kendaraan --}}
                                         </div>
                                     </div>
-                                </div>
-                                {{-- end::Plat Nomor Kendaraan --}}
+                                    {{-- end::Plat Nomor Kendaraan --}}
+                                @endif
 
                                 {{-- begin::Instrumen --}}
                                 <div class="mt-0">

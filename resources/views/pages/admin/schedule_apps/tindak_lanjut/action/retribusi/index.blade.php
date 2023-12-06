@@ -202,7 +202,11 @@
                                             {{-- begin::Details item --}}
                                             <div class="fw-bold mt-5">Verifikator</div>
                                             <div class="text-gray-600">
-                                                <a target="_BLANK" href="{{ route('set.apps.pegawai.show', [\CID::encode($skrd->uuid_verifikasi)]) }}" class="text-gray-600 text-hover-info">{{ $skrd->RelVerifikator->nama_lengkap }}</a>
+                                                @if (isset($skrd->RelVerifikator->nama_lengkap))
+                                                    <a target="_BLANK" href="{{ route('set.apps.pegawai.show', [\CID::encode($skrd->uuid_verifikasi)]) }}" class="text-gray-600 text-hover-info">{{ $skrd->RelVerifikator->nama_lengkap }}</a>
+                                                @else
+                                                    -
+                                                @endif
                                             </div>
                                             {{-- end::Details item --}}
                                             {{-- btn-generate-skrd --}}
