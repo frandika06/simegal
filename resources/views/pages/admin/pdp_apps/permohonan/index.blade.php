@@ -50,7 +50,7 @@
                                         <th>Jenis Pengujian</th>
                                         <th>Nomor Surat</th>
                                         <th>Tanggal Permohonan</th>
-                                        <th>Lokasi</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -133,8 +133,8 @@
                     name: 'tanggal_permohonan'
                 },
                 {
-                    data: 'lokasi_peneraan',
-                    name: 'lokasi_peneraan'
+                    data: 'status',
+                    name: 'status'
                 },
                 {
                     data: 'aksi',
@@ -150,6 +150,10 @@
                 {
                     className: "text-center",
                     targets: [4]
+                },
+                {
+                    className: "w-300px",
+                    targets: [5]
                 },
                 {
                     className: "text-end",

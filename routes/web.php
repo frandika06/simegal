@@ -29,6 +29,8 @@ use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdDataPdpControll
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\penera\ScdInstrumenAlatController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdInputDataPdpController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\permohonan\ScdPermohonanPengujianController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\action\ScdTinjutActionBaController;
+use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\action\ScdTinjutActionCerapanController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\action\ScdTinjutActionRetribusiController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\action\ScdTinjutActionSkhpController;
 use App\Http\Controllers\WebBase\WebAdmin\ScheduleApps\tinjut\ScdTinjutBdktController;
@@ -108,8 +110,7 @@ Route::group(['middleware' => ['WebFECounter']], function () {
     // GUEST ONLY
     Route::group(['middleware' => ['pbh', 'guest']], function () {
         Route::group(['prefix' => 'auth'], function () {
-            Route::get('/login', [LoginController::class, 'index'])->name('prt.lgn.index');
-            Route::post('/login', [LoginController::class, 'store'])->name('prt.lgn.post');
+            Route::get('/login', [LoginController::class, 'index'])->name('prt.lgn.index'); Route::post('/login', [LoginController::class, 'store'])->name('prt.lgn.post');
             Route::get('/register', [RegisterController::class, 'index'])->name('prt.reg.index');
             Route::post('/register', [RegisterController::class, 'store'])->name('prt.reg.post');
             // Route::get('/reset', [ResetController::class, 'index'])->name('prt.rst.index');
@@ -159,6 +160,8 @@ Route::group(['prefix' => 'eximdown'], function () {
     // unduhan
     Route::get('/unduhan/{uuid}', [ExDownController::class, 'unduhan'])->name('exdown.unduh');
     Route::get('/unduh-skhp/{kode_tte}', [ExDownController::class, 'unduhSkhp'])->name('exdown.unduh.skhp');
+    Route::get('/unduh-cerapan/{uuid}', [ExDownController::class, 'unduhCerapan'])->name('exdown.unduh.cerapan');
+    Route::get('/unduh-ba/{uuid}', [ExDownController::class, 'unduhBa'])->name('exdown.unduh.ba');
     // settings-apps
     Route::group(['prefix' => 'settings-apps'], function () {
         // exxport
@@ -208,15 +211,23 @@ Route::group(['prefix' => 'ajax'], function () {
     });
     // schedule-apps
     Route::group(['prefix' => 'schedule-apps'], function () {
-        Route::post('/statistik/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
-        Route::post('/statistik/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
-        Route::post('/statistik/penugasan', [AjaxController::class, 'ScdStatistikPenugasan'])->name('ajax.scd.apps.sts.penugasan');
-        Route::post('/statistik/insalat', [AjaxController::class, 'ScdStatistikInsAlat'])->name('ajax.scd.apps.sts.insalat');
-        Route::post('/statistik/tinjut-mt', [AjaxController::class, 'ScdStatistikTinjutMT'])->name('ajax.scd.apps.sts.tinjut.mt');
-        Route::post('/statistik/tinjut-uapv', [AjaxController::class, 'ScdStatistikTinjutUapv'])->name('ajax.scd.apps.sts.tinjut.uapv');
-        Route::post('/statistik/tinjut-bdkt', [AjaxController::class, 'ScdStatistikTinjutBdkt'])->name('ajax.scd.apps.sts.tinjut.bdkt');
-        Route::post('/statistik/tte/data-skhp', [AjaxController::class, 'ScdTteDokumenSKHP'])->name('ajax.scd.apps.sts.tte.skhp');
-        Route::post('/statistik/tte/get-pejabat', [AjaxController::class, 'SetGetTtePejabat'])->name('ajax.scd.apps.tte.get.pejabat');
+        // statistik
+        Route::group(['prefix' => 'statistik'], function () {
+            Route::post('/permohonan-pengujian', [AjaxController::class, 'ScdStatistikPermohonan'])->name('ajax.scd.apps.sts.pp');
+            Route::post('/input-data', [AjaxController::class, 'ScdStatistikInputData'])->name('ajax.scd.apps.sts.input.pdp');
+            Route::post('/penugasan', [AjaxController::class, 'ScdStatistikPenugasan'])->name('ajax.scd.apps.sts.penugasan');
+            Route::post('/insalat', [AjaxController::class, 'ScdStatistikInsAlat'])->name('ajax.scd.apps.sts.insalat');
+            Route::post('/tinjut-mt', [AjaxController::class, 'ScdStatistikTinjutMT'])->name('ajax.scd.apps.sts.tinjut.mt');
+            Route::post('/tinjut-uapv', [AjaxController::class, 'ScdStatistikTinjutUapv'])->name('ajax.scd.apps.sts.tinjut.uapv');
+            Route::post('/tinjut-bdkt', [AjaxController::class, 'ScdStatistikTinjutBdkt'])->name('ajax.scd.apps.sts.tinjut.bdkt');
+            Route::post('/tte/data-skhp', [AjaxController::class, 'ScdTteDokumenSKHP'])->name('ajax.scd.apps.sts.tte.skhp');
+            Route::post('/tte/get-pejabat', [AjaxController::class, 'SetGetTtePejabat'])->name('ajax.scd.apps.tte.get.pejabat');
+        });
+        // form
+        Route::group(['prefix' => 'form'], function () {
+            Route::post('/file-cerapan', [AjaxController::class, 'FormGetFileCerapan'])->name('ajax.scd.apps.form.get.file.cerapan');
+            Route::post('/file-ba', [AjaxController::class, 'FormGetFileBa'])->name('ajax.scd.apps.form.get.file.ba');
+        });
     });
 });
 
@@ -370,6 +381,7 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
         Route::group(['middleware' => ['Perusahaan']], function () {
             // dashboard
             Route::get('/', [PDPDashboardController::class, 'index'])->name('pdp.apps.home.index');
+
             // auth
             // PATH : WebBase/WebAdmin/auth
             Route::group(['prefix' => 'auth'], function () {
@@ -397,11 +409,14 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                 Route::get('/', [PDPSertifikatSKHPController::class, 'index'])->name('pdp.apps.sertifikat.skhp.index');
             });
 
-            // retribusi
-            Route::group(['prefix' => 'retribusi'], function () {
-                Route::get('/', [PDPRetribusiController::class, 'index'])->name('pdp.apps.retribusi.index');
-                Route::get('/create/{uuid}', [PDPRetribusiController::class, 'create'])->name('pdp.apps.retribusi.create');
-                Route::post('/create/{uuid}', [PDPRetribusiController::class, 'store'])->name('pdp.apps.retribusi.store');
+            // middleware : ProtectFiturRetribusi
+            Route::group(['middleware' => ['ProtectFiturRetribusi']], function () {
+                // retribusi
+                Route::group(['prefix' => 'retribusi'], function () {
+                    Route::get('/', [PDPRetribusiController::class, 'index'])->name('pdp.apps.retribusi.index');
+                    Route::get('/create/{uuid}', [PDPRetribusiController::class, 'create'])->name('pdp.apps.retribusi.create');
+                    Route::post('/create/{uuid}', [PDPRetribusiController::class, 'store'])->name('pdp.apps.retribusi.store');
+                });
             });
         });
     });
@@ -507,6 +522,23 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                             Route::get('/{uuid}', [ScdTinjutActionRetribusiController::class, 'index'])->name('scd.apps.tinjut.action.retribusi.index');
                             Route::put('/{uuid}/generate-skrd', [ScdTinjutActionRetribusiController::class, 'generateSkrd'])->name('scd.apps.tinjut.action.retribusi.generate');
                             Route::get('/{uuid}/download-kode-bayar/{kode_bayar_webr}', [ScdTinjutActionRetribusiController::class, 'downloadKodeBayar'])->name('scd.apps.tinjut.action.retribusi.unduhkode');
+                        });
+                    });
+                    // middleware : PetugasOnly
+                    Route::group(['middleware' => ['PetugasOnly']], function () {
+                        // manajemen-cerapan
+                        // PATH : WebBase/WebAdmin/ScheduleApps/tinjut/action
+                        Route::group(['prefix' => 'manajemen-cerapan'], function () {
+                            Route::get('/{uuid}', [ScdTinjutActionCerapanController::class, 'index'])->name('scd.apps.tinjut.action.cerapan.index');
+                            Route::post('/{uuid}', [ScdTinjutActionCerapanController::class, 'store'])->name('scd.apps.tinjut.action.cerapan.store');
+                            Route::delete('/{uuid}/delete', [ScdTinjutActionCerapanController::class, 'destroy'])->name('scd.apps.tinjut.action.cerapan.destroy');
+                        });
+                        // manajemen-ba
+                        // PATH : WebBase/WebAdmin/ScheduleApps/tinjut/action
+                        Route::group(['prefix' => 'manajemen-ba'], function () {
+                            Route::get('/{uuid}', [ScdTinjutActionBaController::class, 'index'])->name('scd.apps.tinjut.action.ba.index');
+                            Route::post('/{uuid}', [ScdTinjutActionBaController::class, 'store'])->name('scd.apps.tinjut.action.ba.store');
+                            Route::delete('/{uuid}/delete', [ScdTinjutActionBaController::class, 'destroy'])->name('scd.apps.tinjut.action.ba.destroy');
                         });
                     });
                 });

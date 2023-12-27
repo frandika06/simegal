@@ -893,6 +893,35 @@ class CID
             return "0";
         }
     }
+    // Untuk Upload File PDF
+    public static function UpFilePdf($request, $field, $path)
+    {
+        $ext = strtolower($request->file($field)->extension());
+        $ext_array = array('pdf');
+        if (in_array($ext, $ext_array)) {
+            $file = $request->file($field);
+            $filename = $file->getClientOriginalName();
+            $name = ucwords(pathinfo($filename, PATHINFO_FILENAME));
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $size = $file->getSize();
+            $file_name = Str::uuid() . "-" . rand(1000, 9999999999) . "." . Str::lower($ext);
+            $file_save = $path . "/" . $file_name;
+            if (!is_dir(storage_path('app/public/' . $path))) {
+                Storage::disk('public')->makeDirectory($path);
+            }
+            Storage::disk('public')->putFileAs($path, $file, $file_name);
+            $data = [
+                "judul_file" => $name,
+                "nama_file" => $file_name,
+                "tipe_file" => Str::lower($ext),
+                "ukuran_file" => $size,
+                "url" => $file_save,
+            ];
+            return $data;
+        } else {
+            return "0";
+        }
+    }
     // Untuk Upload File SKHP
     public static function UpFileSKHP($request, $field, $path)
     {
@@ -1509,6 +1538,61 @@ class CID
     | PENJADWALAN DAN PENUGASAN APPS
     |--------------------------------------------------------------------------
      */
+    // get progress permohonan
+    public static function getProgressPermohonan($permohonan)
+    {
+        if ($permohonan->status == "Baru") {
+            $progress = "Menunggu Verifikasi Permohonan";
+        } elseif ($permohonan->status == "Ditolak") {
+            $progress = "Permohonan Ditolak";
+        } elseif ($permohonan->status == "Diproses") {
+            $posisi1 = isset($permohonan->RelPdpPenjadwalan) ? true : false; // Penjadwalan & Penugasan
+            if ($posisi1 == true) {
+                $pdp = $permohonan->RelPdpPenjadwalan;
+                // sudah penjadwalan
+                $posisi2 = isset($pdp->RelPdpInstrumenOrder) ? true : false; // Penentuan Intrumen
+                $posisi3 = isset($pdp->RelPdpAlatOrder) ? true : false; // Penentuan Alat
+                if ($posisi2 == true || $posisi3 == true) {
+                    $progress = "Menunggu Kunjungan Peneraan";
+                } else {
+                    $progress = "Sudah Dijadwalkan & Penugasan";
+                }
+            }
+        } elseif ($permohonan->status == "Selesai") {
+            $progress = "Permohonan Selesai";
+        }
+        return $progress;
+    }
+    // set color status permohonan
+    public static function getColorStatusPermohonan($permohonan, $id)
+    {
+        if ($permohonan->status == "Baru") {
+            if ($id == "1") {
+                $getColor = "text-primary";
+            } else {
+                $getColor = "bg-primary text-white";
+            }
+        } elseif ($permohonan->status == "Ditolak") {
+            if ($id == "1") {
+                $getColor = "text-danger";
+            } else {
+                $getColor = "bg-danger text-white";
+            }
+        } elseif ($permohonan->status == "Diproses") {
+            if ($id == "1") {
+                $getColor = "text-info";
+            } else {
+                $getColor = "bg-info text-white";
+            }
+        } elseif ($permohonan->status == "Selesai") {
+            if ($id == "1") {
+                $getColor = "text-success";
+            } else {
+                $getColor = "bg-success text-white";
+            }
+        }
+        return $getColor;
+    }
     // get alamat perusahaan
     public static function getAlamatPerusahaan($permohonan)
     {

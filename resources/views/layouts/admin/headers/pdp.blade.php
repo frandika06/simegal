@@ -227,30 +227,32 @@
                                             {{-- end:Menu item --}}
                                         </div>
                                         {{-- end:Col --}}
-                                        {{-- begin:Col --}}
-                                        <div class="col-12 col-lg-12 mb-3">
-                                            {{-- begin:Menu item --}}
-                                            <div class="menu-item p-0 m-0">
-                                                {{-- begin:Menu link --}}
-                                                <a href="{{ route('pdp.apps.retribusi.index') }}" class="menu-link">
-                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
-                                                        <i class="ki-duotone ki-tag text-info fs-1">
-                                                            <span class="path1"></span>
-                                                            <span class="path2"></span>
-                                                            <span class="path3"></span>
-                                                            <span class="path4"></span>
-                                                        </i>
-                                                    </span>
-                                                    <span class="d-flex flex-column">
-                                                        <span class="fs-6 fw-bold text-gray-800">Tagihan Retribusi</span>
-                                                        <span class="fs-7 fw-semibold text-muted">Halaman Tagihan Retribusi</span>
-                                                    </span>
-                                                </a>
-                                                {{-- end:Menu link --}}
+                                        @if (\CID::getMasterFitur('Retribusi')->status == '1')
+                                            {{-- begin:Col --}}
+                                            <div class="col-12 col-lg-12 mb-3">
+                                                {{-- begin:Menu item --}}
+                                                <div class="menu-item p-0 m-0">
+                                                    {{-- begin:Menu link --}}
+                                                    <a href="{{ route('pdp.apps.retribusi.index') }}" class="menu-link">
+                                                        <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
+                                                            <i class="ki-duotone ki-tag text-info fs-1">
+                                                                <span class="path1"></span>
+                                                                <span class="path2"></span>
+                                                                <span class="path3"></span>
+                                                                <span class="path4"></span>
+                                                            </i>
+                                                        </span>
+                                                        <span class="d-flex flex-column">
+                                                            <span class="fs-6 fw-bold text-gray-800">Tagihan Retribusi</span>
+                                                            <span class="fs-7 fw-semibold text-muted">Halaman Tagihan Retribusi</span>
+                                                        </span>
+                                                    </a>
+                                                    {{-- end:Menu link --}}
+                                                </div>
+                                                {{-- end:Menu item --}}
                                             </div>
-                                            {{-- end:Menu item --}}
-                                        </div>
-                                        {{-- end:Col --}}
+                                            {{-- end:Col --}}
+                                        @endif
                                         {{-- begin:Col --}}
                                         <div class="col-12 col-lg-12 mb-3">
                                             {{-- begin:Menu item --}}

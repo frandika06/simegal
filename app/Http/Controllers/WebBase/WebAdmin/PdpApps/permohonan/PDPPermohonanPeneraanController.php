@@ -163,10 +163,15 @@ class PDPPermohonanPeneraanController extends Controller
         // auth
         $auth = Auth::user();
         $profile = $auth->RelPerusahaan;
+        $uuid_profile = $auth->uuid_profile;
+        $uuid_perusahaan = $profile->uuid;
 
         // uuid
         $uuid = CID::decode($uuid_enc);
-        $data = PermohonanPeneraan::findOrFail($uuid);
+        $data = PermohonanPeneraan::where("uuid_perusahaan", $uuid_perusahaan)
+            ->where("uuid", $uuid)
+            ->firstOrFail();
+        $pdpPenjadwalan = $data->RelPdpPenjadwalan;
 
         // get data alamat
         $alamatPerusahaan = AlamatPerusahaan::whereUuidPerusahaan($profile->uuid)
@@ -174,11 +179,12 @@ class PDPPermohonanPeneraanController extends Controller
             ->get();
 
         // title & button
-        $title = "Detail Data";
+        $title = "Detail Permohonan";
         return view('pages.admin.pdp_apps.permohonan.show', compact(
             'uuid_enc',
             'title',
             'profile',
+            'pdpPenjadwalan',
             'alamatPerusahaan',
             'data'
         ));
@@ -192,10 +198,14 @@ class PDPPermohonanPeneraanController extends Controller
         // auth
         $auth = Auth::user();
         $profile = $auth->RelPerusahaan;
+        $uuid_profile = $auth->uuid_profile;
+        $uuid_perusahaan = $profile->uuid;
 
         // uuid
         $uuid = CID::decode($uuid_enc);
-        $data = PermohonanPeneraan::findOrFail($uuid);
+        $data = PermohonanPeneraan::where("uuid_perusahaan", $uuid_perusahaan)
+            ->where("uuid", $uuid)
+            ->firstOrFail();
 
         // get data alamat
         $alamatPerusahaan = AlamatPerusahaan::whereUuidPerusahaan($profile->uuid)
@@ -237,7 +247,9 @@ class PDPPermohonanPeneraanController extends Controller
 
         // uuid
         $uuid = CID::decode($uuid_enc);
-        $data = PermohonanPeneraan::findOrFail($uuid);
+        $data = PermohonanPeneraan::where("uuid_perusahaan", $uuid_perusahaan)
+            ->where("uuid", $uuid)
+            ->firstOrFail();
 
         // value
         $lokasi_peneraan = $request->lokasi_peneraan;
@@ -395,6 +407,24 @@ class PDPPermohonanPeneraanController extends Controller
 
                     return $jenis_pengujian;
                 })
+                ->addColumn('nomor_order', function ($data) {
+                    $nomor_order = "";
+                    if (isset($data->RelPdpPenjadwalan)) {
+                        $nomor_order = $data->RelPdpPenjadwalan->nomor_order;
+                    }
+                    return $nomor_order;
+                })
+                ->addColumn('progress', function ($data) {
+                    $progress = CID::getProgressPermohonan($data);
+                    return $progress;
+                })
+                ->addColumn('status', function ($data) {
+                    $progress = CID::getProgressPermohonan($data);
+                    $color = CID::getColorStatusPermohonan($data, 1);
+                    $status = '<label class="' . $color . '"><strong>' . Str::upper($data->status) . '</strong></label>';
+                    $status .= '<p class="m-0 p-0 ps-5"><i>' . $progress . '</i></p>';
+                    return $status;
+                })
                 ->addColumn('aksi', function ($data) {
                     $status = $data->status;
                     $uuid_enc = CID::encode($data->uuid);
@@ -407,12 +437,7 @@ class PDPPermohonanPeneraanController extends Controller
                             <a href="javascript:void(0);" class="btn btn-sm btn-danger shadow btn-xs sharp" data-delete="' . $uuid_enc . '"><i class="fa fa-trash"></i></a>
                         </div>';
 
-                    } elseif ($status == "Diproses") {
-                        $aksi = '
-                        <div class="d-flex">
-                            <a href="' . $edit . '" class="btn btn-sm btn-info shadow btn-xs sharp me-1 btn-block"><i class="fas fa-pencil-alt"></i></a>
-                        </div>';
-                    } elseif ($status == "Selesai" || $status == "Ditolak") {
+                    } else {
                         $aksi = '
                         <div class="d-flex">
                             <a href="' . $show . '" class="btn btn-sm btn-success shadow btn-xs sharp me-1 btn-block"><i class="fas fa-eye"></i></a>

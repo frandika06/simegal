@@ -49,6 +49,7 @@ class ScdTinjutActionSkhpController extends Controller
      */
     public function store(Request $request, $tags_jp, $enc_uuid)
     {
+        // proses request
         $path_form = $request->path_form;
         if ($path_form == "generate_qr") {
             return $this->generateQRTte($request, $tags_jp, $enc_uuid);
@@ -201,7 +202,7 @@ class ScdTinjutActionSkhpController extends Controller
 
             $file_skhp = CID::UpFileSKHP($request, "file_skhp", $path);
             if ($file_skhp == "0") {
-                alert()->error('Error!', 'Gagal Menyimpan Data, File Surat Permohonan Tidak Sesuai Format!');
+                alert()->error('Error!', 'Gagal Menyimpan Data, File SKHP Tidak Sesuai Format!');
                 return \back();
             }
             $value_1['file_skhp'] = $file_skhp['url'];

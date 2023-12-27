@@ -112,4 +112,14 @@ class PdpPenjadwalan extends Model
     {
         return $this->hasOne('App\Models\TteSkhp', 'uuid_penjadwalan', 'uuid');
     }
+    // Manajemen File Cerapan
+    public function RelFileCerapan()
+    {
+        return $this->hasMany('App\Models\PdpFileCerapan', 'uuid_penjadwalan', 'uuid');
+    }
+    // Manajemen File Ba
+    public function RelFileBa()
+    {
+        return $this->hasMany('App\Models\PdpFileBa', 'uuid_penjadwalan', 'uuid');
+    }
 }

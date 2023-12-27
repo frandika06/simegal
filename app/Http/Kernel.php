@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'WebFECounter' => \App\Http\Middleware\WebFECounter::class,
         'MobileFECounter' => \App\Http\Middleware\MobileFECounter::class,
         'pbh' => \App\Http\Middleware\PreventBackHistory::class,
+        'ProtectFiturRetribusi' => \App\Http\Middleware\ProtectFiturRetribusi::class,
         'Pegawai' => \App\Http\Middleware\Pegawai::class,
         'AdminSystem' => \App\Http\Middleware\AdminSystem::class,
         'SuperAdmin' => \App\Http\Middleware\SuperAdmin::class,

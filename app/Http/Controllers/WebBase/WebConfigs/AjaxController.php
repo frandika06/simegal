@@ -5,6 +5,8 @@ namespace App\Http\Controllers\WebBase\WebConfigs;
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\MasterKelompokUttp;
+use App\Models\PdpFileBa;
+use App\Models\PdpFileCerapan;
 use App\Models\PdpPenjadwalan;
 use App\Models\Pegawai;
 use App\Models\PermohonanPeneraan;
@@ -586,6 +588,60 @@ class AjaxController extends Controller
             ];
             return response()->json($response, 422);
         }
+
+        // response
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // FormGetFileCerapan
+    public function FormGetFileCerapan(Request $request)
+    {
+        // uuid
+        $uuid = CID::decode($request->uuid);
+        $data = PdpFileCerapan::find($uuid);
+
+        if ($data === null) {
+            // response
+            $response = [
+                "status" => false,
+                "message" => "Data Tidak Ditemukan!",
+            ];
+            return response()->json($response, 404);
+        }
+
+        $data->file_cerapan = CID::ViewImg($data->file_cerapan);
+        $data->keterangan = str_replace("<br />", "", $data->keterangan);
+
+        // response
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // FormGetFileBa
+    public function FormGetFileBa(Request $request)
+    {
+        // uuid
+        $uuid = CID::decode($request->uuid);
+        $data = PdpFileBa::find($uuid);
+
+        if ($data === null) {
+            // response
+            $response = [
+                "status" => false,
+                "message" => "Data Tidak Ditemukan!",
+            ];
+            return response()->json($response, 404);
+        }
+
+        $data->file_ba = CID::ViewImg($data->file_ba);
+        $data->keterangan = str_replace("<br />", "", $data->keterangan);
 
         // response
         $response = [

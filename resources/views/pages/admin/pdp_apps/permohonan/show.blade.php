@@ -38,11 +38,11 @@
                 {{-- begin::Card header --}}
                 <div class="card-header">
                     {{-- begin::Card title --}}
-                    <div class="card-title fs-3 fw-bold">Form {{ $title }}</div>
+                    <div class="card-title fs-3 fw-bold">{{ $title }}</div>
                     {{-- end::Card title --}}
                 </div>
                 {{-- end::Card header --}}
-                {{-- begin::Form --}}
+
                 {{-- begin::Card body --}}
                 <div class="card-body p-9">
 
@@ -201,16 +201,306 @@
 
                 </div>
                 {{-- end::Card body --}}
-                {{-- begin::Card footer --}}
-                <div class="card-footer d-flex justify-content-end py-6 px-9">
-                    <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="btn btn-light btn-active-light-primary me-2"><i class="fa-solid fa-times"></i>Tutup</a>
-                </div>
-                {{-- end::Card footer --}}
-                {{-- end:Form --}}
             </div>
             {{-- end::Card --}}
+
+            {{-- penjadwalan::begin --}}
+            @if ($pdpPenjadwalan !== null)
+                @if ($pdpPenjadwalan->tanggal_peneraan !== null)
+                    {{-- begin::Card --}}
+                    <div class="card mt-10">
+                        {{-- begin::Card header --}}
+                        <div class="card-header">
+                            {{-- begin::Card title --}}
+                            <div class="card-title fs-3 fw-bold">Detail Penjadwalan dan Penugasan</div>
+                            {{-- end::Card title --}}
+                        </div>
+                        {{-- end::Card header --}}
+
+                        {{-- begin::Card body --}}
+                        <div class="card-body p-9">
+
+                            {{-- begin::Row --}}
+                            <div class="row mb-8">
+                                {{-- begin::Col --}}
+                                <div class="col-xl-3">
+                                    <div class="fs-6 fw-semibold mt-2 mb-3">Nomor Order</div>
+                                </div>
+                                {{-- end::Col --}}
+                                {{-- begin::Col --}}
+                                <div class="col-xl-9 fv-row">
+                                    <input type="text" class="form-control" value="{{ $pdpPenjadwalan->nomor_order }}" disabled />
+                                </div>
+                            </div>
+                            {{-- end::Row --}}
+
+                            {{-- begin::Row --}}
+                            <div class="row mb-8">
+                                {{-- begin::Col --}}
+                                <div class="col-xl-3">
+                                    <div class="fs-6 fw-semibold mt-2 mb-3">Tanggal Peneraan</div>
+                                </div>
+                                {{-- end::Col --}}
+                                {{-- begin::Col --}}
+                                <div class="col-xl-9 fv-row">
+                                    <input type="text" class="form-control" value="{{ \CID::tglBlnThn($pdpPenjadwalan->tanggal_peneraan) }}" disabled />
+                                </div>
+                            </div>
+                            {{-- end::Row --}}
+
+                            {{-- begin::Row --}}
+                            <div class="row mb-8">
+                                {{-- begin::Col --}}
+                                <div class="col-xl-3">
+                                    <div class="fs-6 fw-semibold mt-2 mb-3">Jam Peneraan</div>
+                                </div>
+                                {{-- end::Col --}}
+                                {{-- begin::Col --}}
+                                <div class="col-xl-9 fv-row">
+                                    <input type="text" class="form-control" value="{{ \CID::jamMenit($pdpPenjadwalan->jam_peneraan) }}" disabled />
+                                </div>
+                            </div>
+                            {{-- end::Row --}}
+
+                            @if ($data->lokasi_peneraan == 'Luar Kantor Metrologi')
+                                {{-- begin::Row --}}
+                                <div class="row mb-8">
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-3">
+                                        <div class="fs-6 fw-semibold mt-2 mb-3">Nama Supir</div>
+                                    </div>
+                                    {{-- end::Col --}}
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-9 fv-row">
+                                        <input type="text" class="form-control" value="{{ $pdpPenjadwalan->nama_supir }}" disabled />
+                                    </div>
+                                </div>
+                                {{-- end::Row --}}
+
+                                {{-- begin::Row --}}
+                                <div class="row mb-8">
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-3">
+                                        <div class="fs-6 fw-semibold mt-2 mb-3">Jenis Kendaraan</div>
+                                    </div>
+                                    {{-- end::Col --}}
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-9 fv-row">
+                                        <input type="text" class="form-control" value="{{ $pdpPenjadwalan->jenis_kendaraan }}" disabled />
+                                    </div>
+                                </div>
+                                {{-- end::Row --}}
+
+                                {{-- begin::Row --}}
+                                <div class="row mb-8">
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-3">
+                                        <div class="fs-6 fw-semibold mt-2 mb-3">Plat Nomor Kendaraan</div>
+                                    </div>
+                                    {{-- end::Col --}}
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-9 fv-row">
+                                        <input type="text" class="form-control" value="{{ $pdpPenjadwalan->plat_nomor_kendaraan }}" disabled />
+                                    </div>
+                                </div>
+                                {{-- end::Row --}}
+
+                                {{-- begin::Row --}}
+                                <div class="row mb-8">
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-3">
+                                        <div class="fs-6 fw-semibold mt-2 mb-3">Status Peneraan</div>
+                                    </div>
+                                    {{-- end::Col --}}
+                                    {{-- begin::Col --}}
+                                    <div class="col-xl-9 fv-row">
+                                        <input type="text" class="form-control" value="{{ $pdpPenjadwalan->status_peneraan }}" disabled />
+                                    </div>
+                                </div>
+                                {{-- end::Row --}}
+                            @endif
+
+                            {{-- begin::Row --}}
+                            <div class="row mb-8">
+                                {{-- begin::Col --}}
+                                <div class="col-xl-3">
+                                    <div class="fs-6 fw-semibold mt-2 mb-3">Tenaga Ahli Penera</div>
+                                </div>
+                                {{-- end::Col --}}
+                                {{-- begin::Col --}}
+                                <div class="col-xl-9 fv-row">
+                                    <ul>
+                                        @php
+                                            $getPetugasTAP = \CID::getPetugasTAP($pdpPenjadwalan->uuid);
+                                        @endphp
+                                        @foreach ($getPetugasTAP as $itemTAP)
+                                            <li>{{ $itemTAP->RelPegawai->nama_lengkap }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                            {{-- end::Row --}}
+
+                            {{-- begin::Row --}}
+                            <div class="row mb-8">
+                                {{-- begin::Col --}}
+                                <div class="col-xl-3">
+                                    <div class="fs-6 fw-semibold mt-2 mb-3">Pendamping Teknis</div>
+                                </div>
+                                {{-- end::Col --}}
+                                {{-- begin::Col --}}
+                                <div class="col-xl-9 fv-row">
+                                    <ul>
+                                        @php
+                                            $getPetugasPT = \CID::getPetugasPT($pdpPenjadwalan->uuid);
+                                        @endphp
+                                        @foreach ($getPetugasPT as $itemPT)
+                                            <li>{{ $itemPT->RelPegawai->nama_lengkap }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                            {{-- end::Row --}}
+
+                        </div>
+                        {{-- end::Card body --}}
+                    </div>
+                    {{-- end::Card --}}
+                @endif
+            @endif
+            {{-- penjadwalan::end --}}
+
+            {{-- instrumen::begin --}}
+            @if (isset($pdpPenjadwalan->RelPdpInstrumenOrder) && \count($pdpPenjadwalan->RelPdpInstrumenOrder) > 0)
+                {{-- begin::Card --}}
+                <div class="card mt-10">
+                    {{-- begin::Card header --}}
+                    <div class="card-header">
+                        {{-- begin::Card title --}}
+                        <div class="card-title fs-3 fw-bold">Detail Instrumen</div>
+                        {{-- end::Card title --}}
+                    </div>
+                    {{-- end::Card header --}}
+
+                    {{-- begin::Card body --}}
+                    <div class="card-body p-9">
+
+                        {{-- begin::Row --}}
+                        <div class="row mb-8">
+                            {{-- begin::Col --}}
+                            <div class="col">
+                                {{-- begin::intrumen --}}
+                                {{-- begin::Repeater --}}
+                                <div id="repeat_instrumen">
+                                    {{-- begin::Form group --}}
+                                    <div class="form-group">
+                                        <div data-repeater-list="repeat_instrumen">
+                                            {{-- EDIT INSTRUMEN::BEGIN --}}
+                                            @foreach ($pdpPenjadwalan->RelPdpInstrumenOrder as $itemData)
+                                                <div class="alert alert-secondary" id="{{ \CID::encode($itemData->uuid) }}">
+                                                    <div class="form-group row mb-5">
+                                                        <div class="col-12 mb-5">
+                                                            <label class="form-label">Item UTTP:</label>
+                                                            <input type="text" class="form-control bg-light-info mb-2 mb-md-0" name="uuid_instrumen[]" value="{{ $itemData->RelMasterInstrumenDaftarItemUttp->nama_instrumen }}" placeholder="Item UTTP" readonly />
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="form-label">Jumlah Unit:</label>
+                                                            <input type="number" class="form-control bg-light-info mb-2 mb-md-0" name="jumlah_unit_instrumen[]" value="{{ $itemData->jumlah_unit }}" placeholder="Jumlah Unit" min="0" readonly />
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="form-label">Volume/Jam:</label>
+                                                            <input type="number" class="form-control bg-light-info mb-2 mb-md-0" name="volume_instrumen[]" value="{{ $itemData->volume }}" placeholder="Volume/Jam" min="0" readonly />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            {{-- EDIT INSTRUMEN::END --}}
+                                        </div>
+                                    </div>
+                                    {{-- end::Form group --}}
+                                </div>
+                                {{-- end::Repeater --}}
+                                {{-- end::intrumen --}}
+                            </div>
+                        </div>
+                        {{-- end::Row --}}
+
+                    </div>
+                    {{-- end::Card body --}}
+                </div>
+                {{-- end::Card --}}
+            @endif
+            {{-- instrumen::end --}}
+
+            {{-- alat&ctt::begin --}}
+            @if (isset($pdpPenjadwalan->RelPdpAlatOrder) && \count($pdpPenjadwalan->RelPdpAlatOrder) > 0)
+                {{-- begin::Card --}}
+                <div class="card mt-10">
+                    {{-- begin::Card header --}}
+                    <div class="card-header">
+                        {{-- begin::Card title --}}
+                        <div class="card-title fs-3 fw-bold">Detail Alat & CTT</div>
+                        {{-- end::Card title --}}
+                    </div>
+                    {{-- end::Card header --}}
+
+                    {{-- begin::Card body --}}
+                    <div class="card-body p-9">
+
+                        {{-- begin::Row --}}
+                        <div class="row mb-8">
+                            {{-- begin::Col --}}
+                            <div class="col">
+                                {{-- begin::intrumen --}}
+                                {{-- begin::Repeater --}}
+                                <div id="repeat_alat">
+                                    {{-- begin::Form group --}}
+                                    <div class="form-group">
+                                        <div data-repeater-list="repeat_alat">
+                                            {{-- EDIT ALAT::BEGIN --}}
+                                            @foreach ($pdpPenjadwalan->RelPdpAlatOrder as $itemData)
+                                                <div class="alert alert-secondary" id="{{ \CID::encode($itemData->uuid) }}">
+                                                    <div class="form-group row mb-5">
+                                                        <div class="col-12 mb-5">
+                                                            <input type="hidden" name="uuid_pdp_alat[]" value="{{ $itemData->uuid }}">
+                                                            <label class="form-label">Alat & CTT:</label>
+                                                            <input type="text" class="form-control bg-light-info mb-2 mb-md-0" name="uuid_alat[]" value="{{ $itemData->RelMasterKategoriKelompok->nama_kategori }}" placeholder="Alat & CTT:" readonly />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <label class="form-label">Jumlah Unit:</label>
+                                                            <input type="number" class="form-control bg-light-info mb-2 mb-md-0" name="jumlah_unit_alat[]" value="{{ $itemData->jumlah_unit }}" placeholder="Jumlah Unit" min="0" readonly />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            {{-- EDIT ALAT::END --}}
+                                        </div>
+                                    </div>
+                                    {{-- end::Form group --}}
+                                </div>
+                                {{-- end::Repeater --}}
+                                {{-- end::intrumen --}}
+                            </div>
+                        </div>
+                        {{-- end::Row --}}
+
+                    </div>
+                    {{-- end::Card body --}}
+                </div>
+                {{-- end::Card --}}
+            @endif
+            {{-- alat&ctt::end --}}
+
+            <div class="d-flex justify-content-end py-10">
+                <a href="{{ route('pdp.apps.reqpeneraan.index') }}" class="btn btn-light btn-active-light-primary"><i class="fa-solid fa-times"></i>Tutup</a>
+            </div>
         </div>
         {{-- end::Post --}}
     @endif
 @endsection
 {{-- CONTENT::END --}}
+
+@push('scripts')
+    {{-- LINK JS --}}
+    <script src="{{ asset('assets-apps/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
+@endpush

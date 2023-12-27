@@ -42,7 +42,7 @@
                         <div class="col">
                             {{-- begin::nama_pejabat --}}
                             <div class="form-group mb-5">
-                                <select class="form-select @error('nama_pejabat') is-invalid @enderror" name="nama_pejabat" id="nama_pejabat" required data-control="select2" data-placeholder="Pilih Pilih Pejabat Penandatangan" required>
+                                <select class="form-select @error('nama_pejabat') is-invalid @enderror" name="nama_pejabat" id="nama_pejabat" required data-control="select2" data-placeholder="Pilih Pejabat Penandatangan" required>
                                 </select>
                                 @error('nama_pejabat')
                                     <div id="nama_pejabatFeedback" class="invalid-feedback">{{ $message }}</div>

@@ -6,6 +6,8 @@ use App\Exports\SettingsApps\ExFormatMasterItemUttp;
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Imports\SettingsApp\ImMasterItemUttp;
+use App\Models\PdpFileBa;
+use App\Models\PdpFileCerapan;
 use App\Models\PortalUnduhan;
 use App\Models\TteSkhp;
 use Illuminate\Http\Request;
@@ -48,6 +50,40 @@ class ExDownController extends Controller
         $url = $data->file_skhp;
         // $file_name = substr(strrchr(rtrim($url, '/'), '/'), 1);
         $file_name = $kode_tte . "-" . date('Ymd') . ".pdf";
+        if (Storage::disk('public')->exists($url)) {
+            $headers = array('Content-Type: application/octet-stream');
+            return Storage::disk('public')->download($url, $file_name, $headers);
+        } else {
+            return \abort(404);
+        }
+    }
+    // unduhCerapan
+    public function unduhCerapan($uuid)
+    {
+        $data = PdpFileCerapan::findOrFail($uuid);
+
+        // update downloads
+        $downloads = $data->downloads + 1;
+        $data->update(["downloads" => $downloads]);
+        $url = $data->file_cerapan;
+        $file_name = substr(strrchr(rtrim($url, '/'), '/'), 1);
+        if (Storage::disk('public')->exists($url)) {
+            $headers = array('Content-Type: application/octet-stream');
+            return Storage::disk('public')->download($url, $file_name, $headers);
+        } else {
+            return \abort(404);
+        }
+    }
+    // unduhBa
+    public function unduhBa($uuid)
+    {
+        $data = PdpFileBa::findOrFail($uuid);
+
+        // update downloads
+        $downloads = $data->downloads + 1;
+        $data->update(["downloads" => $downloads]);
+        $url = $data->file_ba;
+        $file_name = substr(strrchr(rtrim($url, '/'), '/'), 1);
         if (Storage::disk('public')->exists($url)) {
             $headers = array('Content-Type: application/octet-stream');
             return Storage::disk('public')->download($url, $file_name, $headers);

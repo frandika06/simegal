@@ -22,8 +22,8 @@
                             <th>Kode Permohonan</th>
                             <th>Jenis Pengujian</th>
                             <th>Nomor Surat</th>
-                            <th>Tanggal Permohonan</th>
-                            <th>Lokasi</th>
+                            <th>Nomor Order</th>
+                            <th>Progress</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -88,12 +88,12 @@
                     name: 'nomor_surat_permohonan'
                 },
                 {
-                    data: 'tanggal_permohonan',
-                    name: 'tanggal_permohonan'
+                    data: 'nomor_order',
+                    name: 'nomor_order'
                 },
                 {
-                    data: 'lokasi_peneraan',
-                    name: 'lokasi_peneraan'
+                    data: 'progress',
+                    name: 'progress'
                 },
                 {
                     data: 'aksi',
