@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MasterKelompokUttp;
 use App\Models\PdpFileBa;
 use App\Models\PdpFileCerapan;
+use App\Models\PdpFileDokumentasi;
 use App\Models\PdpPenjadwalan;
 use App\Models\Pegawai;
 use App\Models\PermohonanPeneraan;
@@ -642,6 +643,32 @@ class AjaxController extends Controller
 
         $data->file_ba = CID::ViewImg($data->file_ba);
         $data->keterangan = str_replace("<br />", "", $data->keterangan);
+
+        // response
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
+    }
+
+    // FormGetFileDokumentasi
+    public function FormGetFileDokumentasi(Request $request)
+    {
+        // uuid
+        $uuid = CID::decode($request->uuid);
+        $data = PdpFileDokumentasi::find($uuid);
+
+        if ($data === null) {
+            // response
+            $response = [
+                "status" => false,
+                "message" => "Data Tidak Ditemukan!",
+            ];
+            return response()->json($response, 404);
+        }
+
+        $data->file_dokumentasi = CID::ViewImg($data->file_dokumentasi);
 
         // response
         $response = [

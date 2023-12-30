@@ -3,29 +3,13 @@
     SIMEGAL
 @endpush
 @push('title')
-    Manajemen Cerapan | Tindak Lanjut | SIMEGAL
+    Manajemen Dokumentasi | Tindak Lanjut | SIMEGAL
 @endpush
 @push('description')
-    Manajemen Cerapan | Tindak Lanjut | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
+    Manajemen Dokumentasi | Tindak Lanjut | Sistem Informasi Metrologi Legal Pemerintah Kabupaten Tangerang
 @endpush
 @push('header-title')
-    Manajemen Cerapan | Tindak Lanjut
-@endpush
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('assets-portal/plugins/pdf-viewer/css/pdfviewer.jquery.css') }}" />
-    {{-- SETTING PDF VIEW --}}
-    <style>
-        .pdf-container {
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        canvas {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-        }
-    </style>
+    Manajemen Dokumentasi | Tindak Lanjut
 @endpush
 
 {{-- TOOLBOX::BEGIN --}}
@@ -37,7 +21,7 @@
             {{-- begin::Page title --}}
             <div class="page-title d-flex flex-column me-3">
                 {{-- begin::Title --}}
-                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Manajemen Cerapan</h1>
+                <h1 class="d-flex text-dark fw-bold my-1 fs-3">Manajemen Dokumentasi</h1>
                 {{-- end::Title --}}
                 {{-- begin::Breadcrumb --}}
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 pt-1">
@@ -62,7 +46,7 @@
                     </li>
                     {{-- end::Item --}}
                     {{-- begin::Item --}}
-                    <li class="breadcrumb-item text-dark">Manajemen Cerapan</li>
+                    <li class="breadcrumb-item text-dark">Manajemen Dokumentasi</li>
                     {{-- end::Item --}}
                 </ul>
                 {{-- end::Breadcrumb --}}
@@ -111,7 +95,7 @@
                                 {{-- begin::Position --}}
                                 <div class="mb-9">
                                     {{-- begin::Badge --}}
-                                    <div class="badge badge-lg badge-light-info d-inline">{{ $profile->jenis_perusahaan }}</div>
+                                    <div class="badge Dokumentasidge-lg Dokumentasidge-light-info d-inline">{{ $profile->jenis_perusahaan }}</div>
                                     {{-- begin::Badge --}}
                                 </div>
                                 {{-- end::Position --}}
@@ -181,7 +165,7 @@
                                     <div class="text-gray-600">{{ $permohonan->kode_permohonan }}</div>
                                     {{-- begin::Details item --}}
                                     {{-- begin::Details item --}}
-                                    <div class="fw-bold mt-5">Jenis Pengujian</div>
+                                    <div class="fw-bold mt-5">Nama Pengujian</div>
                                     <div class="text-gray-600">{{ $permohonan->jenis_pengujian }}</div>
                                     {{-- begin::Details item --}}
                                     {{-- begin::Details item --}}
@@ -200,7 +184,7 @@
                                     <div class="fw-bold mt-5">Alamat Peneraan</div>
                                     <div class="text-gray-600">
                                         @if ($permohonan->lokasi_peneraan == 'Dalam Kantor Metrologi')
-                                            Bidang Metrologi Legal, Kec. Balaraja, Kabupaten Tangerang, Banten, 15610.
+                                            Bidang Metrologi Legal, Kec. Dokumentasilaraja, Kabupaten Tangerang, Dokumentasinten, 15610.
                                         @else
                                             {{ $RelAlamat->alamat }}, {{ isset($RelAlamat->rt) ? 'RT. ' . $RelAlamat->rt . ', ' : '' }}
                                             {{ isset($RelAlamat->rw) ? 'RW. ' . $RelAlamat->rw . ', ' : '' }}
@@ -246,8 +230,8 @@
                             <div class="card-header border-0">
                                 {{-- begin::Card title --}}
                                 <div class="card-title flex-column">
-                                    <h2>Form Upload Cerapan</h2>
-                                    <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk upload data cerapan dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
+                                    <h2>Form Upload Dokumentasi</h2>
+                                    <div class="fs-6 fw-semibold text-muted mt-2">Halaman untuk upload data Dokumentasi dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
                                 </div>
                                 {{-- end::Card title --}}
                             </div>
@@ -255,7 +239,7 @@
                             {{-- begin::Card body --}}
                             <div class="card-body">
                                 {{-- begin::Form --}}
-                                <form action="{{ route('scd.apps.tinjut.action.cerapan.store', [$tags_jp, $enc_uuid]) }}" class="form" enctype="multipart/form-data" method="POST">
+                                <form action="{{ route('scd.apps.tinjut.action.dok.store', [$tags_jp, $enc_uuid]) }}" class="form" enctype="multipart/form-data" method="POST">
                                     @csrf
                                     {{-- hidden --}}
                                     <input type="hidden" name="uuid_update" id="uuid_update" value="">
@@ -274,68 +258,93 @@
                                     </div>
                                     {{-- end::kelompok_uttp --}}
 
-                                    {{-- begin::jenis_cerapan --}}
-                                    <div class="mt-0">
-                                        <label for="">Pilih Jenis Cerapan</label>
-                                        <div class="row p-2">
-                                            <div class="col">
-                                                {{-- begin::jenis_cerapan --}}
-                                                <div class="form-group mb-5">
-                                                    <select class="form-select @error('jenis_cerapan') is-invalid @enderror" name="jenis_cerapan" id="jenis_cerapan" required data-control="select2" data-placeholder="Pilih Jenis Cerapan" required>
-                                                        <option value="" selected disabled></option>
-                                                        <option value="Cerapan Pengawasan UTTP Secara Umum" @if (old('jenis_cerapan') == 'Cerapan Pengawasan UTTP Secara Umum') selected @endif>Cerapan Pengawasan UTTP Secara Umum</option>
-                                                        <option value="Cerapan Pengawasan Pompa Ukur BBM" @if (old('jenis_cerapan') == 'Cerapan Pengawasan Pompa Ukur BBM') selected @endif>Cerapan Pengawasan Pompa Ukur BBM</option>
-                                                        <option value="Cerapan Pengawasan Pelabelan Kuantitas BDKT" @if (old('jenis_cerapan') == 'Cerapan Pengawasan Pelabelan Kuantitas BDKT') selected @endif>Cerapan Pengawasan Pelabelan Kuantitas BDKT</option>
-                                                        <option value="Cerapan Pengujian Kebenaran Kuantitas BDKT dalam Satuan Berat Secara Umum" @if (old('jenis_cerapan') == 'Cerapan Pengujian Kebenaran Kuantitas BDKT dalam Satuan Berat Secara Umum') selected @endif>Cerapan Pengujian Kebenaran Kuantitas BDKT dalam Satuan Berat Secara Umum</option>
-                                                    </select>
-                                                    @error('jenis_cerapan')
-                                                        <div id="jenis_cerapanFeedback" class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
+                                    {{-- begin::Repeater --}}
+                                    <div class="" id="repeat_dokumentasi">
+                                        {{-- begin::Form group --}}
+                                        <div class="form-group">
+                                            <div data-repeater-list="repeat_dokumentasi">
+                                                <div data-repeater-item>
+                                                    <div class="alert alert-secondary">
+                                                        <div class="form-group row mb-5">
+                                                            <div class="col-12 mb-5">
+                                                                {{-- begin::nama_dokumentasi --}}
+                                                                <div class="form-floating mb-3 mt-3">
+                                                                    <input type="text" class="form-control nama_dokumentasi @error('nama_dokumentasi') is-invalid @enderror" name="nama_dokumentasi" id="nama_dokumentasi2" placeholder="Nama Dokumentasi" maxlength="300" autocomplete="off"
+                                                                        required />
+                                                                    <label for="nama_dokumentasi">Nama Dokumentasi</label>
+                                                                    @error('nama_dokumentasi')
+                                                                        <div id="nama_dokumentasiFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                                {{-- end::nama_dokumentasi --}}
+                                                            </div>
+                                                            <div class="col">
+                                                                {{-- begin::file_dokumentasi --}}
+                                                                <div class="form-floating">
+                                                                    <input type="file" class="form-control file_dokumentasi @error('file_dokumentasi') is-invalid @enderror" name="file_dokumentasi" id="file_dokumentasi2" data-prop="file_dokumentasi" accept=".jpg,.jpeg,.png" required />
+                                                                    <label for="file_dokumentasi">File Dokumentasi</label>
+                                                                    <div class="form-text">File yang diizinkan: jpg, jpeg, png. | Maksimal: 5 MB</div>
+                                                                    @error('file_dokumentasi')
+                                                                        <div id="file_dokumentasiFeedback" class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                                {{-- end::file_dokumentasi --}}
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <a href="javascript:;" data-repeater-delete class="btn btn-outline btn-light-danger">
+                                                                    <i class="ki-duotone ki-trash fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {{-- end::jenis_cerapan --}}
                                             </div>
-                                        </div>
-                                    </div>
-                                    {{-- end::jenis_cerapan --}}
-
-                                    {{-- begin::file_cerapan --}}
-                                    <div class="form-floating mb-5">
-                                        <input type="file" class="form-control @error('file_cerapan') is-invalid @enderror" name="file_cerapan" id="file_cerapan2" data-prop="file_cerapan" accept=".pdf" required />
-                                        <label for="file_cerapan">File Cerapan</label>
-                                        <div class="form-text">File yang diizinkan: pdf. | Maksimal: 50 MB</div>
-                                        @error('file_cerapan')
-                                            <div id="file_cerapanFeedback" class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    {{-- end::file_cerapan --}}
-
-                                    {{-- begin::keterangan --}}
-                                    <div class="mt-0">
-                                        <label for="">Keterangan</label>
-                                        <div class="row p-2">
-                                            <div class="col">
-                                                {{-- begin::keterangan --}}
-                                                <div class="form-group">
-                                                    <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" id="keterangan" rows="5">{{ old('keterangan') }}</textarea>
-                                                    @error('keterangan')
-                                                        <div id="keteranganFeedback" class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                {{-- end::keterangan --}}
+                                            {{-- begin::Form group --}}
+                                            <div class="form-group mt-5">
+                                                <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                                                    <i class="ki-duotone ki-plus fs-3"></i>
+                                                    Add
+                                                </a>
                                             </div>
+                                            {{-- end::Form group --}}
                                         </div>
+                                        {{-- end::Form group --}}
                                     </div>
-                                    {{-- end::keterangan --}}
+                                    {{-- end::Repeater --}}
+
+                                    {{-- begin::edit --}}
+                                    <div class="d-none" id="edit_dokumentasi">
+                                        {{-- begin::edit_nama_dokumentasi --}}
+                                        <div class="form-floating mb-5">
+                                            <input type="text" class="form-control @error('edit_nama_dokumentasi') is-invalid @enderror" name="edit_nama_dokumentasi" id="edit_nama_dokumentasi2" placeholder="Nama Dokumentasi" maxlength="300" autocomplete="off" required />
+                                            <label for="edit_nama_dokumentasi">Nama Dokumentasi</label>
+                                            @error('edit_nama_dokumentasi')
+                                                <div id="edit_nama_dokumentasiFeedback" class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        {{-- end::edit_nama_dokumentasi --}}
+
+                                        {{-- begin::edit_file_dokumentasi --}}
+                                        <div class="form-floating">
+                                            <input type="file" class="form-control @error('edit_file_dokumentasi') is-invalid @enderror" name="edit_file_dokumentasi" id="edit_file_dokumentasi2" data-prop="edit_file_dokumentasi" accept=".jpg,.jpeg,.png" required />
+                                            <label for="edit_file_dokumentasi">File Dokumentasi</label>
+                                            <div class="form-text">File yang diizinkan: jpg, jpeg, png. | Maksimal: 5 MB</div>
+                                            @error('edit_file_dokumentasi')
+                                                <div id="edit_file_dokumentasiFeedback" class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        {{-- end::edit_file_dokumentasi --}}
+                                    </div>
+                                    {{-- end::edit --}}
 
                                     {{-- begin::Action buttons --}}
                                     <div class="d-flex justify-content-end align-items-center mt-12">
                                         {{-- begin::Button --}}
-                                        <a href="{{ route('scd.apps.tinjut.action.cerapan.index', [$tags_jp, $enc_uuid]) }}" class="btn btn-secondary d-none me-2" id="batal"><i class="fa-solid fa-times"></i>Batal</a>
+                                        <a href="{{ route('scd.apps.tinjut.action.dok.index', [$tags_jp, $enc_uuid]) }}" class="btn btn-secondary d-none me-2" id="batal"><i class="fa-solid fa-times"></i>Batal</a>
                                         <button type="submit" class="btn btn-info"><i class="fa-solid fa-save"></i>Simpan</button>
                                         {{-- end::Button --}}
                                     </div>
                                     {{-- begin::Action buttons --}}
-
                                 </form>
                                 {{-- end::Form --}}
                             </div>
@@ -352,7 +361,7 @@
                         <div class="card-header border-0">
                             {{-- begin::Card title --}}
                             <div class="card-title">
-                                <h2>Data File Cerapan</h2>
+                                <h2>Data File Dokumentasi</h2>
                             </div>
                             {{-- end::Card title --}}
                         </div>
@@ -366,7 +375,7 @@
                                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                                         <tr class="text-start text-muted text-uppercase gs-0">
                                             <th>#</th>
-                                            <th>Jenis Cerapan</th>
+                                            <th>Nama Dokumentasi</th>
                                             <th>Size</th>
                                             <th>Tipe</th>
                                             <th>Aksi</th>
@@ -376,11 +385,11 @@
                                         @php
                                             $i = 1;
                                         @endphp
-                                        @foreach ($RelFileCerapan as $item)
+                                        @foreach ($RelFileDokumentasi as $item)
                                             <tr>
                                                 <td>{{ $i++ }}</td>
                                                 <td>
-                                                    <a target="_BLANK" href="{{ \CID::ViewImg($item->file_cerapan) }}">{{ $item->jenis_cerapan }}</a>
+                                                    <a target="_BLANK" href="{{ \CID::ViewImg($item->file_dokumentasi) }}">{{ $item->nama_dokumentasi }}</a>
                                                 </td>
                                                 <td>{{ \CID::SizeDisk($item->size) }}</td>
                                                 <td>{{ \Str::upper($item->tipe) }}</td>
@@ -388,7 +397,7 @@
                                                     <div class="dropdown">
                                                         <button class="btn btn-light btn-info btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                            <li><a class="dropdown-item" href="{{ route('exdown.unduh.cerapan', [$item->uuid]) }}"><i class="fa-solid fa-download me-2"></i> Unduh File</a></li>
+                                                            <li><a class="dropdown-item" href="{{ route('exdown.unduh.dok', [$item->uuid]) }}"><i class="fa-solid fa-download me-2"></i> Unduh File</a></li>
                                                             @if ($permohonan->status != 'Selesai' && \CID::subRoleOnlyPetugas() == true)
                                                                 <li><a class="dropdown-item" href="javascript:void(0);" data-edit="{{ \CID::encode($item->uuid) }}"><i class="fa-solid fa-edit me-2"></i> Edit File</a></li>
                                                                 <li><a class="dropdown-item" href="javascript:void(0);" data-hapus="{{ \CID::encode($item->uuid) }}"><i class="fa-solid fa-trash me-2"></i> Hapus File</a></li>
@@ -416,8 +425,8 @@
                         <div class="card-header border-0">
                             {{-- begin::Card title --}}
                             <div class="card-title flex-column">
-                                <h2>Detail File Cerapan</h2>
-                                <div class="fs-6 fw-semibold text-muted mt-2">Lihat detail data cerapan dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
+                                <h2>Detail File Dokumentasi</h2>
+                                <div class="fs-6 fw-semibold text-muted mt-2">Lihat detail data Dokumentasi dari permohonan dengan Nomor Order: <strong>{{ $data->nomor_order }}</strong>.</div>
                             </div>
                             {{-- end::Card title --}}
                         </div>
@@ -438,30 +447,23 @@
                             </div>
                             {{-- end::kelompok_uttp --}}
 
-                            {{-- begin::detail_jenis_cerapan --}}
+                            {{-- begin::detail_nama_dokumentasi --}}
                             <div class="form-floating mb-5">
-                                <input type="text" class="form-control bg-light-info" name="detail_jenis_cerapan" id="detail_jenis_cerapan" value="" readonly />
-                                <label for="detail_jenis_cerapan">Jenis Cerapan</label>
+                                <input type="text" class="form-control bg-light-info" name="detail_nama_dokumentasi" id="detail_nama_dokumentasi" value="" readonly />
+                                <label for="detail_nama_dokumentasi">Nama Dokumentasi</label>
                             </div>
-                            {{-- end::detail_jenis_cerapan --}}
+                            {{-- end::detail_nama_dokumentasi --}}
 
-                            {{-- begin::detail_keterangan --}}
-                            <div class="form-floating mb-6">
-                                <textarea class="form-control bg-light-info min-h-150px" name="detail_keterangan" id="detail_keterangan" readonly></textarea>
-                                <label for="detail_keterangan">Keterangan</label>
-                            </div>
-                            {{-- end::detail_keterangan --}}
-
-                            {{-- begin::file_cerapan --}}
+                            {{-- begin::file_dokumentasi --}}
                             <div class="mb-5">
-                                <div id="pdfviewer" class="pdf-container"></div>
+                                <img id="img_viewer" src="" alt="view-dokumentasi" style="width:100%;height:auto;" draggable="false" />
                             </div>
-                            {{-- end::file_cerapan --}}
+                            {{-- end::file_dokumentasi --}}
 
                             {{-- begin::Action buttons --}}
                             <div class="d-flex justify-content-end align-items-center mt-12">
                                 {{-- begin::Button --}}
-                                <a href="{{ route('scd.apps.tinjut.action.cerapan.index', [$tags_jp, $enc_uuid]) }}" class="btn btn-secondary me-2" id="detail_batal"><i class="fa-solid fa-times"></i>Tutup</a>
+                                <a href="{{ route('scd.apps.tinjut.action.dok.index', [$tags_jp, $enc_uuid]) }}" class="btn btn-secondary me-2" id="detail_dokumentasital"><i class="fa-solid fa-times"></i>Tutup</a>
                                 {{-- end::Button --}}
                             </div>
                             {{-- begin::Action buttons --}}
@@ -483,8 +485,7 @@
 
 @push('scripts')
     {{-- LINK JS --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
-    <script src="{{ asset('assets-portal/plugins/pdf-viewer/js/pdfviewer.jquery.js') }}"></script>
+    <script src="{{ asset('assets-apps/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
     {{-- CUTOM JS --}}
     {{-- datatable --}}
     <script>
@@ -495,7 +496,7 @@
         $(document).on('click', "[data-edit]", function() {
             let uuid = $(this).attr('data-edit');
             $.ajax({
-                url: "{!! route('ajax.scd.apps.form.get.file.cerapan') !!}",
+                url: "{!! route('ajax.scd.apps.form.get.file.dok') !!}",
                 type: 'POST',
                 data: {
                     uuid: uuid,
@@ -503,11 +504,15 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(res) {
+                    console.log(res.data);
                     $('#uuid_update').val(res.data.uuid);
-                    $('#jenis_cerapan').val(res.data.jenis_cerapan).trigger('change');
-                    $("#keterangan").val(res.data.keterangan);
-                    $("[data-prop='file_cerapan']").prop('required', false);
+                    $("#edit_nama_dokumentasi2").val(res.data.nama_dokumentasi);
+                    $("[data-prop='edit_file_dokumentasi']").prop('required', false);
+                    $("#repeat_dokumentasi").addClass("d-none");
+                    $("#edit_dokumentasi").removeClass("d-none");
                     $("#batal").removeClass("d-none");
+                    $(".nama_dokumentasi").prop('required', false);
+                    $(".file_dokumentasi").prop('required', false);
                 },
                 error: function(xhr) {
                     Swal.fire({
@@ -526,7 +531,7 @@
         $(document).on('click', "[data-detail]", function() {
             let uuid = $(this).attr('data-detail');
             $.ajax({
-                url: "{!! route('ajax.scd.apps.form.get.file.cerapan') !!}",
+                url: "{!! route('ajax.scd.apps.form.get.file.dok') !!}",
                 type: 'POST',
                 data: {
                     uuid: uuid,
@@ -535,9 +540,9 @@
                 },
                 success: function(res) {
                     $('#detail').removeClass("d-none");
-                    $('#detail_jenis_cerapan').val(res.data.jenis_cerapan);
+                    $('#detail_nama_dokumentasi').val(res.data.nama_dokumentasi);
                     $("#detail_keterangan").val(res.data.keterangan);
-                    $('#pdfviewer').pdfViewer(res.data.file_cerapan);
+                    $('#img_viewer').attr("src", res.data.file_dokumentasi);
                 },
                 error: function(xhr) {
                     Swal.fire({
@@ -550,7 +555,7 @@
                 }
             });
         });
-        $(document).on('click', "#detail_batal", function() {
+        $(document).on('click', "#detail_dokumentasital", function() {
             let uuid = $(this).attr('data-detail');
             $('#detail').addClass("d-none");
         });
@@ -560,7 +565,7 @@
         $(document).on('click', "[data-hapus]", function() {
             let uuid = $(this).attr('data-hapus');
             Swal.fire({
-                title: "Hapus File Cerapan",
+                title: "Hapus File Dokumentasi",
                 text: "Apakah Anda Yakin?",
                 icon: "warning",
                 showCancelButton: true,
@@ -569,7 +574,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{!! route('scd.apps.tinjut.action.cerapan.destroy', [$tags_jp, $enc_uuid]) !!}",
+                        url: "{!! route('scd.apps.tinjut.action.dok.destroy', [$tags_jp, $enc_uuid]) !!}",
                         type: 'POST',
                         data: {
                             uuid: uuid,
@@ -597,6 +602,25 @@
                     });
                 }
             });
+        });
+    </script>
+    {{-- reapeat alat & CTT --}}
+    <script>
+        $('#repeat_dokumentasi').repeater({
+            initEmpty: false,
+            defaultValues: {
+                'text-input': 'foo'
+            },
+            show: function() {
+                $(this).slideDown();
+                $(this).find('select').each(function() {
+                    $('.select_test2').removeAttr("id").removeAttr("data-select2-id");
+                    $('.select_test2').select2();
+                });
+            },
+            hide: function(deleteElement) {
+                $(this).slideUp(deleteElement);
+            }
         });
     </script>
 @endpush

@@ -239,7 +239,7 @@
                 {{-- begin::Content --}}
                 <div class="flex-lg-row-fluid ms-lg-15">
 
-                    @if ($permohonan->status != 'Selesai')
+                    @if ($permohonan->status != 'Selesai' && \CID::subRoleOnlyPetugas() == true)
                         {{-- begin::Card --}}
                         <div class="card pt-4 mb-5 mb-xl-8">
                             {{-- begin::Card header --}}
@@ -388,7 +388,7 @@
                                                         <button class="btn btn-light btn-info btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                             <li><a class="dropdown-item" href="{{ route('exdown.unduh.ba', [$item->uuid]) }}"><i class="fa-solid fa-download me-2"></i> Unduh File</a></li>
-                                                            @if ($permohonan->status != 'Selesai')
+                                                            @if ($permohonan->status != 'Selesai' && \CID::subRoleOnlyPetugas() == true)
                                                                 <li><a class="dropdown-item" href="javascript:void(0);" data-edit="{{ \CID::encode($item->uuid) }}"><i class="fa-solid fa-edit me-2"></i> Edit File</a></li>
                                                                 <li><a class="dropdown-item" href="javascript:void(0);" data-hapus="{{ \CID::encode($item->uuid) }}"><i class="fa-solid fa-trash me-2"></i> Hapus File</a></li>
                                                             @else

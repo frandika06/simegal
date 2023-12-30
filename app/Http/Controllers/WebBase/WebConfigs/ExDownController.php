@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\SettingsApp\ImMasterItemUttp;
 use App\Models\PdpFileBa;
 use App\Models\PdpFileCerapan;
+use App\Models\PdpFileDokumentasi;
 use App\Models\PortalUnduhan;
 use App\Models\TteSkhp;
 use Illuminate\Http\Request;
@@ -83,6 +84,23 @@ class ExDownController extends Controller
         $downloads = $data->downloads + 1;
         $data->update(["downloads" => $downloads]);
         $url = $data->file_ba;
+        $file_name = substr(strrchr(rtrim($url, '/'), '/'), 1);
+        if (Storage::disk('public')->exists($url)) {
+            $headers = array('Content-Type: application/octet-stream');
+            return Storage::disk('public')->download($url, $file_name, $headers);
+        } else {
+            return \abort(404);
+        }
+    }
+    // unduhDokumentasi
+    public function unduhDokumentasi($uuid)
+    {
+        $data = PdpFileDokumentasi::findOrFail($uuid);
+
+        // update downloads
+        $downloads = $data->downloads + 1;
+        $data->update(["downloads" => $downloads]);
+        $url = $data->file_dokumentasi;
         $file_name = substr(strrchr(rtrim($url, '/'), '/'), 1);
         if (Storage::disk('public')->exists($url)) {
             $headers = array('Content-Type: application/octet-stream');

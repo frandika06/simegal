@@ -122,4 +122,9 @@ class PdpPenjadwalan extends Model
     {
         return $this->hasMany('App\Models\PdpFileBa', 'uuid_penjadwalan', 'uuid');
     }
+    // Manajemen File Dokumentasi
+    public function RelFileDokumentasi()
+    {
+        return $this->hasMany('App\Models\PdpFileDokumentasi', 'uuid_penjadwalan', 'uuid');
+    }
 }

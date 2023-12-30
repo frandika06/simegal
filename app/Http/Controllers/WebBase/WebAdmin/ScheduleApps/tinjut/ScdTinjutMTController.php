@@ -129,6 +129,7 @@ class ScdTinjutMTController extends Controller
                     $routeActionRetribusi = route('scd.apps.tinjut.action.retribusi.index', [$tags_jp, $enc_uuid]);
                     $routeActionCerapan = route('scd.apps.tinjut.action.cerapan.index', [$tags_jp, $enc_uuid]);
                     $routeActionBa = route('scd.apps.tinjut.action.ba.index', [$tags_jp, $enc_uuid]);
+                    $routeActionDokumentasi = route('scd.apps.tinjut.action.dok.index', [$tags_jp, $enc_uuid]);
                     // route detail
                     $routePerusahaan = route('set.apps.perusahaan.show', [CID::encode('Aktif'), CID::encode($perusahaan->uuid)]);
                     $routePdp = route('scd.apps.data.pdp.show', [$enc_uuid]);
@@ -138,26 +139,26 @@ class ScdTinjutMTController extends Controller
                     $subRoleAdmin = CID::subRoleAdmin();
                     $subRolePetugas = CID::subRolePetugas();
                     $subRoleOnlyPetugas = CID::subRoleOnlyPetugas();
+                    $subRoleKetuaTimDanPimpinan = CID::subRoleKetuaTimDanPimpinan();
                     if ($subRoleAdmin == true) {
                         // cek fitur retribusi
                         $fitur = MasterFitur::where("nama_fitur", "Retribusi")->first();
                         if ($fitur->status == "1") {
-                            $link_action = '
+                            $link_action .= '
                             <li><a class="dropdown-item" href="' . $routeActionRetribusi . '"><i class="fa-solid fa-money-bill-transfer me-2"></i> Manajemen Retribusi</a></li>
                             <li><a class="dropdown-item" href="' . $routeActionSkhp . '"><i class="fa-solid fa-stamp me-2"></i> Manajemen SKHP</a></li>
                             ';
                         } else {
-                            $link_action = '
+                            $link_action .= '
                             <li><a class="dropdown-item" href="' . $routeActionSkhp . '"><i class="fa-solid fa-stamp me-2"></i> Manajemen SKHP</a></li>
                             ';
                         }
-                    } elseif ($subRoleOnlyPetugas == true) {
-                        $link_action = '
-                            <li><a class="dropdown-item" href="' . $routeActionCerapan . '"><i class="fa-solid fa-table-list me-2"></i> Manajemen Cerapan</a></li>
-                            <li><a class="dropdown-item" href="' . $routeActionBa . '"><i class="fa-solid fa-file-contract me-2"></i> Manajemen BA</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-image me-2"></i> Dokumentasi Kegiatan</a></li>
-                        ';
                     }
+                    $link_action .= '
+                        <li><a class="dropdown-item" href="' . $routeActionCerapan . '"><i class="fa-solid fa-table-list me-2"></i> Manajemen Cerapan</a></li>
+                        <li><a class="dropdown-item" href="' . $routeActionBa . '"><i class="fa-solid fa-file-contract me-2"></i> Manajemen BA</a></li>
+                        <li><a class="dropdown-item" href="' . $routeActionDokumentasi . '"><i class="fa-solid fa-image me-2"></i> Manajemen Dokumentasi</a></li>
+                    ';
                     // aksi
                     $aksi = '<div class="dropdown">
                         <button class="btn btn-light btn-dark btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -170,6 +171,15 @@ class ScdTinjutMTController extends Controller
                         </ul>
                     </div>';
                     if ($subRolePetugas == true) {
+                        $aksi .= '<div class="dropdown mt-2">
+                            <button class="btn btn-light btn-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-gear"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                            ' . $link_action . '
+                            </ul>
+                        </div>';
+                    } elseif ($subRoleKetuaTimDanPimpinan == true) {
                         $aksi .= '<div class="dropdown mt-2">
                             <button class="btn btn-light btn-primary btn-flex btn-center btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-gear"></i>
