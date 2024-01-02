@@ -5,7 +5,9 @@ namespace App\Helpers;
 use App\Models\MasterFitur;
 use App\Models\MasterInstrumenDaftarItemUttp;
 use App\Models\MasterKategoriKelompok;
+use App\Models\PdpAlat;
 use App\Models\PdpDataPetugas;
+use App\Models\PdpInstrumen;
 use App\Models\PdpPenjadwalan;
 use App\Models\PermohonanPeneraan;
 use App\Models\Perusahaan;
@@ -1761,6 +1763,39 @@ class CID
             $kode .= Self::gencode(2);
         }
         return Str::upper($kode);
+    }
+    // Get No. Urut Instrumen
+    public static function getNoUrutInstrumen($uuid_penjadwalan)
+    {
+        $data = PdpInstrumen::where("uuid_penjadwalan", $uuid_penjadwalan)->max("no_urut");
+        if ($data === null) {
+            $data = 1;
+            return $data;
+        } else {
+            return $data + 1;
+        }
+    }
+    // Get Total Retribusi dari Nilai Instrumen
+    public static function getTotalRetribusi($uuid_penjadwalan)
+    {
+        $data = PdpInstrumen::where("uuid_penjadwalan", $uuid_penjadwalan)->sum("nilai_retribusi");
+        if ($data === null) {
+            $data = 0;
+            return $data;
+        } else {
+            return $data;
+        }
+    }
+    // Get No. Urut Alat
+    public static function getNoUrutAlat($uuid_penjadwalan)
+    {
+        $data = PdpAlat::where("uuid_penjadwalan", $uuid_penjadwalan)->max("no_urut");
+        if ($data === null) {
+            $data = 1;
+            return $data;
+        } else {
+            return $data + 1;
+        }
     }
 
     /*

@@ -36,7 +36,7 @@ class Pimpinan
         if (in_array($role, $ar_role)) {
             if ($role == "Pegawai") {
                 // PEGAWAI
-                $ar_sub_role = ['Admin Aplikasi'];
+                $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan'];
                 if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                     // izinkan
                     return $next($request);

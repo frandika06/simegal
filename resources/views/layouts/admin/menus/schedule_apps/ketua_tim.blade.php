@@ -34,30 +34,31 @@
                 </div>
                 {{-- end:Menu item --}}
 
-                {{-- begin::TTE Dokumen --}}
-                {{-- begin:Menu item --}}
-                <div class="menu-item pt-5">
-                    {{-- begin:Menu content --}}
-                    <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">TTE Dokumen</span>
+                @if (\CID::subSubRoleKetuaTimPelayanan() == true)
+                    {{-- begin::TTE Dokumen --}}
+                    {{-- begin:Menu item --}}
+                    <div class="menu-item pt-5">
+                        {{-- begin:Menu content --}}
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">TTE Dokumen</span>
+                        </div>
+                        {{-- end:Menu content --}}
                     </div>
-                    {{-- end:Menu content --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('scd.apps.tte.skhp.index') }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-stamp  fs-2"></i>
-                        </span>
-                        <span class="menu-title">SKHP</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-                {{-- end::TTE Dokumen --}}
+                    {{-- end:Menu item --}}
+                    {{-- begin:Menu item --}}
+                    <div class="menu-item">
+                        {{-- begin:Menu link --}}
+                        <a class="menu-link" href="{{ route('scd.apps.tte.skhp.index') }}">
+                            <span class="menu-icon">
+                                <i class="fa-solid fa-stamp  fs-2"></i>
+                            </span>
+                            <span class="menu-title">SKHP</span>
+                        </a>
+                        {{-- end:Menu link --}}
+                    </div>
+                    {{-- end:Menu item --}}
+                    {{-- end::TTE Dokumen --}}
+                @endif
 
                 {{-- begin::Permohonan --}}
                 {{-- begin:Menu item --}}

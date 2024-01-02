@@ -39,7 +39,7 @@
                 <div class="menu-item pt-5">
                     {{-- begin:Menu content --}}
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Potensi Peneraan Ulang</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Potensi Peneraan</span>
                     </div>
                     {{-- end:Menu content --}}
                 </div>
@@ -48,11 +48,11 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('spv.apps.pp.index', [\CID::encode('Tera')]) }}">
+                    <a class="menu-link" href="{{ route('spv.apps.pp.pemantauan.index') }}">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-scale-balanced fs-2"></i>
+                            <i class="fa-solid fa-crosshairs fs-2"></i>
                         </span>
-                        <span class="menu-title">Tera</span>
+                        <span class="menu-title">Pemantauan</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>
@@ -61,24 +61,11 @@
                 {{-- begin:Menu item --}}
                 <div class="menu-item">
                     {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('spv.apps.pp.index', [\CID::encode('Tera Ulang')]) }}">
+                    <a class="menu-link" href="#">
                         <span class="menu-icon">
-                            <i class="fa-solid fa-scale-balanced fs-2"></i>
+                            <i class="fa-solid fa-expand fs-2"></i>
                         </span>
-                        <span class="menu-title">Tera Ulang</span>
-                    </a>
-                    {{-- end:Menu link --}}
-                </div>
-                {{-- end:Menu item --}}
-
-                {{-- begin:Menu item --}}
-                <div class="menu-item">
-                    {{-- begin:Menu link --}}
-                    <a class="menu-link" href="{{ route('spv.apps.pp.index', [\CID::encode('Pengujian BDKT')]) }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-scale-balanced fs-2"></i>
-                        </span>
-                        <span class="menu-title">Pengujian BDKT</span>
+                        <span class="menu-title">Nihil Permohonan</span>
                     </a>
                     {{-- end:Menu link --}}
                 </div>

@@ -13,7 +13,7 @@ $subSubRoleKetuaTimPelayanan = \CID::subSubRoleKetuaTimPelayanan();
         @include('layouts.admin.menus.schedule_apps.pimpinan')
     @elseif (\CID::subSubRoleKetuaTim() == true)
         @include('layouts.admin.menus.schedule_apps.ketua_tim')
-    @elseif(\CID::subRoleOnlyPetugas())
+    @elseif(\CID::subRoleOnlyPetugas() || \CID::subRoleAdminPengawasan() == true)
         @include('layouts.admin.menus.schedule_apps.petugas')
     @endif
 @endif

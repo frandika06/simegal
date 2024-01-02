@@ -197,7 +197,7 @@
                                     <tr>
                                         <td></td>
                                         <td style="font-size: 8px"><i>{{ $item->RelMasterInstrumenDaftarItemUttp->nama_instrumen }}<i></td>
-                                        <td></td>
+                                        <td style="text-align: center">{{ $item->jumlah_unit }}</td>
                                         <td style="text-align: center">{{ $item->volume }} {{ $item->RelMasterInstrumenDaftarItemUttp->satuan }}</td>
                                         <td style="text-align: right">{{ $item->tipe_tera == 'baru' ? number_format($item->RelMasterInstrumenDaftarItemUttp->tera_baru_pengujian, 0) : '' }}</td>
                                         <td style="text-align: right">{{ $item->tipe_tera == 'baru' ? number_format($item->RelMasterInstrumenDaftarItemUttp->tera_baru_pejustiran, 0) : '' }}</td>

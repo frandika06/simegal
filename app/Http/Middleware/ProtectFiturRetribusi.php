@@ -19,9 +19,43 @@ class ProtectFiturRetribusi
         $statusRetribusi = CID::getMasterFitur("Retribusi")->status;
         if ($statusRetribusi == "0") {
             // blokir
-            alert()->warning('Akses Ditolak!', 'Fitur Retribusi Telah di Non-Aktifkan!');
-            return redirect()->route('pdp.apps.home.index');
+            return $this->blockResponse($request, 1);
         }
         return $next($request);
+    }
+
+    // function block api
+    private function blockResponse($request, $style = null)
+    {
+        if ($request->is('api/*')) {
+            return $this->blockApi();
+        } else {
+            if ($style == "1") {
+                return $this->blockWebHome();
+            } elseif ($style == "2") {
+                return $this->blockWebBack();
+            }
+        }
+    }
+    // function block api
+    private function blockApi()
+    {
+        $response = [
+            "status" => false,
+            "message" => "You Can't Access This Route!",
+        ];
+        return response()->json($response, 422);
+    }
+    // function block web to home
+    private function blockWebHome()
+    {
+        alert()->warning('Akses Ditolak!', 'Fitur Retribusi Telah Di Non-Aktifkan!');
+        return redirect()->route('auth.home');
+    }
+    // function block web to back
+    private function blockWebBack()
+    {
+        alert()->warning('Akses Ditolak!', 'Fitur Retribusi Telah Di Non-Aktifkan!');
+        return \back();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\dashboard;
 
+use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\PermohonanPeneraan;
 use Illuminate\Http\Request;
@@ -45,6 +46,18 @@ class ApiPDPDashboardController extends Controller
                 ->whereStatus($status)
                 ->orderBy("created_at", "DESC")
                 ->get();
+        }
+
+        // cek data
+        if (count($PermohonanPeneraan) > 0) {
+            $dataPdp = [];
+            foreach ($PermohonanPeneraan as $item) {
+                $progress = CID::getProgressPermohonan($item);
+                $dataPdp[] = $item;
+                $item->status_progress = $progress;
+            }
+        } else {
+            $dataPdp = $PermohonanPeneraan;
         }
 
         // response

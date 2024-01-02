@@ -6,9 +6,13 @@ use App\Http\Controllers\ApiBase\ApiAdmin\auth\RegisterApiController;
 use App\Http\Controllers\ApiBase\ApiAdmin\configs\ApiDropdownsController;
 use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\dashboard\ApiPDPDashboardController;
 use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\permohonan\ApiPDPPermohonanPeneraanController;
+use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\retribusi\ApiPDPRetribusiController;
+use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\sertifikat\ApiPDPSertifikatController;
 use App\Http\Controllers\ApiBase\ApiAdmin\PortalApps\ApiPortalAppsController;
 use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\penera\ApiScdDataPdpController;
+use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\penera\ApiScdInstrumenAlatController;
 use App\Http\Controllers\ApiBase\ApiAdmin\SettingsApps\auth\ApiSetAppsProfileController;
+use App\Http\Controllers\ApiBase\ApiAdmin\SettingsApps\master\ApiSetAppsFiturController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +67,9 @@ Route::group(['prefix' => 'exim'], function () {
 Route::group(['prefix' => 'dd'], function () {
     Route::get('/get-alamat-perusahaan/{uuid}', [ApiDropdownsController::class, 'getAlamatPerusahaan']);
     Route::get('/get-list-tahun-permohonan', [ApiDropdownsController::class, 'getListTahunPermohonan']);
+    Route::get('/get-list-instrumen-group', [ApiDropdownsController::class, 'getListInstrumenGroup']);
+    Route::get('/get-list-instrumen-item-uttp/{uuid}', [ApiDropdownsController::class, 'getListInstrumenItemUttp']);
+    Route::get('/get-list-alat/{tags}/{uuid}', [ApiDropdownsController::class, 'getListAlat']);
 });
 
 /*
@@ -111,18 +118,34 @@ Route::group(['middleware' => ['auth:api', 'LastSeen', 'MobileFECounter']], func
             });
 
             // dashboard
-            // PATH : ApiBase/ApiAdmin/dashboard
+            // PATH : ApiBase/ApiAdmin/PdpApps/dashboard
             Route::group(['prefix' => 'dashboard'], function () {
                 Route::get('/{tahun}/{status}', [ApiPDPDashboardController::class, 'index']);
             });
 
             // permohonan
-            // PATH : ApiBase/ApiAdmin/permohonan
+            // PATH : ApiBase/ApiAdmin/PdpApps/permohonan
             Route::group(['prefix' => 'permohonan'], function () {
                 Route::post('/create', [ApiPDPPermohonanPeneraanController::class, 'store']);
                 Route::put('/edit/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'update']);
                 Route::get('/show/{uuid}', [ApiPDPPermohonanPeneraanController::class, 'show']);
                 Route::delete('/delete', [ApiPDPPermohonanPeneraanController::class, 'destroy']);
+            });
+
+            // middleware : ProtectFiturRetribusi
+            Route::group(['middleware' => ['ProtectFiturRetribusi']], function () {
+                // retribusi
+                // PATH : ApiBase/ApiAdmin/PdpApps/retribusi
+                Route::group(['prefix' => 'retribusi'], function () {
+                    Route::get('/', [ApiPDPRetribusiController::class, 'index']);
+                    Route::post('/create/{uuid}', [ApiPDPRetribusiController::class, 'store']);
+                });
+            });
+
+            // sertifikat
+            // PATH : ApiBase/ApiAdmin/PdpApps/sertifikat
+            Route::group(['prefix' => 'sertifikat'], function () {
+                Route::get('/', [ApiPDPSertifikatController::class, 'index']);
             });
         });
     });
@@ -146,6 +169,27 @@ Route::group(['middleware' => ['auth:api', 'LastSeen', 'MobileFECounter']], func
                     Route::put('/status', [ApiScdDataPdpController::class, 'status']);
                 });
             });
+
+            // instrumen-alat
+            // PATH : ApiBase/ApiAdmin/ScheduleApps/penera
+            Route::group(['prefix' => 'instrumen-alat'], function () {
+                Route::get('/{tahun}/{status}/{tags}', [ApiScdInstrumenAlatController::class, 'index']);
+                Route::get('/show/{uuid}', [ApiScdInstrumenAlatController::class, 'show']);
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::put('/update/{uuid}', [ApiScdInstrumenAlatController::class, 'update']);
+                });
+            });
+
+            // tindak-lanjut
+            // PATH : ApiBase/ApiAdmin/ScheduleApps/penera
+            Route::group(['prefix' => 'tindak-lanjut'], function () {
+                Route::get('/{tags_jp}/{tahun}/{status}/{tags}', [ApiScdInstrumenAlatController::class, 'index']);
+                // middleware : PetugasOnly
+                Route::group(['middleware' => ['PetugasOnly']], function () {
+                    Route::put('/update/{uuid}', [ApiScdInstrumenAlatController::class, 'update']);
+                });
+            });
         });
     });
 
@@ -156,6 +200,15 @@ Route::group(['middleware' => ['auth:api', 'LastSeen', 'MobileFECounter']], func
     |--------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'settings-apps'], function () {
+        // master
+        // PATH : ApiBase/ApiAdmin/SettingsApps/master
+        Route::group(['prefix' => 'master'], function () {
+            // fitur
+            Route::group(['prefix' => 'fitur'], function () {
+                Route::get('/{nama_fitur}', [ApiSetAppsFiturController::class, 'index']);
+            });
+        });
+
         // middleware : Pegawai
         Route::group(['middleware' => ['Pegawai']], function () {
             // auth

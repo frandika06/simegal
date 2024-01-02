@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class KetuaTim
+class KetuaTimPengawasan
 {
     /**
      * Handle an incoming request.
@@ -34,7 +34,7 @@ class KetuaTim
             $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan', 'Ketua Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
-                $ar_sub_sub_role = ['Ketua Tim Pelayanan', 'Ketua Tim Pengawasan', 'Ketua Tim Bina SDM'];
+                $ar_sub_sub_role = ['Ketua Tim Pengawasan'];
                 if (count(array_intersect($sub_sub_role, $ar_sub_sub_role)) != 0) {
                     // izinkan
                     return $next($request);

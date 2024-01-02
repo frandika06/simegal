@@ -75,7 +75,8 @@ class ApiScdDataPdpController extends Controller
         $auth = auth()->user();
 
         // base data
-        $data = PdpPenjadwalan::whereUuid($uuid)
+        $data = PdpPenjadwalan::where("pdp_penjadwalan.uuid", $uuid)
+            ->select("pdp_penjadwalan.*")
             ->with("RelPermohonanPeneraan")
             ->with("RelPermohonanPeneraan.RelPerusahaan")
             ->with("RelPermohonanPeneraan.RelAlamatPerusahaan")

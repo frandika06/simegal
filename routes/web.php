@@ -51,6 +51,7 @@ use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\master\uttp\SetAppsUttpTa
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\pegawai\SetAppsPegawaiController;
 use App\Http\Controllers\WebBase\WebAdmin\SettingsApps\perusahaan\SetAppsPerusahaanController;
 use App\Http\Controllers\WebBase\WebAdmin\SupervisionApps\dashboard\SpvDashboardController;
+use App\Http\Controllers\WebBase\WebAdmin\SupervisionApps\pp\SpvPPPemantauanController;
 use App\Http\Controllers\WebBase\WebConfigs\AjaxController;
 use App\Http\Controllers\WebBase\WebConfigs\CekTteController;
 use App\Http\Controllers\WebBase\WebConfigs\ExDownController;
@@ -421,6 +422,11 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
                     Route::post('/create/{uuid}', [PDPRetribusiController::class, 'store'])->name('pdp.apps.retribusi.store');
                 });
             });
+
+            // sertifikat
+            Route::group(['prefix' => 'sertifikat'], function () {
+                Route::get('/', [PDPSertifikatSKHPController::class, 'index'])->name('pdp.apps.sertifikat.skhp.index');
+            });
         });
     });
 
@@ -591,19 +597,52 @@ Route::group(['middleware' => ['pbh', 'auth', 'LastSeen']], function () {
         Route::group(['middleware' => ['Pegawai']], function () {
             // dashboard
             Route::get('/', [SpvDashboardController::class, 'index'])->name('spv.apps.home.index');
+            // potensi-peneraan
+            // PATH : WebBase/WebAdmin/SupervisionApps/pp
+            Route::group(['prefix' => 'pemantauan'], function () {
+                // pemantauan
+                Route::group(['prefix' => 'pemantauan'], function () {
+                    Route::get('/', [SpvPPPemantauanController::class, 'index'])->name('spv.apps.pp.pemantauan.index');
+                    Route::get('/data', [SpvPPPemantauanController::class, 'data'])->name('spv.apps.pp.pemantauan.data');
+                });
+            });
+
+            // middleware : KetuaTimPengawasan
+            Route::group(['middleware' => ['KetuaTimPengawasan']], function () {
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | ROUTE YANG AKAN DIHAPUS
+            |--------------------------------------------------------------------------
+             */
             // middleware : KetuaTimDanPimpinan
             Route::group(['middleware' => ['KetuaTimDanPimpinan']], function () {
                 // permohonan
                 // PATH : WebBase/WebAdmin/SupervisionApps/permohonan
-                Route::group(['prefix' => 'permohonan/{tags}'], function () {
-                    Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('spv.apps.pp.index');
-                    // middleware : Verifikator
-                    Route::group(['middleware' => ['Verifikator']], function () {
-                        Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('spv.apps.pp.status');
-                        Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('spv.apps.pp.pindahjp');
-                    });
-                    Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('spv.apps.pp.data');
-                });
+                // Route::group(['prefix' => 'permohonan/{tags}'], function () {
+                //     Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('spv.apps.pp.index');
+                //     // middleware : Verifikator
+                //     Route::group(['middleware' => ['Verifikator']], function () {
+                //         Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('spv.apps.pp.status');
+                //         Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('spv.apps.pp.pindahjp');
+                //     });
+                //     Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('spv.apps.pp.data');
+                // });
+            });
+            // middleware : KetuaTimDanPimpinan
+            Route::group(['middleware' => ['KetuaTimDanPimpinan']], function () {
+                // permohonan
+                // PATH : WebBase/WebAdmin/SupervisionApps/permohonan
+                // Route::group(['prefix' => 'permohonan/{tags}'], function () {
+                //     Route::get('/', [ScdPermohonanPengujianController::class, 'index'])->name('spv.apps.pp.index');
+                //     // middleware : Verifikator
+                //     Route::group(['middleware' => ['Verifikator']], function () {
+                //         Route::put('/status', [ScdPermohonanPengujianController::class, 'status'])->name('spv.apps.pp.status');
+                //         Route::put('/pindah-jp', [ScdPermohonanPengujianController::class, 'pindahJP'])->name('spv.apps.pp.pindahjp');
+                //     });
+                //     Route::get('/data', [ScdPermohonanPengujianController::class, 'data'])->name('spv.apps.pp.data');
+                // });
             });
             // middleware : KetuaTimPelayanan
             Route::group(['middleware' => ['KetuaTimPelayanan']], function () {

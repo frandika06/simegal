@@ -31,7 +31,7 @@ class KetuaTimDanPimpinan
             return $next($request);
         } elseif ($role == "Pegawai") {
             // PEGAWAI
-            $ar_sub_role = ['Admin Aplikasi', 'Ketua Tim'];
+            $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan', 'Ketua Tim'];
             if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                 // izinkan
                 $ar_sub_sub_role = ['Ketua Tim Pelayanan', 'Ketua Tim Pengawasan', 'Ketua Tim Bina SDM'];
@@ -41,7 +41,7 @@ class KetuaTimDanPimpinan
                 } else {
                     // kembali ke admin
                     // PEGAWAI
-                    $ar_sub_role = ['Admin Aplikasi'];
+                    $ar_sub_role = ['Admin Aplikasi', 'Admin Pengawasan'];
                     if (count(array_intersect($sub_role, $ar_sub_role)) != 0) {
                         // izinkan
                         return $next($request);

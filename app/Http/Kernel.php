@@ -75,6 +75,7 @@ class Kernel extends HttpKernel
         'Admin' => \App\Http\Middleware\Admin::class,
         'KetuaTim' => \App\Http\Middleware\KetuaTim::class,
         'KetuaTimPelayanan' => \App\Http\Middleware\KetuaTimPelayanan::class,
+        'KetuaTimPengawasan' => \App\Http\Middleware\KetuaTimPengawasan::class,
         'KetuaTimDanPimpinan' => \App\Http\Middleware\KetuaTimDanPimpinan::class,
         'PejabatTte' => \App\Http\Middleware\PejabatTte::class,
         'Pimpinan' => \App\Http\Middleware\Pimpinan::class,

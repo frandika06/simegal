@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\WebBase\WebAdmin\PdpApps\retribusi;
+namespace App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\retribusi;
 
 use App\Helpers\CID;
 use App\Http\Controllers\Controller;
 use App\Models\PdpRetribusi;
 use App\Models\PermohonanPeneraan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
-class PDPRetribusiController extends Controller
+class ApiPDPRetribusiController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         // auth
-        $auth = Auth::user();
+        $auth = auth()->user();
         $profile = $auth->RelPerusahaan;
 
         $dataRetribusi = PermohonanPeneraan::join("pdp_penjadwalan", "pdp_penjadwalan.uuid_permohonan", "=", "permohonan_peneraan.uuid")
@@ -32,57 +31,55 @@ class PDPRetribusiController extends Controller
             ->orderBy("pdp_retribusi.tgl_skrd", "DESC")
             ->get();
 
-        return view('pages.admin.pdp_apps.retribusi.index', compact(
-            'profile',
-            'dataRetribusi',
-        ));
-    }
+        if (count($dataRetribusi) > 0) {
+            $data = [];
+            foreach ($dataRetribusi as $item) {
+                $urlPrintSkrd = route('print.pdp.skrd', [CID::encode($item->RelPdpPenjadwalan->uuid)]);
+                $data[] = $item;
+                $item->print_skrd = $urlPrintSkrd;
+            }
+        } else {
+            $data = $dataRetribusi;
+        }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function create(Request $request, $enc_uuid)
-    {
-        // auth
-        $auth = Auth::user();
-        $profile = $auth->RelPerusahaan;
-
-        // uuid
-        $uuid = CID::decode($enc_uuid);
-        $data = PdpRetribusi::findOrFail($uuid);
-
-        // title & button
-        $title = "Upload Bukti Bayar";
-        $submit = "Simpan";
-        return view('pages.admin.pdp_apps.retribusi.upload', compact(
-            'enc_uuid',
-            'title',
-            'submit',
-            'profile',
-            'data',
-        ));
+        // response
+        $response = [
+            "status" => true,
+            "data" => $data,
+        ];
+        return response()->json($response, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $enc_uuid)
+    public function store(Request $request, $uuid)
     {
         // auth
-        $auth = Auth::user();
+        $auth = auth()->user();
         $profile = $auth->RelPerusahaan;
         $uuid_profile = $auth->uuid_profile;
         $uuid_perusahaan = $profile->uuid;
 
         // uuid
-        $uuid = CID::decode($enc_uuid);
         $data = PdpRetribusi::findOrFail($uuid);
         $kode_permohonan = $data->RelPdpPenjadwalan->RelPermohonanPeneraan->kode_permohonan;
 
         // validate
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             "file_pembayaran" => "required|file|mimes:png,jpg,jpeg,pdf|max:5000",
         ]);
+
+        // response validasi
+        $response = [
+            "status" => false,
+            "message" => "Validation Error!!",
+            "errors" => $validator->errors(),
+            "request" => $request->all(),
+        ];
+        if ($validator->fails()) {
+            return response()->json($response, 422);
+        }
 
         // value
         $value_1 = [
@@ -98,8 +95,12 @@ class PDPRetribusiController extends Controller
             }
             $file_pembayaran = CID::UpImgPdf($request, "file_pembayaran", $path);
             if ($file_pembayaran == "0") {
-                alert()->error('Error!', 'Gagal Menyimpan Data, File Bukti Pembayaran Tidak Sesuai Format!');
-                return \back();
+                $response = [
+                    "status" => false,
+                    "message" => "Gagal Menyimpan Data, File Bukti Pembayaran Tidak Sesuai Format!",
+                    "request" => $request->all(),
+                ];
+                return response()->json($response, 422);
             }
             $value_1['file_pembayaran'] = $file_pembayaran['url'];
         }
@@ -117,17 +118,24 @@ class PDPRetribusiController extends Controller
                 "apps" => "Penjadwalan dan Penugasan Apps",
                 "subjek" => "Berhasil Mengupload Bukti Bayar Retribusi (" . $kode_permohonan . ") - " . $uuid,
                 "aktifitas" => $aktifitas,
-                "device" => "web",
+                "role" => "Perusahaan",
+                "device" => "mobile",
                 "dashboard" => "1",
             ];
             CID::addToLogAktifitas($request, $log);
             // alert success
-            alert()->success('Berhasil!', 'Berhasil Mengupload Bukti Bayar Retribusi.');
-            return redirect()->route('pdp.apps.retribusi.index');
+            $response = [
+                "status" => true,
+                "message" => 'Berhasil Mengupload Bukti Bayar Retribusi.',
+            ];
+            return response()->json($response, 201);
         } else {
-            alert()->error('Gagal!', 'Gagal Mengupload Bukti Bayar Retribusi.');
-            return back()->withInput($request->all());
+            $response = [
+                "status" => false,
+                "message" => 'Gagal Mengupload Bukti Bayar Retribusi.',
+                "request" => $request->all(),
+            ];
+            return response()->json($response, 422);
         }
     }
-
 }
