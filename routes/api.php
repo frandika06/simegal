@@ -11,6 +11,10 @@ use App\Http\Controllers\ApiBase\ApiAdmin\PdpApps\sertifikat\ApiPDPSertifikatCon
 use App\Http\Controllers\ApiBase\ApiAdmin\PortalApps\ApiPortalAppsController;
 use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\penera\ApiScdDataPdpController;
 use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\penera\ApiScdInstrumenAlatController;
+use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\tinjut\action\ApiScdTinjutActionBaController;
+use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\tinjut\action\ApiScdTinjutActionCerapanController;
+use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\tinjut\action\ApiScdTinjutActionDokumentasiController;
+use App\Http\Controllers\ApiBase\ApiAdmin\ScheduleApps\tinjut\ApiScdTinjutController;
 use App\Http\Controllers\ApiBase\ApiAdmin\SettingsApps\auth\ApiSetAppsProfileController;
 use App\Http\Controllers\ApiBase\ApiAdmin\SettingsApps\master\ApiSetAppsFiturController;
 use Illuminate\Support\Facades\Route;
@@ -182,13 +186,51 @@ Route::group(['middleware' => ['auth:api', 'LastSeen', 'MobileFECounter']], func
             });
 
             // tindak-lanjut
-            // PATH : ApiBase/ApiAdmin/ScheduleApps/penera
+            // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut
             Route::group(['prefix' => 'tindak-lanjut'], function () {
-                Route::get('/{tags_jp}/{tahun}/{status}/{tags}', [ApiScdInstrumenAlatController::class, 'index']);
+                // manajemen-cerapan
+                // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut/action
+                Route::group(['prefix' => 'manajemen-cerapan'], function () {
+                    Route::get('/{uuid_pdp}', [ApiScdTinjutActionCerapanController::class, 'index']);
+                    Route::get('/{uuid_pdp}/view/{uuid}', [ApiScdTinjutActionCerapanController::class, 'show']);
+                });
+                // manajemen-ba
+                // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut/action
+                Route::group(['prefix' => 'manajemen-ba'], function () {
+                    Route::get('/{uuid_pdp}', [ApiScdTinjutActionBaController::class, 'index']);
+                    Route::get('/{uuid_pdp}/view/{uuid}', [ApiScdTinjutActionBaController::class, 'show']);
+                });
+                // manajemen-dokumentasi
+                // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut/action
+                Route::group(['prefix' => 'manajemen-dokumentasi'], function () {
+                    Route::get('/{uuid_pdp}', [ApiScdTinjutActionDokumentasiController::class, 'index']);
+                    Route::get('/{uuid_pdp}/view/{uuid}', [ApiScdTinjutActionDokumentasiController::class, 'show']);
+                });
+
                 // middleware : PetugasOnly
                 Route::group(['middleware' => ['PetugasOnly']], function () {
-                    Route::put('/update/{uuid}', [ApiScdInstrumenAlatController::class, 'update']);
+                    // manajemen-cerapan
+                    // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut/action
+                    Route::group(['prefix' => 'manajemen-cerapan'], function () {
+                        Route::post('/{uuid_pdp}', [ApiScdTinjutActionCerapanController::class, 'store']);
+                        Route::delete('/{uuid_pdp}/delete', [ApiScdTinjutActionCerapanController::class, 'destroy']);
+                    });
+                    // manajemen-ba
+                    // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut/action
+                    Route::group(['prefix' => 'manajemen-ba'], function () {
+                        Route::post('/{uuid_pdp}', [ApiScdTinjutActionBaController::class, 'store']);
+                        Route::delete('/{uuid_pdp}/delete', [ApiScdTinjutActionBaController::class, 'destroy']);
+                    });
+                    // manajemen-dokumentasi
+                    // PATH : ApiBase/ApiAdmin/ScheduleApps/tinjut/action
+                    Route::group(['prefix' => 'manajemen-dokumentasi'], function () {
+                        Route::post('/{uuid_pdp}', [ApiScdTinjutActionDokumentasiController::class, 'store']);
+                        Route::delete('/{uuid_pdp}/delete', [ApiScdTinjutActionDokumentasiController::class, 'destroy']);
+                    });
                 });
+
+                // dashboard tinjut
+                Route::get('/{tahun}/{tags_jp}/{tags}', [ApiScdTinjutController::class, 'index']);
             });
         });
     });
